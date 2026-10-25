@@ -9,6 +9,14 @@
 - 服务就绪实测：`GET /api/health` → `{"ok":true,"model":"deepseek-flash","baseUrlHost":"api.deepseek.com","keyConfigured":true,"timeoutMs":60000}`。运行的是`042ca2c`服务代码，提供analyze与insights两个路由；人员3无需再启动第二个8787进程，可直接页面联调。
 - 下一步：人员3页面接通后每域触发一次；记录实际model/generatedAt/requestId/analysisId及引用，人员4复验。若最终主机重启服务，须在服务端运行环境重新配置凭据。
 
+### 本轮真实响应证据
+
+| 域/触发 | generatedAt UTC（北京时间加8小时） | requestId / analysisId | 实际模型与服务结果 |
+|---|---|---|---|
+| D1，人员3页面2024年31省分析 | `2026-10-25T07:56:58.754Z` | `202f1b83-6cd1-41e5-a886-e12cedfce788` / `analysis:0290520c386a4c363d733754` | `deepseek-flash`，服务真实上游成功，4条解读、0条无效引用，6995ms |
+
+以上来自当前8787服务实时脱敏日志；页面最终显示与回源仍由人员3确认，整体签收由人员4复验。D2/D3尚待页面触发，不用此前探通替代。
+
 以下保留原负责人较早交付证据；其历史成绩不扩大为本轮三域验收。
 
 ## 身份与依赖
