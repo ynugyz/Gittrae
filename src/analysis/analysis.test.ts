@@ -9,9 +9,17 @@ import { analyze, AnalysisError } from './analyze.mjs';
 import { buildFacts } from './facts.mjs';
 import { validateInsights } from './validate.mjs';
 import { boxplot, histogram, mean, median, pearson, quantileType7, sampleStdDev } from './statistics.mjs';
-import { createInsightsServer, normalizeFacts } from '../../server/insights.mjs';
+import { createInsightsServer, normalizeFacts, buildMessages } from '../../server/insights.mjs';
 
 const TOLERANCE = 1e-9;
+
+test('居民和财务提示按当前范围限制措辞，不套用汽车榜单', () => {
+  for (const label of ['居民收支｜同年省级样本', '企业财务｜FY2025教学子集']) {
+    const messages = buildMessages({ analysisId: 'a', facts: [{ resultId: 'a:r' }], context: { scope: { label } } });
+    assert.match(messages[0].content, /严禁称榜单/);
+    assert.match(messages[0].content, /context.fields/);
+  }
+});
 
 function close(actual, expected, message) {
   assert.ok(Math.abs(actual - expected) <= TOLERANCE, `${message}: 期望 ${expected}，实际 ${actual}`);

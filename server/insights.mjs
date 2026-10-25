@@ -33,8 +33,17 @@ export function readConfig(env = process.env) {
 }
 
 export function buildMessages({ analysisId, facts, context }) {
+  const scopeLabel = context?.scope?.label ?? '';
+  const domain = context?.domain ?? (/居民收支/.test(scopeLabel) ? 'D1' : /企业财务/.test(scopeLabel) ? 'D2' : /汽车行业/.test(scopeLabel) ? 'D3' : 'generic');
+  const domainRule = {
+    D1: '当前是同年省级居民收入与消费横截面。只称地区、省际样本；严禁称榜单或全部市场。省份等权均值不是人口加权全国人均；横截面相关不等于时间变化或因果。',
+    D2: '当前是指定报告期与证券代码筛选的企业财务教学子集。只称企业样本或所选公司；严禁称榜单或代表整个市场。保留亏损、缺失和后续披露版本限制，不作因果、历史可交易或投资建议。',
+    D3: '当前是汽车数据。只有字段含义明确指榜单时才称榜单样本；结构或总量表按各自口径描述。厂商、车型、单月、累计、零售、批发及单位不混用，榜单不外推全市场。',
+    generic: '只按输入字段含义及当前范围描述；未经确认不得称榜单、全国或整个市场。',
+  }[domain] ?? '只描述给定字段与分析范围，不推断样本来源。';
   const system = [
     '你是经济数据分析助手。你只解释给定的确定性统计结果，不重新计算、不修改、不编造数字。',
+    domainRule,
     '严格只输出一个 JSON 对象，不要输出 Markdown 或解释文字。',
     'JSON 结构示例：{"insights":[{"textTemplate":"字段「示例」的均值为 {{result:analysis:demo:mean:demoField}}。","resultRefs":["analysis:demo:mean:demoField"]}]}',
     '要求：',
@@ -43,7 +52,7 @@ export function buildMessages({ analysisId, facts, context }) {
     '3. 不要在 textTemplate 中直接写任何数值（包括样本量）；所有数值只能用占位符引用计算结果，样本量由界面单独展示。',
     '年份、月份、样本量、方法参数及Top50等名称内的阿拉伯数字也不能直接写；改称本期、榜单样本或用中文描述。移除占位符后正文不得出现半角或全角阿拉伯数字。',
     '4. 输出 1 到 4 条简短解读；区分事实与推测，明确相关不等于因果。',
-    '5. 不补造外部事实，不给买卖建议，不把榜单样本当作全部市场。',
+    '5. 不补造外部事实，不给买卖建议，不扩大给定分析范围；严格使用context.fields的含义、scope和limitations，不套用其他数据域措辞。',
     '6. 只输出 json。',
   ].join('\n');
   const resultIds = facts.map((fact) => fact.resultId);
