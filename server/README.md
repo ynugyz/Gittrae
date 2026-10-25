@@ -22,7 +22,7 @@ node server/index.mjs    # 或 node server/index.ts（Node 22.18+）
 - 失败 `{ analysisId, error: { code, message, retryable } }`，HTTP 状态对应 400/413/502/503/504。
 - 返回的 `graph` 为 `owner: "insight"` 的 finding/cites 分片，ref为insightId字符串，标签与人员3重建结果一致。
 
-失败码：`missing_api_key`、`timeout`、`network_error`、`upstream_http_<status>`、`truncated_output`、`empty_content`、`empty_insights`、`invalid_json`、`invalid_payload`。官方 JSON Output 说明提示可能返回空 content，这里会自动重试一次，仍为空则报错，不伪造成成功；模型偶尔包裹 Markdown 代码围栏时会先剥离再解析。`deepseek-flash` 为思考模型，`finish_reason=length` 视为明确的截断失败而非成功。
+失败码：`missing_api_key`、`timeout`、`network_error`、`upstream_http_<status>`、`truncated_output`、`empty_content`、`empty_insights`、`invalid_json`、`invalid_payload`、`invalid_insight_reference`、`unbound_numeric_value`。官方 JSON Output 说明提示可能返回空 content，这里会自动重试一次，仍为空则报错，不伪造成成功；模型偶尔包裹 Markdown 代码围栏时会先剥离再解析。`finish_reason=length` 视为明确的截断失败而非成功。
 
 ## 调用约定
 
