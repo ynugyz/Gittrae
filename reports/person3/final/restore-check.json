@@ -26,5 +26,24 @@
     "originalProjectRetained": true,
     "message": "表头或原始记录缓存与原字节重解析结果不一致",
     "savedAfterFailureCompared": true
+  },
+  "freeze": {
+    "at": "2026-10-25T08:19:59.485Z",
+    "productCommit": "3a558506094c7934ccb1927108bf02950e71dee5",
+    "uiBlankRestore": true,
+    "allFieldsExceptSavedAtEqual": true,
+    "selection": {
+      "datasetId": "ds:d2-listed-company-finance",
+      "analysisId": "analysis:e98f90033b1c0bda7fca4f31",
+      "measureFieldIds": [
+        "revenue",
+        "net_profit"
+      ],
+      "nodeId": "finding:insight:ad96f33d62e3ef0d7d5b952b"
+    },
+    "historyTime": "D2 2026-10-25 16:18:40",
+    "noModelRequestOnRestore": true,
+    "bytes": 16739046,
+    "sha256": "43789cf0853693bd0da8172d551c87ce185e7397b5aed6c0c9ecbb0f8b1158ec"
   }
 }

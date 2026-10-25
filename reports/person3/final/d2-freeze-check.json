@@ -1,0 +1,58 @@
+{
+  "status": "passed",
+  "checkedAt": "2026-10-25T08:18:12.416Z",
+  "commit": "3a558506094c7934ccb1927108bf02950e71dee5",
+  "api": "http://127.0.0.1:8787/api/analyze",
+  "liveAiCalled": false,
+  "checks": [
+    "real_file_import_and_sha_passed",
+    "local_api_analyze_real_default_scope_passed",
+    "missing_revenue_original_empty_cell_2755_4_passed",
+    "validate_export_import_identity_graph_and_evidence_passed"
+  ],
+  "input": {
+    "path": "data/raw/D2_企业财务_A股上市公司/EM_yjbb_FY2025_20251231.csv",
+    "sha256": "c519acb415f858731e5cda99f578b536acb5eb0b59d57963d871ed23223b43a6"
+  },
+  "dataset": {
+    "datasetId": "ds:d2-listed-company-finance",
+    "datasetVersion": "v1:0a66e26f7105aecf406dfd2e",
+    "adapterVersion": "1.0.1",
+    "records": 5228
+  },
+  "analysis": {
+    "analysisId": "analysis:e98f90033b1c0bda7fca4f31",
+    "scopeCount": 5228,
+    "resultId": "analysis:e98f90033b1c0bda7fca4f31:mean:revenue",
+    "mean": 13964968470.386326,
+    "validCount": 5227,
+    "excludedCount": 1,
+    "facts": 7
+  },
+  "evidence": {
+    "recordId": "rec:d2:FY2025:688759",
+    "exclusionReason": "missing_value",
+    "sourceId": "src:c519acb415f858731e5c",
+    "fileName": "EM_yjbb_FY2025_20251231.csv",
+    "sha256": "c519acb415f858731e5cda99f578b536acb5eb0b59d57963d871ed23223b43a6",
+    "recordIndex": 2755,
+    "columnIndex": 4,
+    "columnName": "营业总收入-营业总收入",
+    "rawValue": ""
+  },
+  "project": {
+    "path": ".local/person3-final/d2-fix.t3project.json",
+    "bytes": 16397553,
+    "selection": {
+      "datasetId": "ds:d2-listed-company-finance",
+      "analysisId": "analysis:e98f90033b1c0bda7fca4f31",
+      "measureFieldIds": [
+        "revenue",
+        "net_profit"
+      ],
+      "nodeId": "finding:insight:8a98a921b3dabd552809d3ee"
+    },
+    "nodes": 36,
+    "edges": 51
+  }
+}
