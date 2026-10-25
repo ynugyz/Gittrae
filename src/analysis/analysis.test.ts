@@ -202,6 +202,7 @@ test('单值样本：标准差与 Pearson 为 null 且有原因', () => {
   assert.equal(resultOf(analysis, 'stddev', ['x']).value, null);
   assert.equal(resultOf(analysis, 'pearson', ['x', 'y']).value, null);
   assert.ok(analysis.issues.some((issue) => issue.code === 'insufficient_sample'));
+  assert.ok(analysis.issues.every((issue) => !issue.fieldId || FIELD_BASE.some((field) => field.fieldId === issue.fieldId)));
 });
 
 test('全缺失：统计为 null，直方图为空', () => {
@@ -253,6 +254,7 @@ test('箱线图异常点仍能映射回原始记录', () => {
     { recordId: 'c', values: { id: 'c', region: 'R1', x: 3, y: 1, constant: 5 } },
     { recordId: 'd', values: { id: 'd', region: 'R1', x: 4, y: 1, constant: 5 } },
     { recordId: 'e', values: { id: 'e', region: 'R1', x: 100, y: 1, constant: 5 } },
+    { recordId: 'f', values: { id: 'f', region: 'R1', x: null, y: 1, constant: 5 } },
   ];
   const analysis = analyze(makeBundle(records), request());
   const box = analysis.chartData.boxplots.find((item) => item.fieldId === 'x');
@@ -261,6 +263,8 @@ test('箱线图异常点仍能映射回原始记录', () => {
   assert.equal(resultOf(analysis, 'high', ['x']).value, 4);
   assert.deepEqual(resultOf(analysis, 'low', ['x']).validRecordIds, ['a', 'b', 'c', 'd', 'e']);
   assert.deepEqual(resultOf(analysis, 'high', ['x']).validRecordIds, ['a', 'b', 'c', 'd', 'e']);
+  assert.deepEqual(resultOf(analysis, 'high', ['x']).excludedRecordIds, ['f']);
+  assert.deepEqual(resultOf(analysis, 'high', ['x']).exclusionReasons, { f: 'missing_value' });
 });
 
 test('重复记录 ID 被拒绝', () => {

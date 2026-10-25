@@ -351,9 +351,9 @@ export function analyze(bundle, request) {
     results.push(result);
     scatter = { xFieldId, yFieldId, correlationResultId: result.resultId, points };
     if (points.length < 2) {
-      issues.push({ code: 'insufficient_sample', severity: 'warning', message: '相关分析成对有效样本不足 2 条，Pearson 为 null', fieldId: `${xFieldId}+${yFieldId}` });
+      issues.push({ code: 'insufficient_sample', severity: 'warning', message: '相关分析成对有效样本不足 2 条，Pearson 为 null', fieldId: xFieldId });
     } else if (correlation.value === null) {
-      issues.push({ code: 'constant_field', severity: 'warning', message: `字段 ${xField.label ?? xFieldId} 或 ${yField.label ?? yFieldId} 为常量，Pearson 不可计算`, fieldId: `${xFieldId}+${yFieldId}` });
+      issues.push({ code: 'constant_field', severity: 'warning', message: `字段 ${xField.label ?? xFieldId} 或 ${yField.label ?? yFieldId} 为常量，Pearson 不可计算`, fieldId: xFieldId });
     }
   }
 
