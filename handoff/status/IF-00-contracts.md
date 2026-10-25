@@ -1,17 +1,17 @@
 # IF-00 · 公共契约与集成【全员必读】
 
-人员3，2026-10-25 15:59。集成代码：`d88c32a5e035e813ee4f862e04eb8b7aa501ede7`（dev/app），已合人员1 `1ba946d`、人员2 `042ca2c`。依据[总控正式决定](https://github.com/ynugyz/Gittrae/blob/db28c7cd6a23dfb45ded717baaf2e803b7f42145/handoff/decisions/2026-10-25-final-40-minutes.md)；schemaVersion=1，src/contracts为唯一浏览器契约。
+人员3，2026-10-25 16:10阶段汇报。产品固定为 `c5c91cb292936e1aa0986caa05adc751453433a6`（dev/app）；数据入口 `1ba946d`，服务实现 `6095758`。依据[总控正式决定](https://github.com/ynugyz/Gittrae/blob/db28c7cd6a23dfb45ded717baaf2e803b7f42145/handoff/decisions/2026-10-25-final-40-minutes.md)；schemaVersion=1，src/contracts为唯一浏览器契约。
 
-File[]入口和默认范围钩子已接入。统计通过同机8787的POST /api/analyze，投影保留身份/版本/域/适配信息/字段/规范值/问题/基础图；不传原始字节、rawRecords或provenance。AI facts含fieldIds及sampleSize。引用校验后重建finding/cites；异步返回检查请求序号与项目快照。启动兼容.mjs，严格项目校验保持。
+File[]与默认范围已接通。统计走同机8787 POST /api/analyze；只传规范值及必要元数据，不传原字节/原始记录/逐格来源。AI facts含fieldIds/sampleSize；引用检查后重建发现图。异步返回检查请求序号和项目快照。共享校验与服务均拒绝AI占位符外裸数字；null筛选及重复分析时间冲突已修复。
 
 | 阶段 | 实际状态 |
 |---|---|
-| 集成/自测 | passed：50项测试及构建；Node侧analysis.test.ts仍由npm test执行，不纳入浏览器生产类型检查 |
-| D1页面 | passed：2024年31/155记录；三图、均值回源、4条真实AI（15:56:58，deepseek-flash） |
-| D2页面 | passed：完整FY2025原文件，5228规范记录；三图、有效回源、4条真实AI（15:57:48） |
-| D3与合并保存恢复 | in_progress |
-| 独立产品审计 | not_started：由人员4按本集成版本复验 |
+| 开发验证 | 53项测试、生产构建通过；Node统计测试仍由npm test执行；大图表分包提示保留 |
+| 三域页面 | D1 2024年31条、D2 FY2025 5228条、D3 2026-08 Top50：统计、三图、统计数字/AI数字/发现节点回源均已操作通过 |
+| 真实AI | 每域4条通过新版严格校验，模型deepseek-flash；时间/请求/分析编号见[IF-08](IF-08-live-insights.md) |
+| 保存恢复 | 最终19,372,951字节，3域6次历史分析，选中发现节点及全部内容往返一致（仅savedAt改变）；历史AI标注正确 |
+| 独立签收 | 尚未完成最终版本的独立页面复验；不得把作者页面证据称独立签收 |
 
-剩余边界：IF-02已登记缺失/未分类筛选的Scalar比较错误，待人员2修复；D2唯一营收缺失记录的原单元格回源待核对。重复计算事实仅时间变化的冲突已在c1eda91修复。不能将默认范围通过扩写为全部验收通过。
+剩余限制：D2唯一缺失营收688759未提供直接单元格来源，已在[IF-01](IF-01-import-files.md)交人员1（原记录2755、列4）；AI部分D1/D2措辞使用“榜单/市场”，文字含义仍待审阅，引用检查不等于语义正确。旧版3条裸数字解释明确标invalid保留原文，不进入发现图或有效解释。
 
-接手只读[人员3入口](../人员3_界面与集成/START_HERE.md)、[调用说明](../人员3_界面与集成/IMPLEMENTATION.md)、[IF-08真实AI](IF-08-live-insights.md)。真实界面证据保留在reports/person3/final；后续按接口卡更新，不新增重复模板。
+最小接手：[人员3入口](../人员3_界面与集成/START_HERE.md) → [运行说明](../人员3_界面与集成/IMPLEMENTATION.md#runtime) → [机器证据](../../reports/person3/final/integration-checks.json)及[恢复比较](../../reports/person3/final/restore-check.json)。接下来仅补上述缺口与独立审计，不扩功能。

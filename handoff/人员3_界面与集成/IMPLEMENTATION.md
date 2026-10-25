@@ -6,7 +6,7 @@
 
 ## 1. 唯一入口
 
-[共享类型](https://github.com/ynugyz/Gittrae/blob/d88c32a5e035e813ee4f862e04eb8b7aa501ede7/src/contracts/index.ts)、[MOCK样例](https://github.com/ynugyz/Gittrae/blob/d88c32a5e035e813ee4f862e04eb8b7aa501ede7/src/contracts/example.ts)、[模块接线](https://github.com/ynugyz/Gittrae/blob/d88c32a5e035e813ee4f862e04eb8b7aa501ede7/src/app/modules.ts)、[图谱与回源](https://github.com/ynugyz/Gittrae/blob/d88c32a5e035e813ee4f862e04eb8b7aa501ede7/src/graph/index.ts)、[保存恢复](https://github.com/ynugyz/Gittrae/blob/d88c32a5e035e813ee4f862e04eb8b7aa501ede7/src/storage/index.ts)。本轮集成版本为d88c32a，已纳入人员1 1ba946d、人员2 042ca2c。
+[共享类型](https://github.com/ynugyz/Gittrae/blob/c5c91cb292936e1aa0986caa05adc751453433a6/src/contracts/index.ts)、[MOCK样例](https://github.com/ynugyz/Gittrae/blob/c5c91cb292936e1aa0986caa05adc751453433a6/src/contracts/example.ts)、[模块接线](https://github.com/ynugyz/Gittrae/blob/c5c91cb292936e1aa0986caa05adc751453433a6/src/app/modules.ts)、[图谱与回源](https://github.com/ynugyz/Gittrae/blob/c5c91cb292936e1aa0986caa05adc751453433a6/src/graph/index.ts)、[保存恢复](https://github.com/ynugyz/Gittrae/blob/c5c91cb292936e1aa0986caa05adc751453433a6/src/storage/index.ts)。本轮集成版本为c5c91cb，已纳入人员1 1ba946d、人员2 6095758。
 
 <a id="data"></a>
 
@@ -28,7 +28,7 @@
 
 按共享类型提供 `scope.recordIds/label/limitations`、字符串型 `GraphNode.ref` 等。每项结果的valid/excluded记录互斥且完整覆盖scope；字段与ID必须一致，页面不重算统计。finding/cites使用 `buildInsightGraph` 重建。
 
-AI客户端请求 `POST /api/insights`，60秒超时、不自动重试；最小facts投影已批准加入fieldIds，配合context.fields标识指标，样本数使用sampleSize。响应须含匹配的分析/请求编号、实际model和generatedAt，实时记录为 `live_ai / interpretation / valid`；跨分析、未知引用或错误占位符拒绝。历史恢复不算本次实时调用。
+AI客户端请求 `POST /api/insights`，60秒超时、不自动重试；最小facts投影已批准加入fieldIds，配合context.fields标识指标，样本数使用sampleSize。响应须含匹配的分析/请求编号、实际model和generatedAt，实时记录为 `live_ai / interpretation / valid`；跨分析、未知引用、错误占位符或占位符外裸数字拒绝。历史恢复不算本次实时调用。
 
 <a id="runtime"></a>
 

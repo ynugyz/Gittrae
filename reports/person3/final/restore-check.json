@@ -8,5 +8,23 @@
   "invalidAI": 3,
   "bytes": 16614813,
   "comparison": "All persisted content equal except savedAt; source bytes, IDs, values, AI templates/times/statuses and selection identical",
-  "note": "Three legacy insights marked invalid before restore under strict numeric binding; no template text rewritten."
+  "note": "Three legacy insights marked invalid before restore under strict numeric binding; no template text rewritten.",
+  "finalRound": {
+    "at": "2026-10-25T08:09:59.335Z",
+    "productCommit": "c5c91cb292936e1aa0986caa05adc751453433a6",
+    "bytes": 19372951,
+    "datasets": 3,
+    "analyses": 6,
+    "insights": 66,
+    "selectedNode": "finding:insight:d5e86276513ad34d5b8f5b5f",
+    "contentEqualExceptSavedAt": true,
+    "uiHistoryLabel": true,
+    "latestThreeDomainsValidInsights": 12
+  },
+  "damagedCacheUI": {
+    "rejected": true,
+    "originalProjectRetained": true,
+    "message": "表头或原始记录缓存与原字节重解析结果不一致",
+    "savedAfterFailureCompared": true
+  }
 }
