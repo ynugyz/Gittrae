@@ -40,6 +40,7 @@
 - [数据清单](data/manifest.json)：相对路径、字段、记录数、校验和及已知问题。
 - [总体验收标准](handoff/03_总体验收标准.md)、[验收场景](acceptance/cases.md)、[团队核验样例](acceptance/fixtures/README.md)。
 - [本次交接包核验记录](handoff/04_交接包核验.md)：资料检查与未来产品验收分开记录。
+- [接口进度与下一步入口](handoff/status/README.md)：逐接口查看实现、验证、依赖与接手条件；以负责人分支及绑定commit核对当前状态。
 - `handoff/` 下每个角色都有 `START_HERE.md`、`TASK.md`、`DELIVERABLES.md`、`STATUS_TEMPLATE.md`。
 
 题包说明中提到的清洗数据、官方统计真值和复现脚本没有实际随包提供。不要根据说明文档把它们当作现有文件；团队核验样例也不能冒充官方真值。
