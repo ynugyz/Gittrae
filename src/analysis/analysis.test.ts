@@ -495,6 +495,22 @@ test('页面facts投影保留指标映射和sampleSize，兼容旧validCount', (
   assert.equal(normalizeFacts([{ resultId: 'r', validCount: 3 }])[0].sampleSize, 3);
 });
 
+test('本机代理拒绝正确引用之外的半角和全角裸数字', async () => {
+  const analysis = analyze(makeBundle(basicRecords()), request());
+  const resultId = resultOf(analysis, 'mean', ['x']).resultId;
+  for (const numeral of ['42', '４２']) {
+    const content = JSON.stringify({ insights: [{ textTemplate: `均值为 {{result:${resultId}}}，增长${numeral}%。`, resultRefs: [resultId] }] });
+    const { fetchImpl } = fakeFetch(content);
+    const server = createInsightsServer({ env: { DEEPSEEK_API_KEY: 'test-key' }, fetchImpl, logger: { info() {}, error() {} } });
+    const port = await listen(server);
+    try {
+      const response = await fetch(`http://127.0.0.1:${port}/api/insights`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ analysisId: analysis.analysisId, facts: [{ resultId }], context: {} }) });
+      assert.equal(response.status, 502);
+      assert.equal((await response.json()).error.code, 'unbound_numeric_value');
+    } finally { server.close(); }
+  }
+});
+
 test('分析HTTP一次返回规范analysis和facts，并复用基础指标ID', async () => {
   const bundle = makeBundle(basicRecords(), { bundle: { graph: {
     schemaVersion: 1, owner: 'data', nodes: [

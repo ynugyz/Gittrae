@@ -41,6 +41,7 @@ export function buildMessages({ analysisId, facts, context }) {
     '1. 占位符 {{result:...}} 的花括号内必须逐字复制输入 facts 中某个 resultId 的完整字符串，不能写成 resultId 字面量。',
     '2. resultRefs 必须与占位符一一对应，且只能引用输入 facts 中出现的 resultId；不存在或跨分析的引用会被判为无效。',
     '3. 不要在 textTemplate 中直接写任何数值（包括样本量）；所有数值只能用占位符引用计算结果，样本量由界面单独展示。',
+    '年份、月份、样本量、方法参数及Top50等名称内的阿拉伯数字也不能直接写；改称本期、榜单样本或用中文描述。移除占位符后正文不得出现半角或全角阿拉伯数字。',
     '4. 输出 1 到 4 条简短解读；区分事实与推测，明确相关不等于因果。',
     '5. 不补造外部事实，不给买卖建议，不把榜单样本当作全部市场。',
     '6. 只输出 json。',
@@ -229,6 +230,9 @@ export async function requestDeepSeekInsights(
       };
       const check = validateInsight(insight, { analysisId, resultIds });
       if (!check.valid) {
+        if (check.errors.some((error) => error.code === 'unbound_numeric_value')) {
+          throw new ApiError('unbound_numeric_value', 'AI解读含未绑定结果引用的数字', { retryable: true, statusCode: 502 });
+        }
         throw new ApiError('invalid_insight_reference', '模型解读的结果引用未通过校验', { retryable: true, statusCode: 502 });
       }
       return insight;
