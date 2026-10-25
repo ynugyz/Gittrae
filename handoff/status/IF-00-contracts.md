@@ -1,54 +1,25 @@
 # IF-00 · 公共契约与接线约定
 
-## 身份与依赖
+必做；负责人：人员3，总控审批语义变更。报告人：本机人员3，2026-10-25T15:40:01+08:00；来源分支dev/app。依据 [v1.0](../01_公共接口.md) 及 [总控汇报规则](../decisions/2026-10-25-interface-reporting.md)，本轮无新增产品接口批准。
 
-| 字段 | 当前记录 |
+实现：`39c92f147dc1ff81e0bdaf9f4190b81051a74cbd`，[类型](https://github.com/ynugyz/Gittrae/blob/39c92f147dc1ff81e0bdaf9f4190b81051a74cbd/src/contracts/index.ts)、[样例](https://github.com/ynugyz/Gittrae/blob/39c92f147dc1ff81e0bdaf9f4190b81051a74cbd/src/contracts/example.ts)、[接线](https://github.com/ynugyz/Gittrae/blob/39c92f147dc1ff81e0bdaf9f4190b81051a74cbd/src/app/modules.ts)。本轮复跑commit `197d6b2478e5666eef2dd241a4bd1a0443fce435`，产品文件一致；[自测证据](../../reports/person3/verification.md#handoff-recheck)。
+
+| 阶段 | 状态与证据 |
 |---|---|
-| 首版必要性 | 必做 |
-| 实现负责人 | 人员3；总控审批语义变更 |
-| 下游接手者 | 人员1、人员2、人员3、人员4 |
-| 负责人报告来源分支 | `dev/app`；本文件初始记录在docs/control |
-| 直接依赖 | 无；涉及语义变更时由总控批准 |
-| 公共契约 | [v1.0](../01_公共接口.md)；实现细化未批准之处仍待裁决 |
-| 报告人/更新时间 | 总控初始化；2026-10-25T15:24:40+08:00；非实现负责人新提交的完成声明 |
-| 总体进展 | in_progress；仅描述本次可见的交付与证据 |
-| 实现commit | `39c92f147dc1ff81e0bdaf9f4190b81051a74cbd`（人员3部分）；其他依赖提交未确认 |
+| 实现 | in_progress：人员3公共类型、样例及页面接线已交付，跨模块兼容尚未完成 |
+| 本机自测 | passed：20项测试、构建、格式检查；覆盖为人员3模块，非上游联调 |
+| 真实联调 | blocked：下述可复查差异尚未对齐 |
+| 人员4产品复验 | not_started：尚无相容的集成commit |
 
-## 已做与未做
+## 已取得的上游与差异（本轮仅静态核对）
 
-共享类型、样例与模块接线已在dev/app提交；默认范围钩子和AI facts指标映射仍待裁决。
+| 来源 | 远程实现commit / 作者证据 | 当前接入障碍 |
+|---|---|---|
+| 人员1 | `2781eca3a7ca05543330a91697c0fb02d93243aa`；[作者报告](https://github.com/ynugyz/Gittrae/blob/2781eca3a7ca05543330a91697c0fb02d93243aa/src/data/REPORT.md) 声称54项通过、58/58覆盖；本机未复跑 | `importFiles.ts`接收name/bytes，页面检测index.ts并传File[]；originalName/parseOptions、可空unit、affectedFields等与共享类型不同，仍有types.ts镜像 |
+| 人员2 | `8dff711eac824fb7acedeca9f9c0c301c9fe52fa`；[作者报告](https://github.com/ynugyz/Gittrae/blob/8dff711eac824fb7acedeca9f9c0c301c9fe52fa/reports/人员2_交付与复验.md) 记录18项自测和API/HTTP探通；本机未复跑。远程文档提交为8dff711，报告绑定成果commit `d72ab3f7a98d88f2f0904d6241729af7e85bd4d5` | 入口index.mjs/server/index.mjs未被.ts接线识别；ids.mjs依赖node:crypto；scope.selectedRecordIds/labels、对象型ref、reason/validCount及methodVersion与当前校验不符；数据集节点已改为优先复用，指标节点ID和须线样本覆盖仍需对齐 |
 
-接口边界：六个共同对象及公共调用入口；默认范围、ID、AI指标映射的批准记录。
+默认范围钩子、AI resultId到fieldId映射、通用CSV角色/单位确认仍待决定；本次汇报规则没有批准这些变更。上游已有代码，不能继续写“未开发/未交付”，也不能将作者自测变成人员3或审计已验证。
 
-| 阶段 | 当前事实/状态 |
-|---|---|
-| 实现交付 | 已取得[人员3实现commit](https://github.com/ynugyz/Gittrae/commit/39c92f147dc1ff81e0bdaf9f4190b81051a74cbd)；交付存在，完整行为仍待后续联调/复验。 |
-| 开发者自测 | passed（转录人员3在该commit随附的自测报告；本次总控未复跑，具体覆盖以报告为准） |
-| 三域真实联调 | not_started；需要固定相容的上下游和集成commit，尚无本次联调证据 |
-| 人员4产品独立复验 | not_started；原始基线审计不能验证此后模块，收到明确受测commit后复验 |
+## 最小下一步
 
-成果/证据：[实现与接入说明](https://github.com/ynugyz/Gittrae/blob/39c92f147dc1ff81e0bdaf9f4190b81051a74cbd/handoff/%E4%BA%BA%E5%91%983_%E7%95%8C%E9%9D%A2%E4%B8%8E%E9%9B%86%E6%88%90/IMPLEMENTATION.md)；[开发者自测](https://github.com/ynugyz/Gittrae/blob/39c92f147dc1ff81e0bdaf9f4190b81051a74cbd/reports/person3/verification.md)。
-
-本轮总控实际检查：已读取公共契约、远程main树和人员3提交的树/说明/自测报告，确认上述来源；未运行本接口、未调用模型。后续负责人必须补充自己真实执行的输入/数据SHA、步骤、预期、实际和证据，不能把本次资料阅读记成产品测试。
-
-## 检查与接手标准
-
-重点：类型/样例一致；公共对象字段与函数签名可用；语义变更有总控记录。
-
-对应验收：所有产品用例的公共前置；具体标准以[验收矩阵](../../acceptance/cases.md)为准。三域适用项分别给出D1/D2/D3证据；MOCK不替代真实数据及调用。
-
-## 当前阻塞与候选下一步
-
-未完成/前置条件：默认getDefaultRequest钩子、最小facts中resultId到指标的映射尚无批准结论；本状态规则不批准这些产品接口变更。
-
-建议责任动作：总控先核对接入说明中的待决事项，人员3同步批准后的唯一契约与样例；人员1/2按已确认部分推进独立模块。
-
-下一步判断：本接口为首版必做；当前证据不足以签收。已授权的独立实现/自测按确认契约推进，真实接入和最终签收按本卡依赖及[索引规则](README.md)判断。列出动作不等于启动开发或自动跨对话调度。
-
-解除阻塞或完成检查时，负责人更新本卡的实现commit、实际结果与证据；下游追加接手记录；审计结论链接人员4在acceptance/reports的报告及受测commit。未经原报告人确认，不替他人填写通过成绩。
-
-## 本卡后续交接记录
-
-| 报告人/北京时间 | 代码commit/契约版本 | 本次已做与实测证据 | 未完成/阻塞及责任人 | 下一动作/前置条件/验收者 |
-|---|---|---|---|---|
-| 待负责人首次接手 | 待填 | 待填，不能复用初始化为实测 | 待填 | 待填 |
+总控先裁决上述字段、ID和浏览器/服务端边界；人员1/2按决定对齐模块，人员3更新唯一共享类型、样例与接线。相容模块commit齐备后，人员3执行三域联调，再交人员4按 [验收矩阵](../../acceptance/cases.md) 复验。当前不直接合入不相容业务模块；独立自测可继续，签收暂缓。
