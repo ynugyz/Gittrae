@@ -1,5 +1,7 @@
 # 人员2任务：统计、派生图与 AI
 
+> **人员2必读 · 职责。** 先读 [本角色入口](START_HERE.md) 与 [本轮完整必读清单](../README.md#person2)；阶段和版本以 [仓库首页](../../README.md) 为准。首轮只读段落仅适用于首次接收，已有明确任务时使用后续阶段要求并如实填写状态。
+
 ## 职责与目录
 
 明确进入开发阶段后，在 `dev/analysis-ai` 的 `src/analysis/`、`server/` 工作。使用人员3维护的 `AnalysisRequest`、`AnalysisResult`、`GraphFragment`、`Insight` 等共同契约；需要真实数据时读取人员1输出，不重新解析原始 CSV。
