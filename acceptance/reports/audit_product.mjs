@@ -40,6 +40,11 @@ await check('IMP-01:58-real-files', async () => {
   for (const f of manifest.files) { const source = sources.get(f.sha256); assert.ok(source, f.relativePath); assert.equal(source.rawRecords.length, f.parsedRecordCount); assert.deepEqual(source.headers, f.columns); }
   return { sourceFiles: sources.size, bundles: bundles.length, elapsedMs: Math.round(performance.now() - importStarted) };
 });
+out.provenanceGaps=bundles.map(b=>{
+  const transformed=new Set(b.transformations.flatMap(t=>t.fieldIds??[])); const missing={};
+  for(const r of b.records) for(const f of b.fields) if(r.values[f.fieldId]!==null && !r.provenance[f.fieldId]?.length && !transformed.has(f.fieldId)) missing[f.fieldId]=(missing[f.fieldId]??0)+1;
+  return {datasetId:b.datasetId,missing};
+}).filter(b=>Object.keys(b.missing).length);
 
 for (const name of ['basic.csv', 'missing_constant.csv', 'single.csv', 'all_missing.csv']) {
   await check(`STAT:fixture:${name}`, async () => {
@@ -128,9 +133,22 @@ for (const s of specs) await check(`${s.name}:real-statistics-charts-source`, as
 
 if (appRoot && analyses.length === 3) {
   const storage=await load(appRoot,'src/storage/index.ts'); const graph=await load(appRoot,'src/graph/index.ts');
+  const state=await load(appRoot,'src/app/state.ts');
   const now=new Date().toISOString(); const project={schemaVersion:1,projectId:'audit-closeout-three-domains',createdAt:now,savedAt:now,datasets:specs.map(s=>s.bundle),analyses,insights,selection:{datasetId:analyses[2].datasetId,analysisId:analyses[2].analysisId,measureFieldIds:analyses[2].request.measureFieldIds,nodeId:`finding:${insights.at(-1).insightId}`}};
   for (const a of analyses) await check(`${a.request.filters[0].fieldId}:core-getEvidence`,()=>{
     const e=graph.getEvidence(project,a.results[0].resultId); assert.equal(e.analysisId,a.analysisId); assert.equal(e.validCount,a.results[0].validRecordIds.length); return {validCount:e.validCount};
+  });
+  const a=analyses[0],r=a.results[0];
+  const simulated={insightId:'audit-simulated-insight',analysisId:a.analysisId,kind:'interpretation',origin:'live_ai',textTemplate:`参考 {{result:${r.resultId}}}；相关不等于因果。`,resultRefs:[r.resultId],generatedAt:now,model:'audit-simulated-model',status:'valid'};
+  const synthetic={analysisId:a.analysisId,requestId:'audit-simulated-request',insights:[simulated],graph:graph.buildInsightGraph([simulated],[a]),model:simulated.model,generatedAt:now};
+  await check('SIMULATED:unknown-reference-rejected',()=>{
+    assert.throws(()=>graph.validateInsight({...simulated,resultRefs:[a.analysisId+':unknown'],textTemplate:`{{result:${a.analysisId}:unknown}}`},a));
+  });
+  await check('SIMULATED:foreign-analysis-reference-rejected',()=>{
+    assert.throws(()=>graph.validateInsight({...simulated,resultRefs:[analyses[1].results[0].resultId],textTemplate:`{{result:${analyses[1].results[0].resultId}}}`},a));
+  });
+  await check('SIMULATED:stale-response-keeps-current-state',()=>{
+    assert.equal(state.applyInsightResponse(project,synthetic),project);
   });
   for (const a of analyses) await check(`${a.request.filters[0].fieldId}:single-domain-export`,async()=>{
     const ownInsights=insights.filter(i=>i.analysisId===a.analysisId);
@@ -166,6 +184,25 @@ if (appRoot && analyses.length === 3) {
       await assert.rejects(api.requestInsights(project.datasets[0],analyses[0],new AbortController().signal),/DEEPSEEK_API_KEY/);
     });
   } finally { globalThis.fetch=realFetch; await new Promise(resolve=>server.close(resolve)); }
+  let mockContent={insights:[{textTemplate:simulated.textTemplate,resultRefs:simulated.resultRefs}]};
+  const fake=createInsightsServer({env:{DEEPSEEK_API_KEY:'audit-simulated-placeholder',DEEPSEEK_MODEL:'audit-simulated-model'},logger:{info(){},warn(){},error(){}},fetchImpl:async()=>Response.json({model:'audit-simulated-model',choices:[{finish_reason:'stop',message:{content:JSON.stringify(mockContent)}}]})});
+  await new Promise(resolve=>fake.listen(0,'127.0.0.1',resolve));
+  const fakeBase=`http://127.0.0.1:${fake.address().port}`;
+  globalThis.fetch=(url,init)=>realFetch(typeof url==='string'&&url.startsWith('/api/')?fakeBase+url:url,init);
+  try {
+    await check('SIMULATED:valid-provider-shape-keeps-source-identity',async()=>{
+      const response=await api.requestInsights(project.datasets[0],a,new AbortController().signal); assert.equal(response.insights[0].origin,'live_ai'); assert.equal(response.insights[0].model,'audit-simulated-model');
+    });
+    await check('SIMULATED:upstream-unknown-reference-is-HTTP-error',async()=>{
+      mockContent={insights:[{textTemplate:`{{result:${a.analysisId}:unknown}}`,resultRefs:[a.analysisId+':unknown']}]};
+      await assert.rejects(api.requestInsights(project.datasets[0],a,new AbortController().signal));
+    });
+    await check('SIMULATED:literal-fabricated-number-must-not-be-valid',async()=>{
+      mockContent={insights:[{textTemplate:`均值是999999999，依据{{result:${r.resultId}}}。`,resultRefs:[r.resultId]}]};
+      let response; try { response=await api.requestInsights(project.datasets[0],a,new AbortController().signal); } catch { return; }
+      assert.fail(`raw fabricated numeric literal accepted as ${response.insights[0].status}; actual deterministic value=${r.value}`);
+    });
+  } finally { globalThis.fetch=realFetch; await new Promise(resolve=>fake.close(resolve)); }
 }
 out.summary={passed:out.checks.filter(c=>c.status==='passed').length,failed:out.checks.filter(c=>c.status==='failed').length};
 fs.writeFileSync(path.join(reportDir,`2026-10-25_product-${tag}.json`),JSON.stringify(out,null,2)+'\n');
