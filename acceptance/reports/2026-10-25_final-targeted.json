@@ -1,0 +1,301 @@
+{
+  "kind": "targeted_final_independent_recheck_not_browser",
+  "generatedAt": "2026-10-25T08:17:36.985Z",
+  "testedCommit": "3a558506094c7934ccb1927108bf02950e71dee5",
+  "dataFingerprint": "94520b80f023917c41e3799b13b1c988a9fea1b68308a0a2be5492455b3f6473",
+  "checks": [
+    {
+      "id": "CLOSE-05:fixed-original-empty-cell",
+      "status": "passed",
+      "detail": {
+        "adapterVersion": "1.0.1",
+        "datasetVersion": "v1:c39d995f09d34402083c974b",
+        "analysisId": "analysis:ef6067d4feb472951943b1c5",
+        "recordId": "rec:d2:FY2025:688759",
+        "recordIndex": 2755,
+        "columnIndex": 4,
+        "rawValue": "",
+        "sha256": "c519acb415f858731e5cda99f578b536acb5eb0b59d57963d871ed23223b43a6",
+        "exclusionReason": "missing_value",
+        "nullRetained": true
+      }
+    },
+    {
+      "id": "unchanged-D1-D3-real-evidence-still-matches",
+      "status": "passed",
+      "detail": {
+        "unchangedAnalysisIds": [
+          "analysis:1451942c632df69e0a3a2cb3",
+          "analysis:9a2aa732d7d724e7fc2e7fab"
+        ],
+        "newCalls": 0
+      }
+    },
+    {
+      "id": "new-D2-version-real-AI",
+      "status": "passed",
+      "detail": {
+        "analysisId": "analysis:ef6067d4feb472951943b1c5",
+        "requestId": "a17746ea-af40-41a7-83db-1878cf996165",
+        "model": "deepseek-flash",
+        "generatedAt": "2026-10-25T08:17:45.022Z",
+        "insights": 4
+      }
+    },
+    {
+      "id": "final-three-domain-clear-restore-and-tamper-rejection",
+      "status": "passed",
+      "detail": {
+        "jsonBytes": 31484635,
+        "datasets": 3,
+        "analysisIds": [
+          "analysis:1451942c632df69e0a3a2cb3",
+          "analysis:ef6067d4feb472951943b1c5",
+          "analysis:9a2aa732d7d724e7fc2e7fab"
+        ],
+        "historicalAiCount": 11,
+        "selectedFinding": "finding:insight:531258c12fef08d5a48a1af8",
+        "modelCallsThisRun": 1,
+        "modelRequestsDuringRestore": 0,
+        "tamperedCacheRejected": true,
+        "stableIdsAndRawBytes": true
+      }
+    }
+  ],
+  "liveAi": [
+    {
+      "domain": "D1",
+      "requestId": "46663a86-0595-44fe-a92a-b577a5a6f496",
+      "analysisId": "analysis:1451942c632df69e0a3a2cb3",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-10-25T08:05:56.256Z",
+      "status": 200,
+      "resultRefs": [
+        [
+          "analysis:1451942c632df69e0a3a2cb3:mean:income_all",
+          "analysis:1451942c632df69e0a3a2cb3:median:income_all",
+          "analysis:1451942c632df69e0a3a2cb3:low:income_all",
+          "analysis:1451942c632df69e0a3a2cb3:high:income_all"
+        ],
+        [
+          "analysis:1451942c632df69e0a3a2cb3:mean:expend_all",
+          "analysis:1451942c632df69e0a3a2cb3:median:expend_all",
+          "analysis:1451942c632df69e0a3a2cb3:q1:expend_all",
+          "analysis:1451942c632df69e0a3a2cb3:q3:expend_all"
+        ],
+        [
+          "analysis:1451942c632df69e0a3a2cb3:pearson:income_all+expend_all"
+        ]
+      ],
+      "insights": [
+        {
+          "insightId": "insight:08e904611632b5f99c2d4b92",
+          "analysisId": "analysis:1451942c632df69e0a3a2cb3",
+          "kind": "interpretation",
+          "origin": "live_ai",
+          "textTemplate": "本期人均可支配收入（全体居民）的均值为 {{result:analysis:1451942c632df69e0a3a2cb3:mean:income_all}}，中位数为 {{result:analysis:1451942c632df69e0a3a2cb3:median:income_all}}；箱线图须端下限与上限分别为 {{result:analysis:1451942c632df69e0a3a2cb3:low:income_all}} 与 {{result:analysis:1451942c632df69e0a3a2cb3:high:income_all}}。均值高于中位数，提示样本收入分布可能存在右偏。",
+          "resultRefs": [
+            "analysis:1451942c632df69e0a3a2cb3:mean:income_all",
+            "analysis:1451942c632df69e0a3a2cb3:median:income_all",
+            "analysis:1451942c632df69e0a3a2cb3:low:income_all",
+            "analysis:1451942c632df69e0a3a2cb3:high:income_all"
+          ],
+          "generatedAt": "2026-10-25T08:05:56.256Z",
+          "model": "deepseek-flash",
+          "status": "valid"
+        },
+        {
+          "insightId": "insight:44b7686d845208ce9a29589b",
+          "analysisId": "analysis:1451942c632df69e0a3a2cb3",
+          "kind": "interpretation",
+          "origin": "live_ai",
+          "textTemplate": "本期人均消费支出（全体居民）的均值为 {{result:analysis:1451942c632df69e0a3a2cb3:mean:expend_all}}，中位数为 {{result:analysis:1451942c632df69e0a3a2cb3:median:expend_all}}；四分位区间从 {{result:analysis:1451942c632df69e0a3a2cb3:q1:expend_all}} 到 {{result:analysis:1451942c632df69e0a3a2cb3:q3:expend_all}}。",
+          "resultRefs": [
+            "analysis:1451942c632df69e0a3a2cb3:mean:expend_all",
+            "analysis:1451942c632df69e0a3a2cb3:median:expend_all",
+            "analysis:1451942c632df69e0a3a2cb3:q1:expend_all",
+            "analysis:1451942c632df69e0a3a2cb3:q3:expend_all"
+          ],
+          "generatedAt": "2026-10-25T08:05:56.256Z",
+          "model": "deepseek-flash",
+          "status": "valid"
+        },
+        {
+          "insightId": "insight:665cf09200b4a47b48adbafd",
+          "analysisId": "analysis:1451942c632df69e0a3a2cb3",
+          "kind": "interpretation",
+          "origin": "live_ai",
+          "textTemplate": "收入与支出的 Pearson 相关系数为 {{result:analysis:1451942c632df69e0a3a2cb3:pearson:income_all+expend_all}}，样本内呈强正相关；相关不等于因果，且省级简单均值不等同于全国人口加权均值。",
+          "resultRefs": [
+            "analysis:1451942c632df69e0a3a2cb3:pearson:income_all+expend_all"
+          ],
+          "generatedAt": "2026-10-25T08:05:56.256Z",
+          "model": "deepseek-flash",
+          "status": "valid"
+        }
+      ]
+    },
+    {
+      "domain": "D3",
+      "requestId": "0c7cf91e-b1f3-4c16-9d01-192d3b56add6",
+      "analysisId": "analysis:9a2aa732d7d724e7fc2e7fab",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-10-25T08:07:05.354Z",
+      "status": 200,
+      "resultRefs": [
+        [
+          "analysis:9a2aa732d7d724e7fc2e7fab:mean:month_sales",
+          "analysis:9a2aa732d7d724e7fc2e7fab:median:month_sales"
+        ],
+        [
+          "analysis:9a2aa732d7d724e7fc2e7fab:q1:month_sales",
+          "analysis:9a2aa732d7d724e7fc2e7fab:q3:month_sales",
+          "analysis:9a2aa732d7d724e7fc2e7fab:low:month_sales",
+          "analysis:9a2aa732d7d724e7fc2e7fab:high:month_sales"
+        ],
+        [
+          "analysis:9a2aa732d7d724e7fc2e7fab:mean:yoy",
+          "analysis:9a2aa732d7d724e7fc2e7fab:median:yoy",
+          "analysis:9a2aa732d7d724e7fc2e7fab:stddev:yoy"
+        ],
+        [
+          "analysis:9a2aa732d7d724e7fc2e7fab:pearson:month_sales+yoy"
+        ]
+      ],
+      "insights": [
+        {
+          "insightId": "insight:bf16f58691f68b80cd2a0433",
+          "analysisId": "analysis:9a2aa732d7d724e7fc2e7fab",
+          "kind": "interpretation",
+          "origin": "live_ai",
+          "textTemplate": "榜单样本的当月销量均值为 {{result:analysis:9a2aa732d7d724e7fc2e7fab:mean:month_sales}} 辆，中位数为 {{result:analysis:9a2aa732d7d724e7fc2e7fab:median:month_sales}} 辆；均值明显高于中位数，分布呈右偏特征。",
+          "resultRefs": [
+            "analysis:9a2aa732d7d724e7fc2e7fab:mean:month_sales",
+            "analysis:9a2aa732d7d724e7fc2e7fab:median:month_sales"
+          ],
+          "generatedAt": "2026-10-25T08:07:05.354Z",
+          "model": "deepseek-flash",
+          "status": "valid"
+        },
+        {
+          "insightId": "insight:0bbaf627ee24b700a6f43f9a",
+          "analysisId": "analysis:9a2aa732d7d724e7fc2e7fab",
+          "kind": "interpretation",
+          "origin": "live_ai",
+          "textTemplate": "当月销量的下四分位为 {{result:analysis:9a2aa732d7d724e7fc2e7fab:q1:month_sales}} 辆、上四分位为 {{result:analysis:9a2aa732d7d724e7fc2e7fab:q3:month_sales}} 辆，须端范围为 {{result:analysis:9a2aa732d7d724e7fc2e7fab:low:month_sales}} 至 {{result:analysis:9a2aa732d7d724e7fc2e7fab:high:month_sales}} 辆，显示样本内销量跨度较大。",
+          "resultRefs": [
+            "analysis:9a2aa732d7d724e7fc2e7fab:q1:month_sales",
+            "analysis:9a2aa732d7d724e7fc2e7fab:q3:month_sales",
+            "analysis:9a2aa732d7d724e7fc2e7fab:low:month_sales",
+            "analysis:9a2aa732d7d724e7fc2e7fab:high:month_sales"
+          ],
+          "generatedAt": "2026-10-25T08:07:05.354Z",
+          "model": "deepseek-flash",
+          "status": "valid"
+        },
+        {
+          "insightId": "insight:659f3eab79848c3dce502238",
+          "analysisId": "analysis:9a2aa732d7d724e7fc2e7fab",
+          "kind": "interpretation",
+          "origin": "live_ai",
+          "textTemplate": "同比均值为 {{result:analysis:9a2aa732d7d724e7fc2e7fab:mean:yoy}}%，中位数为 {{result:analysis:9a2aa732d7d724e7fc2e7fab:median:yoy}}%，标准差为 {{result:analysis:9a2aa732d7d724e7fc2e7fab:stddev:yoy}}%；均值与中位数差异较大，说明同比分布离散、受极端值影响明显，中位数为负提示样本中过半厂商同比下降。",
+          "resultRefs": [
+            "analysis:9a2aa732d7d724e7fc2e7fab:mean:yoy",
+            "analysis:9a2aa732d7d724e7fc2e7fab:median:yoy",
+            "analysis:9a2aa732d7d724e7fc2e7fab:stddev:yoy"
+          ],
+          "generatedAt": "2026-10-25T08:07:05.354Z",
+          "model": "deepseek-flash",
+          "status": "valid"
+        },
+        {
+          "insightId": "insight:2f58f18e25422602c59d1534",
+          "analysisId": "analysis:9a2aa732d7d724e7fc2e7fab",
+          "kind": "interpretation",
+          "origin": "live_ai",
+          "textTemplate": "当月销量与同比的皮尔逊相关系数为 {{result:analysis:9a2aa732d7d724e7fc2e7fab:pearson:month_sales+yoy}}，在榜单样本中线性相关很弱，不能据此推断因果关系；且榜单样本不代表全市场。",
+          "resultRefs": [
+            "analysis:9a2aa732d7d724e7fc2e7fab:pearson:month_sales+yoy"
+          ],
+          "generatedAt": "2026-10-25T08:07:05.354Z",
+          "model": "deepseek-flash",
+          "status": "valid"
+        }
+      ]
+    },
+    {
+      "domain": "D2",
+      "analysisId": "analysis:ef6067d4feb472951943b1c5",
+      "requestId": "a17746ea-af40-41a7-83db-1878cf996165",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-10-25T08:17:45.022Z",
+      "insights": [
+        {
+          "insightId": "insight:531258c12fef08d5a48a1af8",
+          "analysisId": "analysis:ef6067d4feb472951943b1c5",
+          "kind": "interpretation",
+          "origin": "live_ai",
+          "textTemplate": "所选企业样本的营业总收入均值为 {{result:analysis:ef6067d4feb472951943b1c5:mean:revenue}}，高于中位数 {{result:analysis:ef6067d4feb472951943b1c5:median:revenue}}，标准差为 {{result:analysis:ef6067d4feb472951943b1c5:stddev:revenue}}，呈现右偏与个体规模差异较大的特征。",
+          "resultRefs": [
+            "analysis:ef6067d4feb472951943b1c5:mean:revenue",
+            "analysis:ef6067d4feb472951943b1c5:median:revenue",
+            "analysis:ef6067d4feb472951943b1c5:stddev:revenue"
+          ],
+          "generatedAt": "2026-10-25T08:17:45.022Z",
+          "model": "deepseek-flash",
+          "status": "valid"
+        },
+        {
+          "insightId": "insight:cbe14e69794c5d438a0743cc",
+          "analysisId": "analysis:ef6067d4feb472951943b1c5",
+          "kind": "interpretation",
+          "origin": "live_ai",
+          "textTemplate": "营业总收入下四分位为 {{result:analysis:ef6067d4feb472951943b1c5:q1:revenue}}，上四分位为 {{result:analysis:ef6067d4feb472951943b1c5:q3:revenue}}，须部观测范围自 {{result:analysis:ef6067d4feb472951943b1c5:low:revenue}} 至 {{result:analysis:ef6067d4feb472951943b1c5:high:revenue}}。",
+          "resultRefs": [
+            "analysis:ef6067d4feb472951943b1c5:q1:revenue",
+            "analysis:ef6067d4feb472951943b1c5:q3:revenue",
+            "analysis:ef6067d4feb472951943b1c5:low:revenue",
+            "analysis:ef6067d4feb472951943b1c5:high:revenue"
+          ],
+          "generatedAt": "2026-10-25T08:17:45.022Z",
+          "model": "deepseek-flash",
+          "status": "valid"
+        },
+        {
+          "insightId": "insight:24c5de7e8e937097c0664b97",
+          "analysisId": "analysis:ef6067d4feb472951943b1c5",
+          "kind": "interpretation",
+          "origin": "live_ai",
+          "textTemplate": "净利润均值为 {{result:analysis:ef6067d4feb472951943b1c5:mean:net_profit}}，中位数为 {{result:analysis:ef6067d4feb472951943b1c5:median:net_profit}}，下四分位 {{result:analysis:ef6067d4feb472951943b1c5:q1:net_profit}} 为负，须部下限 {{result:analysis:ef6067d4feb472951943b1c5:low:net_profit}} 亦为负，表明所选样本中包含亏损企业且亏损被保留。",
+          "resultRefs": [
+            "analysis:ef6067d4feb472951943b1c5:mean:net_profit",
+            "analysis:ef6067d4feb472951943b1c5:median:net_profit",
+            "analysis:ef6067d4feb472951943b1c5:q1:net_profit",
+            "analysis:ef6067d4feb472951943b1c5:low:net_profit"
+          ],
+          "generatedAt": "2026-10-25T08:17:45.022Z",
+          "model": "deepseek-flash",
+          "status": "valid"
+        },
+        {
+          "insightId": "insight:5c57efc4caf65e3040d5bb7e",
+          "analysisId": "analysis:ef6067d4feb472951943b1c5",
+          "kind": "interpretation",
+          "origin": "live_ai",
+          "textTemplate": "营业总收入与净利润的皮尔逊相关系数为 {{result:analysis:ef6067d4feb472951943b1c5:pearson:revenue+net_profit}}，呈中等正相关；该结果为相关关系，不代表因果。",
+          "resultRefs": [
+            "analysis:ef6067d4feb472951943b1c5:pearson:revenue+net_profit"
+          ],
+          "generatedAt": "2026-10-25T08:17:45.022Z",
+          "model": "deepseek-flash",
+          "status": "valid"
+        }
+      ]
+    }
+  ],
+  "priorEvidence": "2026-10-25_product-integrated-33c3438-D3-retry.json",
+  "summary": {
+    "passed": 4,
+    "failed": 0
+  }
+}
