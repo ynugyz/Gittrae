@@ -12,7 +12,7 @@ import {
   toFiniteNumber,
 } from './statistics.mjs';
 
-export const METHODS_VERSION = 'analysis-methods-v1';
+export const METHODS_VERSION = 'analysis-methods-v2';
 
 export class AnalysisError extends Error {
   constructor(code, message) {
@@ -56,7 +56,7 @@ function normalizeFilters(filters) {
   return filters.map((filter) => ({
     fieldId: String(filter.fieldId),
     operator: filter.operator,
-    // 保留请求原值，身份计算时再统一成字符串，避免快照被悄悄改写。
+    // 保留Scalar类型；null、数字与同名文本是不同筛选值。
     values: Array.isArray(filter.values) ? [...filter.values] : [],
   }));
 }
@@ -146,9 +146,7 @@ function applyFilters(records, filters) {
   if (filters.length === 0) return records;
   return records.filter((record) =>
     filters.every((filter) => {
-      const raw = record.values?.[filter.fieldId];
-      const text = raw === null || raw === undefined ? '' : String(raw);
-      return filter.values.some((value) => String(value) === text);
+      return filter.values.includes(record.values?.[filter.fieldId]);
     }),
   );
 }
@@ -210,7 +208,7 @@ export function analyze(bundle, request) {
     measureFieldIds: [...normalized.measureFieldIds].sort(),
     correlationPair: normalized.correlationPair,
     filters: normalized.filters
-      .map((filter) => ({ ...filter, values: filter.values.map(String) }))
+      .map((filter) => ({ ...filter, values: [...filter.values] }))
       .sort((a, b) => stableStringify(a).localeCompare(stableStringify(b))),
   };
   const analysisId = `analysis:${shortHash(stableStringify(identity))}`;

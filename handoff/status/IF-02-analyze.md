@@ -1,10 +1,35 @@
 # IF-02 · analyze：确定性统计与三图数据
 
-## 接收方最新核对【人员2、总控必读】
+## 16:02修复更新
 
-人员3，2026-10-25 15:58：已在 dev/app `d88c32a` 集成数据 `1ba946d` 与服务 `042ca2c`；50项测试及构建通过，D1页面2024年31/155记录统计和真实AI通过。以下作者旧报告保留为历史。
+- 最新产品commit `90c3ae011d889ee1e27314c0891e5403a0e16d74`（含`b7f7f8a`），已推送并更新本机8787。23/23自测通过。
+- 修复真实阻断：按Scalar原类型筛选，null不再变成空字符串；数字与数字文本不混选。分析身份同样保留类型，方法版本升为`analysis-methods-v2`，避免复用旧筛选语义的ID；已保存的旧分析无需重算。
+- 当前8787真实财务HTTP复验：FY2025 + industry=null选中1条 `rec:d2:FY2025:001235`，HTTP200，`analysis:aa5b36d39126a6489e350f57`，Pearson为null（单样本）。问题提示的fieldId均为真实字段，可通过项目引用检查。
+- 人员3需接收本修复并复验“缺失/未分类”筛选；前面三域数值证据保持原受测版本，不改写成新版本成绩。
 
-待人员2修复：`analyze.mjs` 的 applyFilters 将原值 null 转空字符串、筛选 null 转字符串 null，选“缺失/未分类”会得到0行并被项目校验拒绝；应与公共Scalar严格 includes 一致，身份计算也须保留过滤值类型。普通默认范围已通过，不能把该边界记为通过。重复分析事实时间冲突已由人员3在 `c1eda91` 修复。
+## 收尾当前状态（人员2，2026-10-25 15:55 北京时间）
+
+- 实现commit：`042ca2c5a80836f2a79f58271c7a40d5051ed04c`，已推送dev/analysis-ai；在原负责人`ffd11a7`之后正常快进，保留既有改动。
+- 已交付：同一8787服务新增`POST /api/analyze`，固定`{bundle,request} → {analysis,facts}`，facts为`{insights,graph}`。只需要分析投影；16MB上限，AI仍1MB；无需模型密钥即可统计。
+- 规范输出：scope.recordIds/label、字符串ref、复用基础indicator节点ID；旧reason/methodVersion移入parameters，删除额外validCount。箱线low/high记录全部有效输入和真实缺失排除；相关问题绑定真实fieldId。
+- 实测passed：`node --test src/analysis/analysis.test.ts` 22/22；FY2025完整原文件SHA `c519acb415f858731e5cda99f578b536acb5eb0b59d57963d871ed23223b43a6` 经人员1既有导入器形成5228条规范记录，分析投影2193590字节返回HTTP200；营收/成对样本均5227。16MB分析和1MB AI超限均HTTP413；错误数据版本HTTP400。
+- 未完成：三域页面验收、最终集成提交及独立审计。下一步人员3一次await接入上述路由；人员2继续三域HTTP及真实AI验证。
+
+### 三域路由与独立复算（15:57，本机服务代码042ca2c）
+
+使用人员1既有导入器2781eca读取真实CSV，再发送必要投影；本项只证明统计/HTTP，不冒充最新人员1入口或页面/图合并验收。
+
+| 域与范围 | analysisId | 范围数/成对有效数 | HTTP与事实 | 独立原始CSV复算 |
+|---|---|---|---|---|
+| D1全体居民2024年 | `analysis:0290520c386a4c363d733754` | 31/31 | 200，7条事实 | 两指标均值/样本标准差、Pearson通过 |
+| D2 FY2025沪深前缀子集 | `analysis:595d245235bc5c9698fcafed` | 5228/5227 | 200，7条事实 | 营收/净利润均值/样本标准差、Pearson通过 |
+| D3车企2026-08 Top50 | `analysis:33613dcdc8be7c86901ced45` | 50/50 | 200，7条事实 | 单月/年内累计均值/样本标准差、Pearson通过 |
+
+独立工具为Python标准库csv/statistics，直接读取原始字节对应文件；比较容差`max(1e-6,abs(reference)*1e-9)`。三域频数等于逐箱recordIds数量，结果valid/excluded互斥且完整覆盖scope；事实引用均存在于当前analysis。
+
+输入SHA：D1收入`9b19c0e867b282d4b47d3e72ae05441872f9cb0cd7eb79a15b0da16ccbb71a78`、消费`3a55ba5fd6327ad0ddbf1ec19e3c0f40c1d823e26830331ee0a8cb24f137a0c0`；D2见上；D3`c46f0b18fe99e619c8b0545a030b4cb0a22d36afc5d67a87ca378f81fec64262`。
+
+以下保留较早交付记录；如与本段冲突，以本段已绑定commit的状态为准。
 
 ## 身份与依赖
 

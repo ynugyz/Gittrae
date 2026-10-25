@@ -229,6 +229,23 @@ test('筛选会改变分析编号与范围', () => {
   assert.equal(resultOf(filtered, 'mean', ['x']).value, 1.5);
 });
 
+test('缺失筛选命中null，并与空字符串和同名数字文本严格区分', () => {
+  const bundle = makeBundle([
+    { recordId: 'missing', values: { region: null, x: 1 } },
+    { recordId: 'empty', values: { region: '', x: 2 } },
+    { recordId: 'number', values: { region: 2024, x: 3 } },
+    { recordId: 'text', values: { region: '2024', x: 4 } },
+    { recordId: 'null-text', values: { region: 'null', x: 5 } },
+  ]);
+  const select = value => analyze(bundle, request({ filters: [{ fieldId: 'region', operator: 'eq', values: [value] }] }));
+  assert.deepEqual(select(null).scope.recordIds, ['missing']);
+  assert.deepEqual(select('').scope.recordIds, ['empty']);
+  assert.deepEqual(select(2024).scope.recordIds, ['number']);
+  assert.deepEqual(select('2024').scope.recordIds, ['text']);
+  assert.notEqual(select(null).analysisId, select('null').analysisId);
+  assert.notEqual(select(2024).analysisId, select('2024').analysisId);
+});
+
 test('分析编号绑定方法版本，并复用人员1 的数据集节点 ID', () => {
   const bundle = makeBundle(basicRecords(), {
     bundle: {
@@ -241,7 +258,7 @@ test('分析编号绑定方法版本，并复用人员1 的数据集节点 ID', 
     },
   });
   const analysis = analyze(bundle, request());
-  assert.equal(analysis.results[0].parameters.methodVersion, 'analysis-methods-v1');
+  assert.equal(analysis.results[0].parameters.methodVersion, 'analysis-methods-v2');
   assert.equal('methodVersion' in analysis, false);
   const selects = analysis.graph.edges.find((edge) => edge.type === 'selects');
   assert.equal(selects.to, 'dataset:custom-node');
