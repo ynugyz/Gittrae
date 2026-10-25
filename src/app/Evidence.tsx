@@ -138,7 +138,7 @@ export default function Evidence({
                   ))
                 ) : (
                   <p className="muted">
-                    此值无直接原始单元格，请检查下方转换记录。
+                    该字段未提供直接来源映射；如有转换记录，请在下方核对。
                   </p>
                 )}
               </div>

@@ -223,6 +223,31 @@ test("解释拒绝跨分析、未知结果、缺失占位和无模型的实时�
     );
 });
 
+test("实时解释即使引用有效也拒绝直接混入未绑定数字", () => {
+  const project = projectFixture();
+  const ai: Insight = {
+    ...project.insights[0],
+    origin: "live_ai",
+    kind: "interpretation",
+    model: "test-only",
+  };
+  assert.doesNotThrow(() => validateInsight(ai, project.analyses[0]));
+  for (const suffix of [
+    "均值999999。",
+    "均值９９９９９９。",
+    "31省。",
+    "按1.5倍阈值。",
+  ])
+    assert.throws(
+      () =>
+        validateInsight(
+          { ...ai, textTemplate: ai.textTemplate + suffix },
+          project.analyses[0],
+        ),
+      /未绑定/,
+    );
+});
+
 test("发现图可以从项目重建，编号和邻接查询稳定，当前视图不混入历史", () => {
   const project = projectFixture();
   const graph = rebuildGraph(project);

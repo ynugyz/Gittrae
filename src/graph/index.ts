@@ -168,6 +168,13 @@ export function validateInsight(
     )
   )
     fail("解释包含无法识别的数字占位符。");
+  if (
+    insight.origin === "live_ai" &&
+    /[0-9０-９]/u.test(
+      insight.textTemplate.replace(/\{\{result:([^{}]+)\}\}/g, ""),
+    )
+  )
+    fail("AI解读含未绑定结果引用的数字；样本量与方法参数请使用页面已有说明。");
 }
 
 export function buildInsightGraph(
