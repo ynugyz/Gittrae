@@ -1,6 +1,6 @@
 # 人员2 本机模型代理
 
-真实 DeepSeek 官方 API 代理，只绑定 `127.0.0.1`。密钥仅从环境变量读取，不写入仓库、日志或响应。
+真实 DeepSeek 官方 API 代理，只绑定 `127.0.0.1`。密钥仅从环境变量读取，不写入仓库、日志或响应。需要 Node 18+（本机内置 Node 24 可直接运行）。
 
 ## 启动
 
@@ -18,12 +18,12 @@ node server/index.mjs
 - 成功 `{ analysisId, requestId, insights, graph, model, generatedAt }`。
 - 失败 `{ analysisId, error: { code, message, retryable } }`，HTTP 状态对应 400/502/503/504。
 
-失败码：`missing_api_key`、`timeout`、`network_error`、`upstream_http_<status>`、`empty_content`、`invalid_json`、`invalid_payload`。官方 JSON Output 说明提示可能返回空 content，这里会自动重试一次，仍为空则报错，不伪造成成功。
+失败码：`missing_api_key`、`timeout`、`network_error`、`upstream_http_<status>`、`empty_content`、`empty_insights`、`invalid_json`、`invalid_payload`。官方 JSON Output 说明提示可能返回空 content，这里会自动重试一次，仍为空则报错，不伪造成成功；模型偶尔包裹 Markdown 代码围栏时会先剥离再解析。
 
 ## 调用约定
 
-- 界面只接受当前 `analysisId` 的返回；旧响应由人员3按分析编号丢弃或存为历史，不得覆盖当前分析。
-- 超时 60 秒，不自动无限重试；用户可手动重试。
+- 界面只接受当前 `analysisId` 的返回；旧响应由人员3按分析编号丢弃或存为历史，不得覆盖当前分析。分析编号绑定 `methodVersion`，方法口径变化会生成新编号。
+- 超时 60 秒，不自动无限重试；用户可手动重试。请求取消由界面中止 fetch，代理不保存“取消”状态。
 - 每条 Insight 的 `resultRefs` 必须属于当前 `facts`；不存在的引用标记为 `status: "invalid"`，不得展示为有效结论。
 - `generatedAt` 为实际生成时间；历史恢复不自动重发请求。
 

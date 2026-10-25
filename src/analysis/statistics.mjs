@@ -21,16 +21,21 @@ export function mean(values) {
   return sum / values.length;
 }
 
-/** type7 线性插值分位；无有效值返回 null。 */
-export function quantileType7(values, p) {
-  if (!values.length) return null;
+/** 对已排序数值求 type7 线性插值分位；供批量计算复用同一份排序结果。 */
+export function quantileSortedType7(sorted, p) {
+  if (!sorted.length) return null;
   if (!(p >= 0 && p <= 1)) throw new RangeError('分位概率必须在 [0,1] 内');
-  const sorted = [...values].sort((a, b) => a - b);
   const h = (sorted.length - 1) * p;
   const lower = Math.floor(h);
   const upper = Math.ceil(h);
   if (lower === upper) return sorted[lower];
   return sorted[lower] + (h - lower) * (sorted[upper] - sorted[lower]);
+}
+
+/** type7 线性插值分位；无有效值返回 null。 */
+export function quantileType7(values, p) {
+  if (!values.length) return null;
+  return quantileSortedType7([...values].sort((a, b) => a - b), p);
 }
 
 /** 中位数，等价于 type7 的 0.5 分位。 */
@@ -84,8 +89,12 @@ export function pearson(xs, ys) {
  */
 export function histogram(values) {
   if (!values.length) return { edges: [], counts: [], bins: [] };
-  const min = Math.min(...values);
-  const max = Math.max(...values);
+  let min = values[0];
+  let max = values[0];
+  for (const value of values) {
+    if (value < min) min = value;
+    if (value > max) max = value;
+  }
   const low = min === max ? min - 0.5 : min;
   const high = min === max ? max + 0.5 : max;
   const width = (high - low) / 10;
@@ -114,19 +123,24 @@ export function boxplot(values) {
   if (!values.length) {
     return { q1: null, median: null, q3: null, iqr: null, lowerFence: null, upperFence: null, low: null, high: null, outliers: [] };
   }
-  const q1 = quantileType7(values, 0.25);
-  const q3 = quantileType7(values, 0.75);
-  const mid = quantileType7(values, 0.5);
+  // 排序一次并保留原始索引，避免分位数与须线各排一次。
+  const sorted = values
+    .map((value, index) => ({ value, index }))
+    .sort((a, b) => a.value - b.value || a.index - b.index);
+  const numbers = sorted.map((entry) => entry.value);
+  const q1 = quantileSortedType7(numbers, 0.25);
+  const q3 = quantileSortedType7(numbers, 0.75);
+  const mid = quantileSortedType7(numbers, 0.5);
   const iqr = q3 - q1;
   const lowerFence = q1 - 1.5 * iqr;
   const upperFence = q3 + 1.5 * iqr;
   let low = null;
   let high = null;
   const outliers = [];
-  for (let index = 0; index < values.length; index += 1) {
-    const value = values[index];
+  for (const entry of sorted) {
+    const value = entry.value;
     if (value < lowerFence || value > upperFence) {
-      outliers.push({ index, value });
+      outliers.push({ index: entry.index, value });
       continue;
     }
     if (low === null || value < low) low = value;

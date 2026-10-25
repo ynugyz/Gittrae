@@ -6,12 +6,13 @@ import {
   boxplot,
   histogram,
   mean,
-  median,
   pearson,
-  quantileType7,
+  quantileSortedType7,
   sampleStdDev,
   toFiniteNumber,
 } from './statistics.mjs';
+
+export const METHODS_VERSION = 'analysis-methods-v1';
 
 export class AnalysisError extends Error {
   constructor(code, message) {
@@ -53,7 +54,8 @@ function normalizeFilters(filters) {
   return filters.map((filter) => ({
     fieldId: String(filter.fieldId),
     operator: filter.operator,
-    values: (filter.values ?? []).map((value) => String(value)),
+    // 保留请求原值，身份计算时再统一成字符串，避免快照被悄悄改写。
+    values: Array.isArray(filter.values) ? [...filter.values] : [],
   }));
 }
 
@@ -65,6 +67,16 @@ function assertBundle(bundle) {
   }
   if (!Array.isArray(bundle.fields) || !Array.isArray(bundle.records)) {
     throw new AnalysisError('invalid_bundle', 'DatasetBundle 缺少 fields 或 records');
+  }
+  const recordIds = new Set();
+  for (const record of bundle.records) {
+    if (!record || typeof record.recordId !== 'string' || record.recordId === '') {
+      throw new AnalysisError('invalid_record', '记录缺少 recordId');
+    }
+    if (recordIds.has(record.recordId)) {
+      throw new AnalysisError('duplicate_record_id', `记录 ID 重复：${record.recordId}`);
+    }
+    recordIds.add(record.recordId);
   }
 }
 
@@ -134,7 +146,7 @@ function applyFilters(records, filters) {
     filters.every((filter) => {
       const raw = record.values?.[filter.fieldId];
       const text = raw === null || raw === undefined ? '' : String(raw);
-      return filter.values.includes(text);
+      return filter.values.some((value) => String(value) === text);
     }),
   );
 }
@@ -196,34 +208,37 @@ export function analyze(bundle, request) {
 
   const identity = {
     schemaVersion: 1,
+    methodVersion: METHODS_VERSION,
     datasetId: bundle.datasetId,
     datasetVersion: bundle.datasetVersion,
     measureFieldIds: [...normalized.measureFieldIds].sort(),
     correlationPair: normalized.correlationPair,
-    filters: [...normalized.filters].sort((a, b) => stableStringify(a).localeCompare(stableStringify(b))),
+    filters: normalized.filters
+      .map((filter) => ({ ...filter, values: filter.values.map(String) }))
+      .sort((a, b) => stableStringify(a).localeCompare(stableStringify(b))),
   };
   const analysisId = `analysis:${shortHash(stableStringify(identity))}`;
-  const scopeId = `scope:${shortHash(stableStringify({ identity, records: selectedRecords.map((record) => record.recordId) }))}`;
+  // 范围编号绑定分析身份与筛选快照，不依赖记录顺序。
+  const scopeId = `scope:${shortHash(stableStringify({ analysisId, filters: identity.filters }))}`;
 
   const results = [];
   const issues = [];
   const histograms = [];
   const boxplots = [];
-  const measureIndex = new Map();
 
   for (const fieldId of normalized.measureFieldIds) {
     const field = resolveMeasure(fieldId, fields);
     const summary = summarizeField(selectedRecords, fieldId);
     const values = summary.valid.map((entry) => entry.value);
+    const sortedValues = [...values].sort((a, b) => a - b);
     const validIds = summary.valid.map((entry) => entry.recordId);
     const excludedIds = summary.excluded;
-    measureIndex.set(fieldId, { field, summary, values });
 
     const meanValue = mean(values);
-    const medianValue = median(values);
+    const medianValue = quantileSortedType7(sortedValues, 0.5);
     const stdValue = sampleStdDev(values);
-    const q1Value = quantileType7(values, 0.25);
-    const q3Value = quantileType7(values, 0.75);
+    const q1Value = quantileSortedType7(sortedValues, 0.25);
+    const q3Value = quantileSortedType7(sortedValues, 0.75);
     const box = boxplot(values);
     const boxLow = box.low;
     const boxHigh = box.high;
@@ -355,9 +370,20 @@ export function analyze(bundle, request) {
     labels: {
       domain: bundle.domain ?? 'generic',
       measureFieldIds: normalized.measureFieldIds,
+      measureFields: normalized.measureFieldIds.map((fieldId) => ({
+        fieldId,
+        label: fields.get(fieldId)?.label ?? fieldId,
+        unit: fields.get(fieldId)?.unit ?? '',
+      })),
       correlationPair: normalized.correlationPair,
+      filters: normalized.filters.map((filter) => ({
+        fieldId: filter.fieldId,
+        label: fields.get(filter.fieldId)?.label ?? filter.fieldId,
+        operator: filter.operator,
+        values: filter.values,
+      })),
       filterText: normalized.filters
-        .map((filter) => `${fields.get(filter.fieldId)?.label ?? filter.fieldId}∈[${filter.values.join(',')}]`)
+        .map((filter) => `${fields.get(filter.fieldId)?.label ?? filter.fieldId}∈[${filter.values.map(String).join(',')}]`)
         .join(' 且 '),
     },
     limitations: DOMAIN_LIMITATIONS[bundle.domain] ?? DOMAIN_LIMITATIONS.generic,
@@ -368,6 +394,7 @@ export function analyze(bundle, request) {
   return {
     schemaVersion: 1,
     analysisId,
+    methodVersion: METHODS_VERSION,
     datasetId: bundle.datasetId,
     datasetVersion: bundle.datasetVersion,
     request: {
@@ -388,6 +415,11 @@ export function analyze(bundle, request) {
 function buildGraph({ bundle, scope, results, fields, normalized }) {
   const nodes = [];
   const edges = [];
+  // 数据集节点由人员1 提供；优先使用其实际节点 ID，找不到时退回约定 ID。
+  const datasetNode = Array.isArray(bundle.graph?.nodes)
+    ? bundle.graph.nodes.find((node) => node?.type === 'dataset')
+    : null;
+  const datasetNodeId = datasetNode?.id ?? `dataset:${bundle.datasetId}`;
   const indicatorIds = new Set(normalized.measureFieldIds);
   if (normalized.correlationPair) for (const fieldId of normalized.correlationPair) indicatorIds.add(fieldId);
   for (const fieldId of indicatorIds) {
@@ -403,7 +435,7 @@ function buildGraph({ bundle, scope, results, fields, normalized }) {
   edges.push({
     id: `selects:${scope.scopeId}`,
     from: scope.scopeId,
-    to: `dataset:${bundle.datasetId}`,
+    to: datasetNodeId,
     type: 'selects',
   });
   for (const result of results) {

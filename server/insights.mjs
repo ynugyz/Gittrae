@@ -81,14 +81,22 @@ function normalizeFacts(facts) {
 }
 
 function parseModelContent(content) {
+  // 少数情况下模型会包一层 Markdown 代码围栏；先剥离再解析，仍失败则按真实错误返回。
+  let text = content.trim();
+  if (text.startsWith('```')) {
+    text = text.replace(/^```[a-zA-Z]*\s*/, '').replace(/\s*```$/, '').trim();
+  }
   let parsed;
   try {
-    parsed = JSON.parse(content);
+    parsed = JSON.parse(text);
   } catch {
     throw new ApiError('invalid_json', '模型返回内容不是合法 JSON', { retryable: true, statusCode: 502 });
   }
   if (!parsed || !Array.isArray(parsed.insights)) {
     throw new ApiError('invalid_payload', '模型 JSON 缺少 insights 数组', { retryable: true, statusCode: 502 });
+  }
+  if (parsed.insights.length === 0) {
+    throw new ApiError('empty_insights', '模型未返回任何解读', { retryable: true, statusCode: 502 });
   }
   return parsed.insights;
 }
@@ -223,6 +231,7 @@ export async function requestDeepSeekInsights(
         invalidCount: insights.filter((insight) => insight.status !== 'valid').length,
         durationMs: Date.now() - startedAt,
         emptyRetried: lastEmpty,
+        at: generatedAt,
       }),
     );
 
@@ -239,15 +248,19 @@ export async function requestDeepSeekInsights(
   throw new ApiError('empty_content', '模型返回空内容', { retryable: true, statusCode: 502 });
 }
 
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+};
+
 function sendJson(res, statusCode, body) {
   const text = JSON.stringify(body);
   res.writeHead(statusCode, {
     'Content-Type': 'application/json; charset=utf-8',
     'Content-Length': Buffer.byteLength(text),
     'Cache-Control': 'no-store',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+    ...CORS_HEADERS,
   });
   res.end(text);
 }
@@ -275,7 +288,8 @@ export function createInsightsServer({ env = process.env, fetchImpl = globalThis
 
   return http.createServer(async (req, res) => {
     if (req.method === 'OPTIONS') {
-      sendJson(res, 204, {});
+      res.writeHead(204, CORS_HEADERS);
+      res.end();
       return;
     }
     const url = new URL(req.url ?? '/', 'http://127.0.0.1');

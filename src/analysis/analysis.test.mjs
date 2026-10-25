@@ -193,6 +193,42 @@ test('筛选会改变分析编号与范围', () => {
   assert.equal(resultOf(filtered, 'mean', ['x']).value, 1.5);
 });
 
+test('分析编号绑定方法版本，并复用人员1 的数据集节点 ID', () => {
+  const bundle = makeBundle(basicRecords(), {
+    bundle: { graph: { schemaVersion: 1, owner: 'data', nodes: [{ id: 'dataset:custom-node', type: 'dataset', label: '自定义数据集' }], edges: [] } },
+  });
+  const analysis = analyze(bundle, request());
+  assert.equal(analysis.methodVersion, 'analysis-methods-v1');
+  const selects = analysis.graph.edges.find((edge) => edge.type === 'selects');
+  assert.equal(selects.to, 'dataset:custom-node');
+});
+
+test('箱线图异常点仍能映射回原始记录', () => {
+  const records = [
+    { recordId: 'a', values: { id: 'a', region: 'R1', x: 1, y: 1, constant: 5 } },
+    { recordId: 'b', values: { id: 'b', region: 'R1', x: 2, y: 1, constant: 5 } },
+    { recordId: 'c', values: { id: 'c', region: 'R1', x: 3, y: 1, constant: 5 } },
+    { recordId: 'd', values: { id: 'd', region: 'R1', x: 4, y: 1, constant: 5 } },
+    { recordId: 'e', values: { id: 'e', region: 'R1', x: 100, y: 1, constant: 5 } },
+  ];
+  const analysis = analyze(makeBundle(records), request());
+  const box = analysis.chartData.boxplots.find((item) => item.fieldId === 'x');
+  assert.deepEqual(box.outliers, [{ recordId: 'e', value: 100 }]);
+  assert.equal(resultOf(analysis, 'low', ['x']).value, 1);
+  assert.equal(resultOf(analysis, 'high', ['x']).value, 4);
+});
+
+test('重复记录 ID 被拒绝', () => {
+  const records = [
+    { recordId: 'dup', values: { id: 'dup', region: 'R1', x: 1, y: 1, constant: 5 } },
+    { recordId: 'dup', values: { id: 'dup', region: 'R2', x: 2, y: 2, constant: 5 } },
+  ];
+  assert.throws(
+    () => analyze(makeBundle(records), request()),
+    (error) => error instanceof AnalysisError && error.code === 'duplicate_record_id',
+  );
+});
+
 test('拒绝未知字段、版本不一致、排除字段与非数值度量', () => {
   const bundle = makeBundle(basicRecords());
   assert.throws(
@@ -219,6 +255,24 @@ test('拒绝未知字段、版本不一致、排除字段与非数值度量', ()
     () => analyze(textMeasure, request({ measureFieldIds: ['x'] })),
     (error) => error instanceof AnalysisError && error.code === 'non_numeric_measure',
   );
+});
+
+test('结果有效记录可回到原始来源引用', () => {
+  const records = basicRecords().map((record, index) => ({
+    ...record,
+    provenance: { sourceId: 'acceptance/fixtures/basic.csv', row: index + 2, columns: { id: 1, x: 2, y: 3 } },
+  }));
+  const analysis = analyze(makeBundle(records), request());
+  const mean = resultOf(analysis, 'mean', ['x']);
+  assert.deepEqual(mean.validRecordIds, ['a', 'b', 'c']);
+  const byId = new Map(records.map((record) => [record.recordId, record]));
+  assert.equal(byId.get('a').provenance.row, 2);
+  assert.equal(byId.get('c').provenance.sourceId, 'acceptance/fixtures/basic.csv');
+
+  const calculationId = `calculation:${mean.resultId}`;
+  const usesScope = analysis.graph.edges.find((edge) => edge.from === calculationId && edge.type === 'uses_scope');
+  assert.ok(usesScope);
+  assert.ok(analysis.graph.edges.some((edge) => edge.from === usesScope.to && edge.type === 'selects'));
 });
 
 test('buildFacts 生成可回源的确定性事实与发现图', () => {
@@ -299,9 +353,9 @@ test('本机代理：缺密钥返回 503，不泄露密钥', async () => {
 test('本机代理：真实调用成功时校验引用并生成发现图', async () => {
   const analysis = analyze(makeBundle(basicRecords()), request());
   const meanResult = resultOf(analysis, 'mean', ['x']);
-  const content = JSON.stringify({
+  const content = `\`\`\`json\n${JSON.stringify({
     insights: [{ textTemplate: `字段「x 指标」的均值为 {{result:${meanResult.resultId}}}。`, resultRefs: [meanResult.resultId] }],
-  });
+  })}\n\`\`\``;
   const { fetchImpl, state } = fakeFetch(content);
   const server = createInsightsServer({ env: { DEEPSEEK_API_KEY: 'test-key' }, fetchImpl });
   const port = await listen(server);
@@ -383,5 +437,32 @@ test('本机代理：空 content 重试一次后报错', async () => {
     assert.equal(state.calls, 2);
   } finally {
     server.close();
+  }
+});
+
+test('本机代理：非法 JSON 与空 insights 都返回明确失败', async () => {
+  for (const [content, expectedCode] of [
+    ['not-json', 'invalid_json'],
+    ['{"insights":[]}', 'empty_insights'],
+  ]) {
+    const { fetchImpl } = fakeFetch(content);
+    const server = createInsightsServer({
+      env: { DEEPSEEK_API_KEY: 'test-key' },
+      fetchImpl,
+      logger: { info() {}, warn() {}, error() {} },
+    });
+    const port = await listen(server);
+    try {
+      const response = await fetch(`http://127.0.0.1:${port}/api/insights`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ analysisId: 'analysis:test', facts: [{ resultId: 'r1' }], context: {} }),
+      });
+      const body = await response.json();
+      assert.equal(response.status, 502);
+      assert.equal(body.error.code, expectedCode);
+    } finally {
+      server.close();
+    }
   }
 });
