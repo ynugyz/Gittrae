@@ -216,18 +216,31 @@ if (appRoot && analyses.length === 3) {
       assert.fail(`raw fabricated numeric literal accepted as ${response.insights[0].status}; actual deterministic value=${r.value}`);
     });
   } finally { globalThis.fetch=realFetch; await new Promise(resolve=>fake.close(resolve)); }
+  if(process.env.AUDIT_RUNNING_BASE) {
+    const runningBase=process.env.AUDIT_RUNNING_BASE; assert.match(runningBase,/^http:\/\/127\.0\.0\.1:\d+$/);
+    globalThis.fetch=(url,init)=>realFetch(typeof url==='string'&&url.startsWith('/api/')?runningBase+url:url,init);
+    try {
+      for(const current of analyses) await check(`${current.request.filters[0].fieldId}:running-service-analysis-identity`,async()=>{
+        const bundle=project.datasets.find(b=>b.datasetId===current.datasetId);const response=await api.requestAnalysis(bundle,current.request,new AbortController().signal);
+        assert.equal(response.analysis.analysisId,current.analysisId,'running service differs from tested commit');return {analysisId:response.analysis.analysisId};
+      });
+    }finally{globalThis.fetch=realFetch;}
+  }
   if(process.env.AUDIT_LIVE_BASE) {
     const liveBase=process.env.AUDIT_LIVE_BASE;
     assert.match(liveBase,/^http:\/\/127\.0\.0\.1:\d+$/);
     const health=await realFetch(liveBase+'/api/health').then(r=>r.json());
     out.liveServiceHealth={ok:health.ok,model:health.model,baseUrlHost:health.baseUrlHost,keyConfigured:health.keyConfigured};
-    out.liveAi=[]; const liveInsights=[]; let localInsightCalls=0;
+    const seed=process.env.AUDIT_LIVE_SEED?JSON.parse(fs.readFileSync(path.resolve(process.env.AUDIT_LIVE_SEED),'utf8')):null;
+    out.liveAi=(seed?.liveAi??[]).filter(r=>analyses.some(a=>a.analysisId===r.analysisId));
+    if(seed)out.reusedLiveEvidence={file:path.basename(process.env.AUDIT_LIVE_SEED),analysisIds:out.liveAi.map(r=>r.analysisId),reason:'Only retry the one failed domain; previous successes remain bound to their actual timestamps.'};
+    const liveInsights=out.liveAi.flatMap(r=>r.insights); let localInsightCalls=0;
     globalThis.fetch=(url,init)=>{
       if(typeof url==='string'&&url.startsWith('/api/')) { if(url==='/api/insights')localInsightCalls++; return realFetch(liveBase+url,init); }
       return realFetch(url,init);
     };
     try {
-      for(const current of analyses) await check(`${current.request.filters[0].fieldId}:REAL-AI-client-service-not-page`,async()=>{
+      for(const current of analyses) {if(out.liveAi.some(r=>r.analysisId===current.analysisId))continue;await check(`${current.request.filters[0].fieldId}:REAL-AI-client-service-not-page`,async()=>{
         const bundle=project.datasets.find(b=>b.datasetId===current.datasetId);
         const response=await api.requestInsights(bundle,current,new AbortController().signal);
         assert.equal(response.analysisId,current.analysisId);
@@ -235,13 +248,21 @@ if (appRoot && analyses.length === 3) {
         liveInsights.push(...response.insights);
         const record={domain:bundle.domain,requestId:response.requestId,analysisId:response.analysisId,model:response.model,generatedAt:response.generatedAt,status:200,resultRefs:response.insights.map(i=>i.resultRefs),insights:response.insights};
         out.liveAi.push(record); return {analysisId:response.analysisId,requestId:response.requestId,model:response.model,generatedAt:response.generatedAt,insights:response.insights.length};
-      });
+      });}
       if(out.liveAi.length===3) await check('SAVE:real-AI-history-roundtrip-without-model-repeat',async()=>{
         const withAi={...project,insights:[...project.insights,...liveInsights],selection:{...project.selection,nodeId:`finding:${liveInsights.at(-1).insightId}`}};
         const before=localInsightCalls; const json=await storage.exportProject(withAi); const restored=await storage.importProject(json);
         assert.deepEqual(restored,withAi); assert.equal(localInsightCalls,before); assert.ok(graph.rebuildGraph(restored).nodes.some(n=>n.id===withAi.selection.nodeId));
         const bad=JSON.parse(json);bad.datasets[0].sources[0].rawRecords[0][1]='CACHE_TAMPERED';await assert.rejects(storage.importProject(JSON.stringify(bad)));
         return {jsonBytes:Buffer.byteLength(json),actualLiveInsightCount:liveInsights.length,localModelRequests:before,requestsDuringRestore:localInsightCalls-before,selectedFinding:withAi.selection.nodeId};
+      });
+      if(out.liveAi.length===3)for(const record of out.liveAi)await check(`${record.domain}:real-AI-number-and-finding-core-evidence`,()=>{
+        const a=analyses.find(a=>a.analysisId===record.analysisId);
+        const owned={...project,insights:[...project.insights,...record.insights],selection:{datasetId:a.datasetId,analysisId:a.analysisId,measureFieldIds:a.request.measureFieldIds,nodeId:`finding:${record.insights[0].insightId}`}};
+        const network=graph.currentGraph(owned,a.analysisId);assert.ok(network.nodes.some(n=>n.id===owned.selection.nodeId));
+        assert.ok(network.nodes.filter(n=>n.type==='calculation').every(n=>n.ref.startsWith(a.analysisId+':')));
+        for(const insight of record.insights)for(const ref of insight.resultRefs) {const e=graph.getEvidence(owned,ref);assert.equal(e.analysisId,a.analysisId);assert.ok(e.validCount>0);assert.ok(network.edges.some(edge=>edge.id===`cites:${insight.insightId}:${ref}`));}
+        return {analysisId:a.analysisId,generatedAt:record.generatedAt,currentNetworkNodes:network.nodes.length};
       });
     } finally {globalThis.fetch=realFetch;}
   }

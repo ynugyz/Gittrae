@@ -1,0 +1,1052 @@
+{
+  "generatedAt": "2026-10-25T08:06:50.847Z",
+  "kind": "independent_product_module_check_not_ui_or_live_ai",
+  "commits": {
+    "data": "33c34387025c0bce96b8d66a98af5fe0414b34a3",
+    "analysis": "33c34387025c0bce96b8d66a98af5fe0414b34a3",
+    "app": "33c34387025c0bce96b8d66a98af5fe0414b34a3"
+  },
+  "packageFingerprintSha256": "94520b80f023917c41e3799b13b1c988a9fea1b68308a0a2be5492455b3f6473",
+  "checks": [
+    {
+      "id": "IMP-01:58-real-files",
+      "status": "passed",
+      "detail": {
+        "sourceFiles": 58,
+        "bundles": 7,
+        "elapsedMs": 440
+      }
+    },
+    {
+      "id": "STAT:fixture:basic.csv",
+      "status": "passed",
+      "detail": {
+        "analysisId": "analysis:4deef6d04932a984c3774261",
+        "samples": 3
+      }
+    },
+    {
+      "id": "STAT:fixture:missing_constant.csv",
+      "status": "passed",
+      "detail": {
+        "analysisId": "analysis:221bc16158974de1f3c2ba4c",
+        "samples": 4
+      }
+    },
+    {
+      "id": "STAT:fixture:single.csv",
+      "status": "passed",
+      "detail": {
+        "analysisId": "analysis:5dab3a7276068d3c5f2cc5e3",
+        "samples": 1
+      }
+    },
+    {
+      "id": "STAT:fixture:all_missing.csv",
+      "status": "passed",
+      "detail": {
+        "analysisId": "analysis:ead426cbdc11c01e5dd49d8e",
+        "samples": 2
+      }
+    },
+    {
+      "id": "D1:real-statistics-charts-source",
+      "status": "passed",
+      "detail": {
+        "analysisId": "analysis:1451942c632df69e0a3a2cb3",
+        "scopeRecords": 31
+      }
+    },
+    {
+      "id": "D2:real-statistics-charts-source",
+      "status": "passed",
+      "detail": {
+        "analysisId": "analysis:213d65551f95bfbad3e930b6",
+        "scopeRecords": 5228
+      }
+    },
+    {
+      "id": "D3:real-statistics-charts-source",
+      "status": "passed",
+      "detail": {
+        "analysisId": "analysis:9a2aa732d7d724e7fc2e7fab",
+        "scopeRecords": 50
+      }
+    },
+    {
+      "id": "D2:null-industry-filter-keeps-unknown-record",
+      "status": "passed"
+    },
+    {
+      "id": "year:core-getEvidence",
+      "status": "passed",
+      "detail": {
+        "validCount": 31
+      }
+    },
+    {
+      "id": "report_period:core-getEvidence",
+      "status": "passed",
+      "detail": {
+        "validCount": 5227
+      }
+    },
+    {
+      "id": "year_month:core-getEvidence",
+      "status": "passed",
+      "detail": {
+        "validCount": 50
+      }
+    },
+    {
+      "id": "SIMULATED:unknown-reference-rejected",
+      "status": "passed"
+    },
+    {
+      "id": "SIMULATED:foreign-analysis-reference-rejected",
+      "status": "passed"
+    },
+    {
+      "id": "SIMULATED:stale-response-keeps-current-state",
+      "status": "passed"
+    },
+    {
+      "id": "year:single-domain-export",
+      "status": "passed",
+      "detail": {
+        "bytes": 480141
+      }
+    },
+    {
+      "id": "report_period:single-domain-export",
+      "status": "passed",
+      "detail": {
+        "bytes": 30143870
+      }
+    },
+    {
+      "id": "year_month:single-domain-export",
+      "status": "passed",
+      "detail": {
+        "bytes": 810471
+      }
+    },
+    {
+      "id": "SAVE:three-domain-core-roundtrip",
+      "status": "passed",
+      "detail": {
+        "jsonBytes": 31433718,
+        "restoredDatasets": 3,
+        "restoredAnalysisIds": [
+          "analysis:1451942c632df69e0a3a2cb3",
+          "analysis:213d65551f95bfbad3e930b6",
+          "analysis:9a2aa732d7d724e7fc2e7fab"
+        ],
+        "tamperedCacheRejected": true,
+        "liveAiRecords": 0
+      }
+    },
+    {
+      "id": "year:real-local-HTTP-analyze",
+      "status": "passed",
+      "detail": {
+        "analysisId": "analysis:1451942c632df69e0a3a2cb3",
+        "status": 200
+      }
+    },
+    {
+      "id": "report_period:real-local-HTTP-analyze",
+      "status": "passed",
+      "detail": {
+        "analysisId": "analysis:213d65551f95bfbad3e930b6",
+        "status": 200
+      }
+    },
+    {
+      "id": "year_month:real-local-HTTP-analyze",
+      "status": "passed",
+      "detail": {
+        "analysisId": "analysis:9a2aa732d7d724e7fc2e7fab",
+        "status": 200
+      }
+    },
+    {
+      "id": "HTTP:version-mismatch-rejected",
+      "status": "passed"
+    },
+    {
+      "id": "HTTP:missing-key-explicit-error",
+      "status": "passed"
+    },
+    {
+      "id": "SIMULATED:valid-provider-shape-keeps-source-identity",
+      "status": "passed"
+    },
+    {
+      "id": "SIMULATED:upstream-unknown-reference-is-HTTP-error",
+      "status": "passed"
+    },
+    {
+      "id": "SIMULATED:literal-fabricated-number-must-not-be-valid",
+      "status": "passed"
+    },
+    {
+      "id": "year:running-service-analysis-identity",
+      "status": "passed",
+      "detail": {
+        "analysisId": "analysis:1451942c632df69e0a3a2cb3"
+      }
+    },
+    {
+      "id": "report_period:running-service-analysis-identity",
+      "status": "passed",
+      "detail": {
+        "analysisId": "analysis:213d65551f95bfbad3e930b6"
+      }
+    },
+    {
+      "id": "year_month:running-service-analysis-identity",
+      "status": "passed",
+      "detail": {
+        "analysisId": "analysis:9a2aa732d7d724e7fc2e7fab"
+      }
+    },
+    {
+      "id": "year_month:REAL-AI-client-service-not-page",
+      "status": "passed",
+      "detail": {
+        "analysisId": "analysis:9a2aa732d7d724e7fc2e7fab",
+        "requestId": "0c7cf91e-b1f3-4c16-9d01-192d3b56add6",
+        "model": "deepseek-flash",
+        "generatedAt": "2026-10-25T08:07:05.354Z",
+        "insights": 4
+      }
+    },
+    {
+      "id": "SAVE:real-AI-history-roundtrip-without-model-repeat",
+      "status": "passed",
+      "detail": {
+        "jsonBytes": 31441639,
+        "actualLiveInsightCount": 11,
+        "localModelRequests": 1,
+        "requestsDuringRestore": 0,
+        "selectedFinding": "finding:insight:2f58f18e25422602c59d1534"
+      }
+    },
+    {
+      "id": "D1:real-AI-number-and-finding-core-evidence",
+      "status": "passed",
+      "detail": {
+        "analysisId": "analysis:1451942c632df69e0a3a2cb3",
+        "generatedAt": "2026-10-25T08:05:56.256Z",
+        "currentNetworkNodes": 48
+      }
+    },
+    {
+      "id": "D2:real-AI-number-and-finding-core-evidence",
+      "status": "passed",
+      "detail": {
+        "analysisId": "analysis:213d65551f95bfbad3e930b6",
+        "generatedAt": "2026-10-25T08:06:03.120Z",
+        "currentNetworkNodes": 32
+      }
+    },
+    {
+      "id": "D3:real-AI-number-and-finding-core-evidence",
+      "status": "passed",
+      "detail": {
+        "analysisId": "analysis:9a2aa732d7d724e7fc2e7fab",
+        "generatedAt": "2026-10-25T08:07:05.354Z",
+        "currentNetworkNodes": 42
+      }
+    }
+  ],
+  "domains": [
+    {
+      "domain": "D1",
+      "datasetId": "ds:d1-resident-income-expenditure",
+      "datasetVersion": "v1:1791c28e02eb50df4fb3820a",
+      "analysisId": "analysis:1451942c632df69e0a3a2cb3",
+      "scopeRecordCount": 31,
+      "results": [
+        {
+          "resultId": "analysis:1451942c632df69e0a3a2cb3:mean:income_all",
+          "metric": "mean",
+          "fieldIds": [
+            "income_all"
+          ],
+          "value": 40790.645161290326,
+          "validCount": 31
+        },
+        {
+          "resultId": "analysis:1451942c632df69e0a3a2cb3:median:income_all",
+          "metric": "median",
+          "fieldIds": [
+            "income_all"
+          ],
+          "value": 34829,
+          "validCount": 31
+        },
+        {
+          "resultId": "analysis:1451942c632df69e0a3a2cb3:stddev:income_all",
+          "metric": "stddev",
+          "fieldIds": [
+            "income_all"
+          ],
+          "value": 15239.458556760663,
+          "validCount": 31
+        },
+        {
+          "resultId": "analysis:1451942c632df69e0a3a2cb3:q1:income_all",
+          "metric": "q1",
+          "fieldIds": [
+            "income_all"
+          ],
+          "value": 31338,
+          "validCount": 31
+        },
+        {
+          "resultId": "analysis:1451942c632df69e0a3a2cb3:q3:income_all",
+          "metric": "q3",
+          "fieldIds": [
+            "income_all"
+          ],
+          "value": 41077,
+          "validCount": 31
+        },
+        {
+          "resultId": "analysis:1451942c632df69e0a3a2cb3:low:income_all",
+          "metric": "low",
+          "fieldIds": [
+            "income_all"
+          ],
+          "value": 26612,
+          "validCount": 31
+        },
+        {
+          "resultId": "analysis:1451942c632df69e0a3a2cb3:high:income_all",
+          "metric": "high",
+          "fieldIds": [
+            "income_all"
+          ],
+          "value": 55415,
+          "validCount": 31
+        },
+        {
+          "resultId": "analysis:1451942c632df69e0a3a2cb3:mean:expend_all",
+          "metric": "mean",
+          "fieldIds": [
+            "expend_all"
+          ],
+          "value": 27690.064516129034,
+          "validCount": 31
+        },
+        {
+          "resultId": "analysis:1451942c632df69e0a3a2cb3:median:expend_all",
+          "metric": "median",
+          "fieldIds": [
+            "expend_all"
+          ],
+          "value": 24878,
+          "validCount": 31
+        },
+        {
+          "resultId": "analysis:1451942c632df69e0a3a2cb3:stddev:expend_all",
+          "metric": "stddev",
+          "fieldIds": [
+            "expend_all"
+          ],
+          "value": 8609.85867454855,
+          "validCount": 31
+        },
+        {
+          "resultId": "analysis:1451942c632df69e0a3a2cb3:q1:expend_all",
+          "metric": "q1",
+          "fieldIds": [
+            "expend_all"
+          ],
+          "value": 22118,
+          "validCount": 31
+        },
+        {
+          "resultId": "analysis:1451942c632df69e0a3a2cb3:q3:expend_all",
+          "metric": "q3",
+          "fieldIds": [
+            "expend_all"
+          ],
+          "value": 28000.5,
+          "validCount": 31
+        },
+        {
+          "resultId": "analysis:1451942c632df69e0a3a2cb3:low:expend_all",
+          "metric": "low",
+          "fieldIds": [
+            "expend_all"
+          ],
+          "value": 18983,
+          "validCount": 31
+        },
+        {
+          "resultId": "analysis:1451942c632df69e0a3a2cb3:high:expend_all",
+          "metric": "high",
+          "fieldIds": [
+            "expend_all"
+          ],
+          "value": 35818,
+          "validCount": 31
+        },
+        {
+          "resultId": "analysis:1451942c632df69e0a3a2cb3:pearson:income_all+expend_all",
+          "metric": "pearson",
+          "fieldIds": [
+            "income_all",
+            "expend_all"
+          ],
+          "value": 0.9837860625634043,
+          "validCount": 31
+        }
+      ],
+      "trace": [
+        {
+          "fieldId": "income_all",
+          "recordId": "rec:d1:安徽省:2024",
+          "sourceId": "src:9b19c0e867b282d4b47d",
+          "sha256": "9b19c0e867b282d4b47d3e72ae05441872f9cb0cd7eb79a15b0da16ccbb71a78",
+          "fileName": "NBS_fsYearData_income__全体居民人均可支配收入(元).csv",
+          "recordIndex": 12,
+          "columnIndex": 1,
+          "raw": "36782",
+          "value": 36782
+        },
+        {
+          "fieldId": "expend_all",
+          "recordId": "rec:d1:安徽省:2024",
+          "sourceId": "src:3a55ba5fd6327ad0ddbf",
+          "sha256": "3a55ba5fd6327ad0ddbf1ec19e3c0f40c1d823e26830331ee0a8cb24f137a0c0",
+          "fileName": "NBS_fsYearData_expend__全体居民人均消费支出(元).csv",
+          "recordIndex": 12,
+          "columnIndex": 1,
+          "raw": "24996",
+          "value": 24996
+        }
+      ]
+    },
+    {
+      "domain": "D2",
+      "datasetId": "ds:d2-listed-company-finance",
+      "datasetVersion": "v1:34667e686023a087d8b68db9",
+      "analysisId": "analysis:213d65551f95bfbad3e930b6",
+      "scopeRecordCount": 5228,
+      "results": [
+        {
+          "resultId": "analysis:213d65551f95bfbad3e930b6:mean:revenue",
+          "metric": "mean",
+          "fieldIds": [
+            "revenue"
+          ],
+          "value": 13964968470.386326,
+          "validCount": 5227
+        },
+        {
+          "resultId": "analysis:213d65551f95bfbad3e930b6:median:revenue",
+          "metric": "median",
+          "fieldIds": [
+            "revenue"
+          ],
+          "value": 2016348883.02,
+          "validCount": 5227
+        },
+        {
+          "resultId": "analysis:213d65551f95bfbad3e930b6:stddev:revenue",
+          "metric": "stddev",
+          "fieldIds": [
+            "revenue"
+          ],
+          "value": 83866198264.10657,
+          "validCount": 5227
+        },
+        {
+          "resultId": "analysis:213d65551f95bfbad3e930b6:q1:revenue",
+          "metric": "q1",
+          "fieldIds": [
+            "revenue"
+          ],
+          "value": 815241145.36,
+          "validCount": 5227
+        },
+        {
+          "resultId": "analysis:213d65551f95bfbad3e930b6:q3:revenue",
+          "metric": "q3",
+          "fieldIds": [
+            "revenue"
+          ],
+          "value": 5739616751.545,
+          "validCount": 5227
+        },
+        {
+          "resultId": "analysis:213d65551f95bfbad3e930b6:low:revenue",
+          "metric": "low",
+          "fieldIds": [
+            "revenue"
+          ],
+          "value": -171421984.2,
+          "validCount": 5227
+        },
+        {
+          "resultId": "analysis:213d65551f95bfbad3e930b6:high:revenue",
+          "metric": "high",
+          "fieldIds": [
+            "revenue"
+          ],
+          "value": 13121060568.37,
+          "validCount": 5227
+        },
+        {
+          "resultId": "analysis:213d65551f95bfbad3e930b6:mean:net_profit",
+          "metric": "mean",
+          "fieldIds": [
+            "net_profit"
+          ],
+          "value": 1033045814.7029896,
+          "validCount": 5228
+        },
+        {
+          "resultId": "analysis:213d65551f95bfbad3e930b6:median:net_profit",
+          "metric": "median",
+          "fieldIds": [
+            "net_profit"
+          ],
+          "value": 84499446.465,
+          "validCount": 5228
+        },
+        {
+          "resultId": "analysis:213d65551f95bfbad3e930b6:stddev:net_profit",
+          "metric": "stddev",
+          "fieldIds": [
+            "net_profit"
+          ],
+          "value": 10838674280.75518,
+          "validCount": 5228
+        },
+        {
+          "resultId": "analysis:213d65551f95bfbad3e930b6:q1:net_profit",
+          "metric": "q1",
+          "fieldIds": [
+            "net_profit"
+          ],
+          "value": -15611973.495000001,
+          "validCount": 5228
+        },
+        {
+          "resultId": "analysis:213d65551f95bfbad3e930b6:q3:net_profit",
+          "metric": "q3",
+          "fieldIds": [
+            "net_profit"
+          ],
+          "value": 315420404.1875,
+          "validCount": 5228
+        },
+        {
+          "resultId": "analysis:213d65551f95bfbad3e930b6:low:net_profit",
+          "metric": "low",
+          "fieldIds": [
+            "net_profit"
+          ],
+          "value": -497088962.39,
+          "validCount": 5228
+        },
+        {
+          "resultId": "analysis:213d65551f95bfbad3e930b6:high:net_profit",
+          "metric": "high",
+          "fieldIds": [
+            "net_profit"
+          ],
+          "value": 811953460.29,
+          "validCount": 5228
+        },
+        {
+          "resultId": "analysis:213d65551f95bfbad3e930b6:pearson:revenue+net_profit",
+          "metric": "pearson",
+          "fieldIds": [
+            "revenue",
+            "net_profit"
+          ],
+          "value": 0.5270947226631513,
+          "validCount": 5227
+        }
+      ],
+      "trace": [
+        {
+          "fieldId": "revenue",
+          "recordId": "rec:d2:FY2025:301569",
+          "sourceId": "src:c519acb415f858731e5c",
+          "sha256": "c519acb415f858731e5cda99f578b536acb5eb0b59d57963d871ed23223b43a6",
+          "fileName": "EM_yjbb_FY2025_20251231.csv",
+          "recordIndex": 8,
+          "columnIndex": 4,
+          "raw": "895470048.65",
+          "value": 895470048.65
+        },
+        {
+          "fieldId": "net_profit",
+          "recordId": "rec:d2:FY2025:301569",
+          "sourceId": "src:c519acb415f858731e5c",
+          "sha256": "c519acb415f858731e5cda99f578b536acb5eb0b59d57963d871ed23223b43a6",
+          "fileName": "EM_yjbb_FY2025_20251231.csv",
+          "recordIndex": 8,
+          "columnIndex": 7,
+          "raw": "227819038.04",
+          "value": 227819038.04
+        }
+      ]
+    },
+    {
+      "domain": "D3",
+      "datasetId": "ds:d3-gasgoo-firm-monthly",
+      "datasetVersion": "v1:331363ab12b89b27cba9c12b",
+      "analysisId": "analysis:9a2aa732d7d724e7fc2e7fab",
+      "scopeRecordCount": 50,
+      "results": [
+        {
+          "resultId": "analysis:9a2aa732d7d724e7fc2e7fab:mean:month_sales",
+          "metric": "mean",
+          "fieldIds": [
+            "month_sales"
+          ],
+          "value": 46860.4,
+          "validCount": 50
+        },
+        {
+          "resultId": "analysis:9a2aa732d7d724e7fc2e7fab:median:month_sales",
+          "metric": "median",
+          "fieldIds": [
+            "month_sales"
+          ],
+          "value": 18341,
+          "validCount": 50
+        },
+        {
+          "resultId": "analysis:9a2aa732d7d724e7fc2e7fab:stddev:month_sales",
+          "metric": "stddev",
+          "fieldIds": [
+            "month_sales"
+          ],
+          "value": 77103.98794869067,
+          "validCount": 50
+        },
+        {
+          "resultId": "analysis:9a2aa732d7d724e7fc2e7fab:q1:month_sales",
+          "metric": "q1",
+          "fieldIds": [
+            "month_sales"
+          ],
+          "value": 8594.75,
+          "validCount": 50
+        },
+        {
+          "resultId": "analysis:9a2aa732d7d724e7fc2e7fab:q3:month_sales",
+          "metric": "q3",
+          "fieldIds": [
+            "month_sales"
+          ],
+          "value": 45514.25,
+          "validCount": 50
+        },
+        {
+          "resultId": "analysis:9a2aa732d7d724e7fc2e7fab:low:month_sales",
+          "metric": "low",
+          "fieldIds": [
+            "month_sales"
+          ],
+          "value": 2698,
+          "validCount": 50
+        },
+        {
+          "resultId": "analysis:9a2aa732d7d724e7fc2e7fab:high:month_sales",
+          "metric": "high",
+          "fieldIds": [
+            "month_sales"
+          ],
+          "value": 91553,
+          "validCount": 50
+        },
+        {
+          "resultId": "analysis:9a2aa732d7d724e7fc2e7fab:mean:yoy",
+          "metric": "mean",
+          "fieldIds": [
+            "yoy"
+          ],
+          "value": 67412.6678,
+          "validCount": 50
+        },
+        {
+          "resultId": "analysis:9a2aa732d7d724e7fc2e7fab:median:yoy",
+          "metric": "median",
+          "fieldIds": [
+            "yoy"
+          ],
+          "value": -11.879999999999999,
+          "validCount": 50
+        },
+        {
+          "resultId": "analysis:9a2aa732d7d724e7fc2e7fab:stddev:yoy",
+          "metric": "stddev",
+          "fieldIds": [
+            "yoy"
+          ],
+          "value": 411426.8997659057,
+          "validCount": 50
+        },
+        {
+          "resultId": "analysis:9a2aa732d7d724e7fc2e7fab:q1:yoy",
+          "metric": "q1",
+          "fieldIds": [
+            "yoy"
+          ],
+          "value": -32.915,
+          "validCount": 50
+        },
+        {
+          "resultId": "analysis:9a2aa732d7d724e7fc2e7fab:q3:yoy",
+          "metric": "q3",
+          "fieldIds": [
+            "yoy"
+          ],
+          "value": 23.05,
+          "validCount": 50
+        },
+        {
+          "resultId": "analysis:9a2aa732d7d724e7fc2e7fab:low:yoy",
+          "metric": "low",
+          "fieldIds": [
+            "yoy"
+          ],
+          "value": -72.35,
+          "validCount": 50
+        },
+        {
+          "resultId": "analysis:9a2aa732d7d724e7fc2e7fab:high:yoy",
+          "metric": "high",
+          "fieldIds": [
+            "yoy"
+          ],
+          "value": 80.72,
+          "validCount": 50
+        },
+        {
+          "resultId": "analysis:9a2aa732d7d724e7fc2e7fab:pearson:month_sales+yoy",
+          "metric": "pearson",
+          "fieldIds": [
+            "month_sales",
+            "yoy"
+          ],
+          "value": -0.04672197235377263,
+          "validCount": 50
+        }
+      ],
+      "trace": [
+        {
+          "fieldId": "month_sales",
+          "recordId": "rec:d3-gasgoo-firm:北京奔驰:2026-08",
+          "sourceId": "src:c46f0b18fe99e619c8b0",
+          "sha256": "c46f0b18fe99e619c8b0545a030b4cb0a22d36afc5d67a87ca378f81fec64262",
+          "fileName": "GASGOO_rank_firm_202608.csv",
+          "recordIndex": 22,
+          "columnIndex": 1,
+          "raw": "27312",
+          "value": 27312
+        },
+        {
+          "fieldId": "yoy",
+          "recordId": "rec:d3-gasgoo-firm:北京奔驰:2026-08",
+          "sourceId": "src:c46f0b18fe99e619c8b0",
+          "sha256": "c46f0b18fe99e619c8b0545a030b4cb0a22d36afc5d67a87ca378f81fec64262",
+          "fileName": "GASGOO_rank_firm_202608.csv",
+          "recordIndex": 22,
+          "columnIndex": 2,
+          "raw": "-23.53%",
+          "value": -23.53
+        }
+      ]
+    }
+  ],
+  "unexecuted": [
+    "browser UI",
+    "page live AI",
+    "page scope race",
+    "UI chart clicks"
+  ],
+  "provenanceGaps": [],
+  "liveServiceHealth": {
+    "ok": true,
+    "model": "deepseek-flash",
+    "baseUrlHost": "api.deepseek.com",
+    "keyConfigured": true
+  },
+  "liveAi": [
+    {
+      "domain": "D1",
+      "requestId": "46663a86-0595-44fe-a92a-b577a5a6f496",
+      "analysisId": "analysis:1451942c632df69e0a3a2cb3",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-10-25T08:05:56.256Z",
+      "status": 200,
+      "resultRefs": [
+        [
+          "analysis:1451942c632df69e0a3a2cb3:mean:income_all",
+          "analysis:1451942c632df69e0a3a2cb3:median:income_all",
+          "analysis:1451942c632df69e0a3a2cb3:low:income_all",
+          "analysis:1451942c632df69e0a3a2cb3:high:income_all"
+        ],
+        [
+          "analysis:1451942c632df69e0a3a2cb3:mean:expend_all",
+          "analysis:1451942c632df69e0a3a2cb3:median:expend_all",
+          "analysis:1451942c632df69e0a3a2cb3:q1:expend_all",
+          "analysis:1451942c632df69e0a3a2cb3:q3:expend_all"
+        ],
+        [
+          "analysis:1451942c632df69e0a3a2cb3:pearson:income_all+expend_all"
+        ]
+      ],
+      "insights": [
+        {
+          "insightId": "insight:08e904611632b5f99c2d4b92",
+          "analysisId": "analysis:1451942c632df69e0a3a2cb3",
+          "kind": "interpretation",
+          "origin": "live_ai",
+          "textTemplate": "本期人均可支配收入（全体居民）的均值为 {{result:analysis:1451942c632df69e0a3a2cb3:mean:income_all}}，中位数为 {{result:analysis:1451942c632df69e0a3a2cb3:median:income_all}}；箱线图须端下限与上限分别为 {{result:analysis:1451942c632df69e0a3a2cb3:low:income_all}} 与 {{result:analysis:1451942c632df69e0a3a2cb3:high:income_all}}。均值高于中位数，提示样本收入分布可能存在右偏。",
+          "resultRefs": [
+            "analysis:1451942c632df69e0a3a2cb3:mean:income_all",
+            "analysis:1451942c632df69e0a3a2cb3:median:income_all",
+            "analysis:1451942c632df69e0a3a2cb3:low:income_all",
+            "analysis:1451942c632df69e0a3a2cb3:high:income_all"
+          ],
+          "generatedAt": "2026-10-25T08:05:56.256Z",
+          "model": "deepseek-flash",
+          "status": "valid"
+        },
+        {
+          "insightId": "insight:44b7686d845208ce9a29589b",
+          "analysisId": "analysis:1451942c632df69e0a3a2cb3",
+          "kind": "interpretation",
+          "origin": "live_ai",
+          "textTemplate": "本期人均消费支出（全体居民）的均值为 {{result:analysis:1451942c632df69e0a3a2cb3:mean:expend_all}}，中位数为 {{result:analysis:1451942c632df69e0a3a2cb3:median:expend_all}}；四分位区间从 {{result:analysis:1451942c632df69e0a3a2cb3:q1:expend_all}} 到 {{result:analysis:1451942c632df69e0a3a2cb3:q3:expend_all}}。",
+          "resultRefs": [
+            "analysis:1451942c632df69e0a3a2cb3:mean:expend_all",
+            "analysis:1451942c632df69e0a3a2cb3:median:expend_all",
+            "analysis:1451942c632df69e0a3a2cb3:q1:expend_all",
+            "analysis:1451942c632df69e0a3a2cb3:q3:expend_all"
+          ],
+          "generatedAt": "2026-10-25T08:05:56.256Z",
+          "model": "deepseek-flash",
+          "status": "valid"
+        },
+        {
+          "insightId": "insight:665cf09200b4a47b48adbafd",
+          "analysisId": "analysis:1451942c632df69e0a3a2cb3",
+          "kind": "interpretation",
+          "origin": "live_ai",
+          "textTemplate": "收入与支出的 Pearson 相关系数为 {{result:analysis:1451942c632df69e0a3a2cb3:pearson:income_all+expend_all}}，样本内呈强正相关；相关不等于因果，且省级简单均值不等同于全国人口加权均值。",
+          "resultRefs": [
+            "analysis:1451942c632df69e0a3a2cb3:pearson:income_all+expend_all"
+          ],
+          "generatedAt": "2026-10-25T08:05:56.256Z",
+          "model": "deepseek-flash",
+          "status": "valid"
+        }
+      ]
+    },
+    {
+      "domain": "D2",
+      "requestId": "b3631e4c-ed88-4b22-9556-fbc050e08d17",
+      "analysisId": "analysis:213d65551f95bfbad3e930b6",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-10-25T08:06:03.120Z",
+      "status": 200,
+      "resultRefs": [
+        [
+          "analysis:213d65551f95bfbad3e930b6:mean:revenue",
+          "analysis:213d65551f95bfbad3e930b6:median:revenue",
+          "analysis:213d65551f95bfbad3e930b6:stddev:revenue"
+        ],
+        [
+          "analysis:213d65551f95bfbad3e930b6:q1:revenue",
+          "analysis:213d65551f95bfbad3e930b6:q3:revenue",
+          "analysis:213d65551f95bfbad3e930b6:low:revenue",
+          "analysis:213d65551f95bfbad3e930b6:high:revenue"
+        ],
+        [
+          "analysis:213d65551f95bfbad3e930b6:mean:net_profit",
+          "analysis:213d65551f95bfbad3e930b6:median:net_profit",
+          "analysis:213d65551f95bfbad3e930b6:q1:net_profit",
+          "analysis:213d65551f95bfbad3e930b6:q3:net_profit"
+        ],
+        [
+          "analysis:213d65551f95bfbad3e930b6:pearson:revenue+net_profit"
+        ]
+      ],
+      "insights": [
+        {
+          "insightId": "insight:76340f9731f08beae3fb8587",
+          "analysisId": "analysis:213d65551f95bfbad3e930b6",
+          "kind": "interpretation",
+          "origin": "live_ai",
+          "textTemplate": "营业总收入均值为 {{result:analysis:213d65551f95bfbad3e930b6:mean:revenue}}，中位数为 {{result:analysis:213d65551f95bfbad3e930b6:median:revenue}}；均值高于中位数，分布呈右偏特征，标准差 {{result:analysis:213d65551f95bfbad3e930b6:stddev:revenue}} 也显示样本间收入离散度较大。",
+          "resultRefs": [
+            "analysis:213d65551f95bfbad3e930b6:mean:revenue",
+            "analysis:213d65551f95bfbad3e930b6:median:revenue",
+            "analysis:213d65551f95bfbad3e930b6:stddev:revenue"
+          ],
+          "generatedAt": "2026-10-25T08:06:03.120Z",
+          "model": "deepseek-flash",
+          "status": "valid"
+        },
+        {
+          "insightId": "insight:80d335d3ea1516a3a4fa70da",
+          "analysisId": "analysis:213d65551f95bfbad3e930b6",
+          "kind": "interpretation",
+          "origin": "live_ai",
+          "textTemplate": "营业总收入下四分位为 {{result:analysis:213d65551f95bfbad3e930b6:q1:revenue}}，上四分位为 {{result:analysis:213d65551f95bfbad3e930b6:q3:revenue}}，须状范围从 {{result:analysis:213d65551f95bfbad3e930b6:low:revenue}} 到 {{result:analysis:213d65551f95bfbad3e930b6:high:revenue}}，反映榜单样本内收入跨度较宽。",
+          "resultRefs": [
+            "analysis:213d65551f95bfbad3e930b6:q1:revenue",
+            "analysis:213d65551f95bfbad3e930b6:q3:revenue",
+            "analysis:213d65551f95bfbad3e930b6:low:revenue",
+            "analysis:213d65551f95bfbad3e930b6:high:revenue"
+          ],
+          "generatedAt": "2026-10-25T08:06:03.120Z",
+          "model": "deepseek-flash",
+          "status": "valid"
+        },
+        {
+          "insightId": "insight:659c739fcaff4b837656bd53",
+          "analysisId": "analysis:213d65551f95bfbad3e930b6",
+          "kind": "interpretation",
+          "origin": "live_ai",
+          "textTemplate": "净利润均值为 {{result:analysis:213d65551f95bfbad3e930b6:mean:net_profit}}，中位数为 {{result:analysis:213d65551f95bfbad3e930b6:median:net_profit}}，下四分位为 {{result:analysis:213d65551f95bfbad3e930b6:q1:net_profit}}，上四分位为 {{result:analysis:213d65551f95bfbad3e930b6:q3:net_profit}}；均值与中位数差异明显，提示盈利分布存在偏态，且部分样本录得亏损。",
+          "resultRefs": [
+            "analysis:213d65551f95bfbad3e930b6:mean:net_profit",
+            "analysis:213d65551f95bfbad3e930b6:median:net_profit",
+            "analysis:213d65551f95bfbad3e930b6:q1:net_profit",
+            "analysis:213d65551f95bfbad3e930b6:q3:net_profit"
+          ],
+          "generatedAt": "2026-10-25T08:06:03.120Z",
+          "model": "deepseek-flash",
+          "status": "valid"
+        },
+        {
+          "insightId": "insight:61172f1c16bd688e8914d44f",
+          "analysisId": "analysis:213d65551f95bfbad3e930b6",
+          "kind": "interpretation",
+          "origin": "live_ai",
+          "textTemplate": "营收与净利润的皮尔逊相关系数为 {{result:analysis:213d65551f95bfbad3e930b6:pearson:revenue+net_profit}}，呈中等正相关；相关不等于因果，不能据此推断收入变化导致利润变化。",
+          "resultRefs": [
+            "analysis:213d65551f95bfbad3e930b6:pearson:revenue+net_profit"
+          ],
+          "generatedAt": "2026-10-25T08:06:03.120Z",
+          "model": "deepseek-flash",
+          "status": "valid"
+        }
+      ]
+    },
+    {
+      "domain": "D3",
+      "requestId": "0c7cf91e-b1f3-4c16-9d01-192d3b56add6",
+      "analysisId": "analysis:9a2aa732d7d724e7fc2e7fab",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-10-25T08:07:05.354Z",
+      "status": 200,
+      "resultRefs": [
+        [
+          "analysis:9a2aa732d7d724e7fc2e7fab:mean:month_sales",
+          "analysis:9a2aa732d7d724e7fc2e7fab:median:month_sales"
+        ],
+        [
+          "analysis:9a2aa732d7d724e7fc2e7fab:q1:month_sales",
+          "analysis:9a2aa732d7d724e7fc2e7fab:q3:month_sales",
+          "analysis:9a2aa732d7d724e7fc2e7fab:low:month_sales",
+          "analysis:9a2aa732d7d724e7fc2e7fab:high:month_sales"
+        ],
+        [
+          "analysis:9a2aa732d7d724e7fc2e7fab:mean:yoy",
+          "analysis:9a2aa732d7d724e7fc2e7fab:median:yoy",
+          "analysis:9a2aa732d7d724e7fc2e7fab:stddev:yoy"
+        ],
+        [
+          "analysis:9a2aa732d7d724e7fc2e7fab:pearson:month_sales+yoy"
+        ]
+      ],
+      "insights": [
+        {
+          "insightId": "insight:bf16f58691f68b80cd2a0433",
+          "analysisId": "analysis:9a2aa732d7d724e7fc2e7fab",
+          "kind": "interpretation",
+          "origin": "live_ai",
+          "textTemplate": "榜单样本的当月销量均值为 {{result:analysis:9a2aa732d7d724e7fc2e7fab:mean:month_sales}} 辆，中位数为 {{result:analysis:9a2aa732d7d724e7fc2e7fab:median:month_sales}} 辆；均值明显高于中位数，分布呈右偏特征。",
+          "resultRefs": [
+            "analysis:9a2aa732d7d724e7fc2e7fab:mean:month_sales",
+            "analysis:9a2aa732d7d724e7fc2e7fab:median:month_sales"
+          ],
+          "generatedAt": "2026-10-25T08:07:05.354Z",
+          "model": "deepseek-flash",
+          "status": "valid"
+        },
+        {
+          "insightId": "insight:0bbaf627ee24b700a6f43f9a",
+          "analysisId": "analysis:9a2aa732d7d724e7fc2e7fab",
+          "kind": "interpretation",
+          "origin": "live_ai",
+          "textTemplate": "当月销量的下四分位为 {{result:analysis:9a2aa732d7d724e7fc2e7fab:q1:month_sales}} 辆、上四分位为 {{result:analysis:9a2aa732d7d724e7fc2e7fab:q3:month_sales}} 辆，须端范围为 {{result:analysis:9a2aa732d7d724e7fc2e7fab:low:month_sales}} 至 {{result:analysis:9a2aa732d7d724e7fc2e7fab:high:month_sales}} 辆，显示样本内销量跨度较大。",
+          "resultRefs": [
+            "analysis:9a2aa732d7d724e7fc2e7fab:q1:month_sales",
+            "analysis:9a2aa732d7d724e7fc2e7fab:q3:month_sales",
+            "analysis:9a2aa732d7d724e7fc2e7fab:low:month_sales",
+            "analysis:9a2aa732d7d724e7fc2e7fab:high:month_sales"
+          ],
+          "generatedAt": "2026-10-25T08:07:05.354Z",
+          "model": "deepseek-flash",
+          "status": "valid"
+        },
+        {
+          "insightId": "insight:659f3eab79848c3dce502238",
+          "analysisId": "analysis:9a2aa732d7d724e7fc2e7fab",
+          "kind": "interpretation",
+          "origin": "live_ai",
+          "textTemplate": "同比均值为 {{result:analysis:9a2aa732d7d724e7fc2e7fab:mean:yoy}}%，中位数为 {{result:analysis:9a2aa732d7d724e7fc2e7fab:median:yoy}}%，标准差为 {{result:analysis:9a2aa732d7d724e7fc2e7fab:stddev:yoy}}%；均值与中位数差异较大，说明同比分布离散、受极端值影响明显，中位数为负提示样本中过半厂商同比下降。",
+          "resultRefs": [
+            "analysis:9a2aa732d7d724e7fc2e7fab:mean:yoy",
+            "analysis:9a2aa732d7d724e7fc2e7fab:median:yoy",
+            "analysis:9a2aa732d7d724e7fc2e7fab:stddev:yoy"
+          ],
+          "generatedAt": "2026-10-25T08:07:05.354Z",
+          "model": "deepseek-flash",
+          "status": "valid"
+        },
+        {
+          "insightId": "insight:2f58f18e25422602c59d1534",
+          "analysisId": "analysis:9a2aa732d7d724e7fc2e7fab",
+          "kind": "interpretation",
+          "origin": "live_ai",
+          "textTemplate": "当月销量与同比的皮尔逊相关系数为 {{result:analysis:9a2aa732d7d724e7fc2e7fab:pearson:month_sales+yoy}}，在榜单样本中线性相关很弱，不能据此推断因果关系；且榜单样本不代表全市场。",
+          "resultRefs": [
+            "analysis:9a2aa732d7d724e7fc2e7fab:pearson:month_sales+yoy"
+          ],
+          "generatedAt": "2026-10-25T08:07:05.354Z",
+          "model": "deepseek-flash",
+          "status": "valid"
+        }
+      ]
+    }
+  ],
+  "reusedLiveEvidence": {
+    "file": "2026-10-25_product-integrated-33c3438-live.json",
+    "analysisIds": [
+      "analysis:1451942c632df69e0a3a2cb3",
+      "analysis:213d65551f95bfbad3e930b6"
+    ],
+    "reason": "Only retry the one failed domain; previous successes remain bound to their actual timestamps."
+  },
+  "summary": {
+    "passed": 35,
+    "failed": 0
+  }
+}
