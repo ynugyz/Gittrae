@@ -1,0 +1,65 @@
+import type {
+  AnalysisResult,
+  DatasetBundle,
+  InsightRequest,
+  InsightResponse,
+} from "../contracts";
+
+export async function requestInsights(
+  bundle: DatasetBundle,
+  analysis: AnalysisResult,
+  signal: AbortSignal,
+): Promise<InsightResponse> {
+  const request: InsightRequest = {
+    analysisId: analysis.analysisId,
+    facts: analysis.results.map((r) => ({
+      resultId: r.resultId,
+      metric: r.metric,
+      value: r.value,
+      unit: r.unit,
+      method: r.method,
+      sampleSize: r.validRecordIds.length,
+    })),
+    context: {
+      fields: bundle.fields.map(({ fieldId, label, meaning, unit }) => ({
+        fieldId,
+        label,
+        meaning,
+        unit,
+      })),
+      scope: { ...analysis.scope, recordIds: [] },
+      limitations: [
+        ...analysis.scope.limitations,
+        ...bundle.issues.map((i) => i.message),
+      ],
+    },
+  };
+  const response = await fetch("/api/insights", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(request),
+    signal: AbortSignal.any([signal, AbortSignal.timeout(60_000)]),
+  });
+  let body: unknown;
+  try {
+    body = await response.json();
+  } catch {
+    throw new Error("模型服务没有返回有效 JSON，请检查本机服务是否已启动。");
+  }
+  if (!body || typeof body !== "object")
+    throw new Error("模型服务返回空响应。");
+  if ("error" in body) {
+    const error = body.error as { message?: string };
+    throw new Error(
+      typeof error?.message === "string"
+        ? error.message
+        : "模型请求失败，请稍后重试。",
+    );
+  }
+  if (!response.ok)
+    throw new Error(`模型服务请求失败（HTTP ${response.status}）。`);
+  const result = body as InsightResponse;
+  if (result.analysisId !== analysis.analysisId)
+    throw new Error("模型响应分析编号与当前请求不一致。");
+  return result;
+}
