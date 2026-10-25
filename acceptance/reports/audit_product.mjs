@@ -130,6 +130,10 @@ for (const s of specs) await check(`${s.name}:real-statistics-charts-source`, as
   const summary={domain:s.name,datasetId:s.bundle.datasetId,datasetVersion:s.bundle.datasetVersion,analysisId:a.analysisId,scopeRecordCount:a.scope.recordIds.length,results:a.results.map(r=>({resultId:r.resultId,metric:r.metric,fieldIds:r.fieldIds,value:r.value,validCount:r.validRecordIds.length})),trace};
   out.domains.push(summary); return {analysisId:a.analysisId,scopeRecords:a.scope.recordIds.length};
 });
+if(d2) await check('D2:null-industry-filter-keeps-unknown-record',()=>{
+  const a=analyze(d2,request(d2,['revenue','net_profit'],[{fieldId:'report_period',operator:'eq',values:['FY2025']},{fieldId:'industry',operator:'eq',values:[null]}]));
+  assert.equal(a.scope.recordIds.length,1,'FY2025 has one actual unknown-industry record');
+});
 
 if (appRoot && analyses.length === 3) {
   const storage=await load(appRoot,'src/storage/index.ts'); const graph=await load(appRoot,'src/graph/index.ts');
@@ -203,6 +207,35 @@ if (appRoot && analyses.length === 3) {
       assert.fail(`raw fabricated numeric literal accepted as ${response.insights[0].status}; actual deterministic value=${r.value}`);
     });
   } finally { globalThis.fetch=realFetch; await new Promise(resolve=>fake.close(resolve)); }
+  if(process.env.AUDIT_LIVE_BASE) {
+    const liveBase=process.env.AUDIT_LIVE_BASE;
+    assert.match(liveBase,/^http:\/\/127\.0\.0\.1:\d+$/);
+    const health=await realFetch(liveBase+'/api/health').then(r=>r.json());
+    out.liveServiceHealth={ok:health.ok,model:health.model,baseUrlHost:health.baseUrlHost,keyConfigured:health.keyConfigured};
+    out.liveAi=[]; const liveInsights=[]; let localInsightCalls=0;
+    globalThis.fetch=(url,init)=>{
+      if(typeof url==='string'&&url.startsWith('/api/')) { if(url==='/api/insights')localInsightCalls++; return realFetch(liveBase+url,init); }
+      return realFetch(url,init);
+    };
+    try {
+      for(const current of analyses) await check(`${current.request.filters[0].fieldId}:REAL-AI-client-service-not-page`,async()=>{
+        const bundle=project.datasets.find(b=>b.datasetId===current.datasetId);
+        const response=await api.requestInsights(bundle,current,new AbortController().signal);
+        assert.equal(response.analysisId,current.analysisId);
+        for(const insight of response.insights) graph.validateInsight(insight,current);
+        liveInsights.push(...response.insights);
+        const record={domain:bundle.domain,requestId:response.requestId,analysisId:response.analysisId,model:response.model,generatedAt:response.generatedAt,status:200,resultRefs:response.insights.map(i=>i.resultRefs),insights:response.insights};
+        out.liveAi.push(record); return {analysisId:response.analysisId,requestId:response.requestId,model:response.model,generatedAt:response.generatedAt,insights:response.insights.length};
+      });
+      if(out.liveAi.length===3) await check('SAVE:real-AI-history-roundtrip-without-model-repeat',async()=>{
+        const withAi={...project,insights:[...project.insights,...liveInsights],selection:{...project.selection,nodeId:`finding:${liveInsights.at(-1).insightId}`}};
+        const before=localInsightCalls; const json=await storage.exportProject(withAi); const restored=await storage.importProject(json);
+        assert.deepEqual(restored,withAi); assert.equal(localInsightCalls,before); assert.ok(graph.rebuildGraph(restored).nodes.some(n=>n.id===withAi.selection.nodeId));
+        const bad=JSON.parse(json);bad.datasets[0].sources[0].rawRecords[0][1]='CACHE_TAMPERED';await assert.rejects(storage.importProject(JSON.stringify(bad)));
+        return {jsonBytes:Buffer.byteLength(json),actualLiveInsightCount:liveInsights.length,localModelRequests:before,requestsDuringRestore:localInsightCalls-before,selectedFinding:withAi.selection.nodeId};
+      });
+    } finally {globalThis.fetch=realFetch;}
+  }
 }
 out.summary={passed:out.checks.filter(c=>c.status==='passed').length,failed:out.checks.filter(c=>c.status==='failed').length};
 fs.writeFileSync(path.join(reportDir,`2026-10-25_product-${tag}.json`),JSON.stringify(out,null,2)+'\n');
