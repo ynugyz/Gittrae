@@ -15,6 +15,7 @@ import type {
   Field,
   ImportOptions,
   InputFile,
+  Issue,
   RecordRow,
   SourceFile,
   SourceRef,

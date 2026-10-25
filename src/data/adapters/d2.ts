@@ -31,7 +31,6 @@ interface ColumnSpec {
   header: string; // 原始表头
   fieldId: string;
   label: string;
-  role: 'measure';
   unit: string | null;
   meaning: string;
   percent: boolean; // true → parsePercent；false → parseNumber
