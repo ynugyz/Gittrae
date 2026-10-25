@@ -1,28 +1,16 @@
 # 人员3：最简进度与交接
 
-**必读：** [共同规则](../README.md#common) → 本页 → [接入说明](IMPLEMENTATION.md) → [接口状态](../status/README.md)。依据总控 [164e052的汇报规则](https://github.com/ynugyz/Gittrae/blob/164e052edcb6fcd5eed4d5567e767303047a1631/handoff/decisions/2026-10-25-interface-reporting.md)，未批准业务接口改版。
+**必读顺序：** [共同规则](../README.md#common) → [总控收尾决定](https://github.com/ynugyz/Gittrae/blob/db28c7cd6a23dfb45ded717baaf2e803b7f42145/handoff/decisions/2026-10-25-final-40-minutes.md) → 本页 → [运行与接线](IMPLEMENTATION.md)。
 
-报告人：本机人员3。更新时间：2026-10-25T15:38:25+08:00。分支：`dev/app`；实现commit：`39c92f147dc1ff81e0bdaf9f4190b81051a74cbd`；本轮复跑commit：`197d6b2478e5666eef2dd241a4bd1a0443fce435`，产品文件一致。
+本机人员3，2026-10-25。可运行产品在dev/app，固定版本`c5c91cb292936e1aa0986caa05adc751453433a6`。已接通三域统计、三图、三种数字回源入口、每域真实AI和项目保存恢复；53项测试与构建通过。**这是作者实测，最终独立页面签收尚未完成。**
 
-## 已做与未做
-
-共享类型、MOCK样例、页面状态、三图展示、图谱合并与回源、保存恢复、AI客户端已实现。本轮20项测试、构建和格式检查通过；[证据](../../reports/person3/verification.md#handoff-recheck)。浏览器截图沿用原自测，本轮未重跑浏览器、上游模块或真实API。
-
-人员1/2已远程交付，但存在入口、结构和浏览器运行兼容问题，详见 [IF-00](../status/IF-00-contracts.md)。三域真实联调、应用内真实AI及人员4产品复验尚未完成；不能将开发自测记为产品签收。
-
-## 只在这些地方更新进度
-
-| 接口 | 固定报告 |
+| 接手内容 | 唯一状态入口 |
 |---|---|
-| 公共类型与接线 | [IF-00](../status/IF-00-contracts.md) |
-| 图合并与回源 | [IF-04](../status/IF-04-merge-graph.md)、[IF-05](../status/IF-05-get-evidence.md) |
-| 导出与恢复 | [IF-06](../status/IF-06-export-project.md)、[IF-07](../status/IF-07-import-project.md) |
-| AI客户端 | [IF-08](../status/IF-08-live-insights.md)，服务端由人员2报告 |
+| 版本、整体进度、剩余缺口【全员必读】 | [IF-00](../status/IF-00-contracts.md) |
+| 图谱、来源【人员1/3/4必读】 | [IF-04](../status/IF-04-merge-graph.md)、[IF-05](../status/IF-05-get-evidence.md) |
+| 项目导出恢复【人员3/4必读】 | [IF-06](../status/IF-06-export-project.md)、[IF-07](../status/IF-07-import-project.md) |
+| 真实AI与脱敏证据【人员2/3/4必读】 | [IF-08](../status/IF-08-live-insights.md) |
 
-## 下一步与交付
+剩余事项只有：人员1补D2缺失营收的直接来源；人员4按固定版本完成独立页面复验并审阅AI措辞。原字节、引用、版本、恢复校验不放宽。主机服务由人员2启动；密钥只留服务端。
 
-1. 总控裁决IF-00的字段、入口和运行边界；人员1/2对齐各自模块，人员3维护唯一共享类型与接线。
-2. 人员3固定相容的三个模块commit，验证三域导入→统计→三图→回源→真实AI→保存恢复，交集成commit及实际证据。
-3. 人员4按 [验收矩阵](../../acceptance/cases.md) 独立复验。当前暂缓直接合入不相容模块；必做范围不减少。
-
-人员3负责公共配置、UI/状态、图合并、存储和集成，不代写数据适配或统计算法。后续汇报只更新对应接口卡，写清commit、实测、未完成事项及接手条件；旧的三份重复任务/交付/状态模板已删除。技术细节仅保留在接入说明，历史自测和截图继续作为证据保留。
+旧TASK/DELIVERABLES/状态模板已删除。进度只改接口卡，技术调用只改IMPLEMENTATION；[历史证据](../../reports/person3/verification.md)保留，不再复制重复说明。

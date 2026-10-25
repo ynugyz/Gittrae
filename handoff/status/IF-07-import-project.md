@@ -1,16 +1,21 @@
 # IF-07 · importProject：原子恢复
 
-必做；负责人/报告人：本机人员3；2026-10-25T15:38:25+08:00；分支dev/app。契约：[v1.0](../01_公共接口.md)，无新增批准。直接依赖：IF-00、IF-06；完整项目另依赖真实上游；兼容问题统一见 [IF-00](IF-00-contracts.md)。
+必做；负责人/报告人：本机人员3；2026-10-25；分支 `dev/app`。
+产品commit：`c5c91cb292936e1aa0986caa05adc751453433a6`；已合人员1 `1ba946d`、人员2 `6095758`。
 
-实现commit：`39c92f147dc1ff81e0bdaf9f4190b81051a74cbd`；[实现入口](https://github.com/ynugyz/Gittrae/blob/39c92f147dc1ff81e0bdaf9f4190b81051a74cbd/src/storage/index.ts)。已做：版本/哈希/原字节重解析/缓存/引用校验，成功才替换状态；保留ID与历史时间，不重发模型请求。
+**必读依赖：** [IF-00 契约](IF-00-contracts.md) → [IF-06 导出](IF-06-export-project.md)；历史解释读 [IF-08](IF-08-live-insights.md)，来源缺口读 [IF-05](IF-05-get-evidence.md)。
+[实现入口](https://github.com/ynugyz/Gittrae/blob/c5c91cb292936e1aa0986caa05adc751453433a6/src/storage/index.ts)：版本、哈希、原字节重解析、缓存和引用全部通过后才替换项目；失败保留原状态。
 
-| 阶段 | 当前状态 |
+| 检查 | 状态与边界 |
 |---|---|
-| 实现 | in_progress：本模块已交付，完整链路待接入 |
-| 本机自测 | passed：存储测试：合法快照恢复、损坏哈希/缓存/悬空引用拒绝；58份真实CSV逐项匹配manifest；实际通过。原始字节核对不证明业务口径 |
-| 三域真实联调 | blocked：上游已交付但契约/运行入口不相容，尚未接入 |
-| 人员4产品复验 | not_started：等待明确集成commit；基线材料核验不算应用复验 |
+| 当前产品自动检查 | passed：53项测试及构建通过 |
+| 全新空白页实际恢复 | passed：恢复3域、6次历史分析、最新12条有效AI及旧历史/invalid；原文不改写 |
+| 恢复后再次保存 | passed：19,372,951字节项目除savedAt外全内容相等 |
+| 当前产品独立签收 | not_started：旧产品核心复验不签收新版本或页面 |
 
-本轮检查commit：`197d6b2478e5666eef2dd241a4bd1a0443fce435`；产品文件与实现commit一致。测试输入、操作与历史浏览器证据见 [自测记录](../../reports/person3/verification.md#handoff-recheck)；本轮未运行上游模块、浏览器或真实API。
+本轮 [实际页面往返证据](../../reports/person3/final/restore-check.json) 保留首轮记录并追加finalRound，绑定最终c5c91cb；损坏缓存实际页面拒绝且原项目保留。
+人员4 [2cc2df1审计](https://github.com/ynugyz/Gittrae/blob/2cc2df1/acceptance/reports/2026-10-25_78f7678_audit.md) 已通过旧产品78f7678核心恢复与损坏缓存检查；未签收c5c91cb及本轮页面。
+恢复不重新计算或请求模型；历史解释不冒充本次实时调用，invalid记录继续无效。历史边界检查见 [开发自测](../../reports/person3/verification.md)。
+D2缺失营收sources为空仍由IF-01处理；快照可恢复不代表所有来源完整或三域全链通过。
 
-下一步：总控裁决IF-00、原负责人对齐并交commit后，人员3真实三域项目恢复及损坏文件拒绝；核对失败保留原项目、历史解释不冒充实时调用。人员4按 [验收矩阵](../../acceptance/cases.md) 的 SAVE-01/02/03、STATE-01 独立复验；依赖未齐暂缓真实联调与签收，不减少必做项。
+下一步：人员4固定新commit复验 [SAVE-01/02/03、STATE-01](../../acceptance/cases.md)，重点检查损坏文件拒绝、失败保留原项目与历史状态。

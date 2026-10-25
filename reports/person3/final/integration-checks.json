@@ -1,0 +1,253 @@
+{
+  "productCommit": "c5c91cb292936e1aa0986caa05adc751453433a6",
+  "clientDuringUI": "33c34387025c0bce96b8d66a98af5fe0414b34a3",
+  "serviceDuringUI": "6095758d1fdb5a6586c87556c9399c35aef1f9fa",
+  "inputs": [
+    {
+      "domain": "D1",
+      "datasetId": "ds:d1-resident-income-expenditure",
+      "datasetVersion": "v1:a8089739d1a26a4581e6f3ec",
+      "sources": [
+        {
+          "file": "NBS_fsYearData_income__全体居民人均可支配收入(元).csv",
+          "sha256": "9b19c0e867b282d4b47d3e72ae05441872f9cb0cd7eb79a15b0da16ccbb71a78"
+        },
+        {
+          "file": "NBS_fsYearData_expend__全体居民人均消费支出(元).csv",
+          "sha256": "3a55ba5fd6327ad0ddbf1ec19e3c0f40c1d823e26830331ee0a8cb24f137a0c0"
+        }
+      ]
+    },
+    {
+      "domain": "D2",
+      "datasetId": "ds:d2-listed-company-finance",
+      "datasetVersion": "v1:46858cc3a18ab72d174fdd0e",
+      "sources": [
+        {
+          "file": "EM_yjbb_FY2025_20251231.csv",
+          "sha256": "c519acb415f858731e5cda99f578b536acb5eb0b59d57963d871ed23223b43a6"
+        }
+      ]
+    },
+    {
+      "domain": "D3",
+      "datasetId": "ds:d3-gasgoo-firm-monthly",
+      "datasetVersion": "v1:79420aaf75025c355363b70f",
+      "sources": [
+        {
+          "file": "GASGOO_rank_firm_202608.csv",
+          "sha256": "c46f0b18fe99e619c8b0545a030b4cb0a22d36afc5d67a87ca378f81fec64262"
+        }
+      ]
+    }
+  ],
+  "domains": [
+    {
+      "domain": "D1",
+      "analysisId": "analysis:ae5630ca45ee22b7ba0444f1",
+      "requestId": "c3c9f64d-4cfa-4384-b923-b18a3a606d22",
+      "scopeRecords": 31,
+      "model": "deepseek-flash",
+      "generatedAt": "2026-10-25T08:06:02.368Z",
+      "validInsights": 4,
+      "resultRefs": [
+        [
+          "analysis:ae5630ca45ee22b7ba0444f1:mean:income_all",
+          "analysis:ae5630ca45ee22b7ba0444f1:median:income_all"
+        ],
+        [
+          "analysis:ae5630ca45ee22b7ba0444f1:stddev:income_all",
+          "analysis:ae5630ca45ee22b7ba0444f1:q1:income_all",
+          "analysis:ae5630ca45ee22b7ba0444f1:q3:income_all",
+          "analysis:ae5630ca45ee22b7ba0444f1:low:income_all",
+          "analysis:ae5630ca45ee22b7ba0444f1:high:income_all"
+        ],
+        [
+          "analysis:ae5630ca45ee22b7ba0444f1:mean:expend_all",
+          "analysis:ae5630ca45ee22b7ba0444f1:median:expend_all",
+          "analysis:ae5630ca45ee22b7ba0444f1:stddev:expend_all",
+          "analysis:ae5630ca45ee22b7ba0444f1:q1:expend_all",
+          "analysis:ae5630ca45ee22b7ba0444f1:q3:expend_all"
+        ],
+        [
+          "analysis:ae5630ca45ee22b7ba0444f1:pearson:income_all+expend_all"
+        ]
+      ],
+      "statistics": [
+        {
+          "metric": "mean",
+          "fields": [
+            "income_all"
+          ],
+          "value": 40790.645161290326,
+          "valid": 31,
+          "excluded": 0
+        },
+        {
+          "metric": "mean",
+          "fields": [
+            "expend_all"
+          ],
+          "value": 27690.064516129034,
+          "valid": 31,
+          "excluded": 0
+        },
+        {
+          "metric": "pearson",
+          "fields": [
+            "income_all",
+            "expend_all"
+          ],
+          "value": 0.9837860625634043,
+          "valid": 31,
+          "excluded": 0
+        }
+      ]
+    },
+    {
+      "domain": "D2",
+      "analysisId": "analysis:85fa7af18b1a361461ac8d74",
+      "requestId": "d29d2513-f976-4234-ab7f-593fb57aef0a",
+      "scopeRecords": 5228,
+      "model": "deepseek-flash",
+      "generatedAt": "2026-10-25T08:05:40.274Z",
+      "validInsights": 4,
+      "resultRefs": [
+        [
+          "analysis:85fa7af18b1a361461ac8d74:mean:revenue",
+          "analysis:85fa7af18b1a361461ac8d74:median:revenue"
+        ],
+        [
+          "analysis:85fa7af18b1a361461ac8d74:stddev:revenue",
+          "analysis:85fa7af18b1a361461ac8d74:q1:revenue",
+          "analysis:85fa7af18b1a361461ac8d74:q3:revenue"
+        ],
+        [
+          "analysis:85fa7af18b1a361461ac8d74:median:net_profit",
+          "analysis:85fa7af18b1a361461ac8d74:q1:net_profit",
+          "analysis:85fa7af18b1a361461ac8d74:mean:net_profit"
+        ],
+        [
+          "analysis:85fa7af18b1a361461ac8d74:pearson:revenue+net_profit"
+        ]
+      ],
+      "statistics": [
+        {
+          "metric": "mean",
+          "fields": [
+            "revenue"
+          ],
+          "value": 13964968470.386326,
+          "valid": 5227,
+          "excluded": 1
+        },
+        {
+          "metric": "mean",
+          "fields": [
+            "net_profit"
+          ],
+          "value": 1033045814.7029896,
+          "valid": 5228,
+          "excluded": 0
+        },
+        {
+          "metric": "pearson",
+          "fields": [
+            "revenue",
+            "net_profit"
+          ],
+          "value": 0.5270947226631513,
+          "valid": 5227,
+          "excluded": 1
+        }
+      ]
+    },
+    {
+      "domain": "D3",
+      "analysisId": "analysis:0146ae7cff7d1b5651bb6f06",
+      "requestId": "e4af32b4-0752-45da-b6bd-a2ae5dea7787",
+      "scopeRecords": 50,
+      "model": "deepseek-flash",
+      "generatedAt": "2026-10-25T08:07:11.425Z",
+      "validInsights": 4,
+      "resultRefs": [
+        [
+          "analysis:0146ae7cff7d1b5651bb6f06:mean:month_sales",
+          "analysis:0146ae7cff7d1b5651bb6f06:median:month_sales"
+        ],
+        [
+          "analysis:0146ae7cff7d1b5651bb6f06:q1:month_sales",
+          "analysis:0146ae7cff7d1b5651bb6f06:q3:month_sales",
+          "analysis:0146ae7cff7d1b5651bb6f06:low:month_sales",
+          "analysis:0146ae7cff7d1b5651bb6f06:high:month_sales",
+          "analysis:0146ae7cff7d1b5651bb6f06:stddev:month_sales"
+        ],
+        [
+          "analysis:0146ae7cff7d1b5651bb6f06:mean:yoy",
+          "analysis:0146ae7cff7d1b5651bb6f06:median:yoy",
+          "analysis:0146ae7cff7d1b5651bb6f06:stddev:yoy",
+          "analysis:0146ae7cff7d1b5651bb6f06:q1:yoy",
+          "analysis:0146ae7cff7d1b5651bb6f06:q3:yoy"
+        ],
+        [
+          "analysis:0146ae7cff7d1b5651bb6f06:pearson:month_sales+yoy"
+        ]
+      ],
+      "statistics": [
+        {
+          "metric": "mean",
+          "fields": [
+            "month_sales"
+          ],
+          "value": 46860.4,
+          "valid": 50,
+          "excluded": 0
+        },
+        {
+          "metric": "mean",
+          "fields": [
+            "yoy"
+          ],
+          "value": 67412.6678,
+          "valid": 50,
+          "excluded": 0
+        },
+        {
+          "metric": "pearson",
+          "fields": [
+            "month_sales",
+            "yoy"
+          ],
+          "value": -0.04672197235377263,
+          "valid": 50,
+          "excluded": 0
+        }
+      ]
+    }
+  ],
+  "snapshot": {
+    "bytes": 19372951,
+    "sha256": "70afba46a12be15c8a62f63a080753547bf16bf9d6ad5af35cbecaf1e812da91",
+    "datasets": 3,
+    "analyses": 6,
+    "insights": 66,
+    "validLive": 21,
+    "invalidHistorical": 3,
+    "selectedNode": "finding:insight:d5e86276513ad34d5b8f5b5f"
+  },
+  "uiChecks": {
+    "threeChartsEachDomain": true,
+    "statisticsNumberToSourceEachDomain": true,
+    "aiNumberToSourceEachDomain": true,
+    "aiFindingToSourceEachDomain": true,
+    "nullIndustryFilter": {
+      "scopeRecords": 1,
+      "staleViewHidden": true
+    }
+  },
+  "limitations": [
+    "D2 missing revenue record 688759 has no direct source reference; IF-01 tracks record 2755 column 4.",
+    "AI semantic wording still requires review: D1/D2 include generic ranking-market phrasing.",
+    "Independent UI audit is not signed off."
+  ]
+}

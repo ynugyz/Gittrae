@@ -1,12 +1,15 @@
-# IF-08 · POST /api/insights：真实DeepSeek解读
+# IF-08 · 真实AI交接【人员2、3、4必读】
 
-必做；人员2负责服务，人员3负责客户端。本次报告人：本机人员3，2026-10-25T15:40:01+08:00；dev/app客户端交接，服务端事实仅转录作者报告。直接依赖IF-00、IF-02，三域验收另需IF-01；契约 [v1.0](../01_公共接口.md)，未有新语义批准。
+人员3，2026-10-25 16:10阶段汇报。固定产品`c5c91cb`；页面测试客户端`33c3438`与当前前端代码一致，运行服务`6095758`。官方api.deepseek.com，实际模型deepseek-flash；密钥仅人员2启动的127.0.0.1:8787服务进程。
 
-| 部分 | 实现commit及证据 | 状态 |
-|---|---|---|
-| 人员3客户端 | `39c92f147dc1ff81e0bdaf9f4190b81051a74cbd`；[客户端](https://github.com/ynugyz/Gittrae/blob/39c92f147dc1ff81e0bdaf9f4190b81051a74cbd/src/app/api.ts)、[响应状态](https://github.com/ynugyz/Gittrae/blob/39c92f147dc1ff81e0bdaf9f4190b81051a74cbd/src/app/state.ts)；本轮在`197d6b2478e5666eef2dd241a4bd1a0443fce435`复跑20项检查，见 [自测](../../reports/person3/verification.md#handoff-recheck) | passed（仅客户端自测）：最小投影、不带原数据/密钥、HTTP/JSON/网络失败、跨分析及无效引用拒绝；伪响应不是官方API成功 |
-| 人员2服务端 | `8dff711eac824fb7acedeca9f9c0c301c9fe52fa`；[作者报告](https://github.com/ynugyz/Gittrae/blob/8dff711eac824fb7acedeca9f9c0c301c9fe52fa/reports/人员2_交付与复验.md) 记录18项自测及官方API、HTTP 200探通 | in_progress：远程代码已取得，作者报告探通成功；人员3本轮未运行或独立复验。报告绑定成果commit `d72ab3f7a98d88f2f0904d6241729af7e85bd4d5`，最新HTTP成功证据为15:33:53 |
-| 三域应用联调 | 无相容集成commit；[IF-00](IF-00-contracts.md)记录入口、字段、运行边界和facts映射问题 | blocked：未从人员3页面完成三域真实调用 |
-| 人员4产品复验 | 无当前集成版本报告 | not_started |
+| 页面场景/北京时间 | analysisId | requestId | 有效解释 |
+|---|---|---|---|
+| D1 2024收入/消费，16:06:02.368 | analysis:ae5630ca45ee22b7ba0444f1 | c3c9f64d-4cfa-4384-b923-b18a3a606d22 | 4 |
+| D2 FY2025营收/净利润，16:05:40.274 | analysis:85fa7af18b1a361461ac8d74 | d29d2513-f976-4234-ab7f-593fb57aef0a | 4 |
+| D3 2026-08单月销量/同比，16:07:11.425 | analysis:0146ae7cff7d1b5651bb6f06 | e4af32b4-0752-45da-b6bd-a2ae5dea7787 | 4 |
 
-下一步：总控明确IF-00接口边界，人员2对齐服务与统计，人员3接通启动及请求。随后三域各一次页面触发真实调用，记录脱敏时间、模型、analysisId和引用；人员4按 [AI-01/02/03、STATE-01、TRACE-01](../../acceptance/cases.md) 复验。上游探通证据不作废，也不扩大为三域应用通过；当前暂缓整体签收。
+均由页面触发，并与[人员2严格服务日志](https://github.com/ynugyz/Gittrae/blob/517dd2cdb885b8a542fc974b7ab58ccee96579ee/handoff/status/IF-08-live-insights.md)按时间和analysisId对应。逐条引用及输入SHA见[机器证据](../../reports/person3/final/integration-checks.json)；页面文本：[D1](../../reports/person3/final/d1-strict-page.txt)、[D2](../../reports/person3/final/d2-strict-page.txt)、[D3](../../reports/person3/final/d3-strict-page.txt)。每域AI数字和发现节点均已点击回到原始记录。
+
+严格边界：字段映射/有效样本数保留；未知/跨分析引用、裸数字和错误占位拒绝；服务与共享图/恢复校验一致。旧响应不覆盖当前项目。最终项目保存并在空白页恢复，最新12条解释保留、标历史且未触发模型；[恢复证据](../../reports/person3/final/restore-check.json)。旧版3条裸数字解释已标invalid保留原文，[失效清单](../../reports/person3/final/invalidated-legacy-ai.json)，旧成功不替代新版成绩。
+
+未签收：独立页面复验尚待人员4；D1/D2部分解释出现“榜单/市场”泛化措辞，须人工审阅，不能把数值引用通过视为全部语义正确。服务重启需在服务端重新配置环境变量；不上传密钥、不用模板补成功。

@@ -1,25 +1,17 @@
-# IF-00 · 公共契约与接线约定
+# IF-00 · 公共契约与集成【全员必读】
 
-必做；负责人：人员3，总控审批语义变更。报告人：本机人员3，2026-10-25T15:40:01+08:00；来源分支dev/app。依据 [v1.0](../01_公共接口.md) 及 [总控汇报规则](../decisions/2026-10-25-interface-reporting.md)，本轮无新增产品接口批准。
+人员3，2026-10-25 16:10阶段汇报。产品固定为 `c5c91cb292936e1aa0986caa05adc751453433a6`（dev/app）；数据入口 `1ba946d`，服务实现 `6095758`。依据[总控正式决定](https://github.com/ynugyz/Gittrae/blob/db28c7cd6a23dfb45ded717baaf2e803b7f42145/handoff/decisions/2026-10-25-final-40-minutes.md)；schemaVersion=1，src/contracts为唯一浏览器契约。
 
-实现：`39c92f147dc1ff81e0bdaf9f4190b81051a74cbd`，[类型](https://github.com/ynugyz/Gittrae/blob/39c92f147dc1ff81e0bdaf9f4190b81051a74cbd/src/contracts/index.ts)、[样例](https://github.com/ynugyz/Gittrae/blob/39c92f147dc1ff81e0bdaf9f4190b81051a74cbd/src/contracts/example.ts)、[接线](https://github.com/ynugyz/Gittrae/blob/39c92f147dc1ff81e0bdaf9f4190b81051a74cbd/src/app/modules.ts)。本轮复跑commit `197d6b2478e5666eef2dd241a4bd1a0443fce435`，产品文件一致；[自测证据](../../reports/person3/verification.md#handoff-recheck)。
+File[]与默认范围已接通。统计走同机8787 POST /api/analyze；只传规范值及必要元数据，不传原字节/原始记录/逐格来源。AI facts含fieldIds/sampleSize；引用检查后重建发现图。异步返回检查请求序号和项目快照。共享校验与服务均拒绝AI占位符外裸数字；null筛选及重复分析时间冲突已修复。
 
-| 阶段 | 状态与证据 |
+| 阶段 | 实际状态 |
 |---|---|
-| 实现 | in_progress：人员3公共类型、样例及页面接线已交付，跨模块兼容尚未完成 |
-| 本机自测 | passed：20项测试、构建、格式检查；覆盖为人员3模块，非上游联调 |
-| 真实联调 | blocked：下述可复查差异尚未对齐 |
-| 人员4产品复验 | not_started：尚无相容的集成commit |
+| 开发验证 | 53项测试、生产构建通过；Node统计测试仍由npm test执行；大图表分包提示保留 |
+| 三域页面 | D1 2024年31条、D2 FY2025 5228条、D3 2026-08 Top50：统计、三图、统计数字/AI数字/发现节点回源均已操作通过 |
+| 真实AI | 每域4条通过新版严格校验，模型deepseek-flash；时间/请求/分析编号见[IF-08](IF-08-live-insights.md) |
+| 保存恢复 | 最终19,372,951字节，3域6次历史分析，选中发现节点及全部内容往返一致（仅savedAt改变）；历史AI标注正确 |
+| 独立签收 | 尚未完成最终版本的独立页面复验；不得把作者页面证据称独立签收 |
 
-## 已取得的上游与差异（本轮仅静态核对）
+剩余限制：D2唯一缺失营收688759未提供直接单元格来源，已在[IF-01](IF-01-import-files.md)交人员1（原记录2755、列4）；AI部分D1/D2措辞使用“榜单/市场”，文字含义仍待审阅，引用检查不等于语义正确。旧版3条裸数字解释明确标invalid保留原文，不进入发现图或有效解释。
 
-| 来源 | 远程实现commit / 作者证据 | 当前接入障碍 |
-|---|---|---|
-| 人员1 | `2781eca3a7ca05543330a91697c0fb02d93243aa`；[作者报告](https://github.com/ynugyz/Gittrae/blob/2781eca3a7ca05543330a91697c0fb02d93243aa/src/data/REPORT.md) 声称54项通过、58/58覆盖；本机未复跑 | `importFiles.ts`接收name/bytes，页面检测index.ts并传File[]；originalName/parseOptions、可空unit、affectedFields等与共享类型不同，仍有types.ts镜像 |
-| 人员2 | `8dff711eac824fb7acedeca9f9c0c301c9fe52fa`；[作者报告](https://github.com/ynugyz/Gittrae/blob/8dff711eac824fb7acedeca9f9c0c301c9fe52fa/reports/人员2_交付与复验.md) 记录18项自测和API/HTTP探通；本机未复跑。远程文档提交为8dff711，报告绑定成果commit `d72ab3f7a98d88f2f0904d6241729af7e85bd4d5` | 入口index.mjs/server/index.mjs未被.ts接线识别；ids.mjs依赖node:crypto；scope.selectedRecordIds/labels、对象型ref、reason/validCount及methodVersion与当前校验不符；数据集节点已改为优先复用，指标节点ID和须线样本覆盖仍需对齐 |
-
-默认范围钩子、AI resultId到fieldId映射、通用CSV角色/单位确认仍待决定；本次汇报规则没有批准这些变更。上游已有代码，不能继续写“未开发/未交付”，也不能将作者自测变成人员3或审计已验证。
-
-## 最小下一步
-
-总控先裁决上述字段、ID和浏览器/服务端边界；人员1/2按决定对齐模块，人员3更新唯一共享类型、样例与接线。相容模块commit齐备后，人员3执行三域联调，再交人员4按 [验收矩阵](../../acceptance/cases.md) 复验。当前不直接合入不相容业务模块；独立自测可继续，签收暂缓。
+最小接手：[人员3入口](../人员3_界面与集成/START_HERE.md) → [运行说明](../人员3_界面与集成/IMPLEMENTATION.md#runtime) → [机器证据](../../reports/person3/final/integration-checks.json)及[恢复比较](../../reports/person3/final/restore-check.json)。接下来仅补上述缺口与独立审计，不扩功能。
