@@ -151,6 +151,16 @@ if (appRoot && analyses.length === 3) {
   for (const a of analyses) await check(`${a.request.filters[0].fieldId}:core-getEvidence`,()=>{
     const e=graph.getEvidence(project,a.results[0].resultId); assert.equal(e.analysisId,a.analysisId); assert.equal(e.validCount,a.results[0].validRecordIds.length); return {validCount:e.validCount};
   });
+  await check('D2:excluded-missing-revenue-has-original-empty-cell',()=>{
+    const a=analyses.find(a=>a.datasetId===d2.datasetId);const mean=result(a,'mean','revenue');const e=graph.getEvidence(project,mean.resultId);
+    const missing=d2.records.find(r=>r.values.report_period==='FY2025'&&r.values.code==='688759');assert.ok(missing);assert.equal(missing.values.revenue,null);
+    const original=d2.sources.find(s=>s.originalFileName.includes('FY2025'));const codeCol=original.headers.indexOf('股票代码'),revenueCol=original.headers.indexOf('营业总收入-营业总收入');
+    const row=original.rawRecords.findIndex(r=>r[codeCol]==='688759');assert.ok(row>=0);assert.equal(original.rawRecords[row][revenueCol],'');
+    const cell=e.excludedRecords.find(r=>r.recordId===missing.recordId)?.cells.find(c=>c.fieldId==='revenue');assert.ok(cell);
+    assert.ok(cell.sources.length>0,`688759 original record=${row+1}, column=${revenueCol}, raw empty exists but excluded evidence sources.length=0`);
+    assert.equal(cell.sources[0].recordIndex,row+1);assert.equal(cell.sources[0].columnIndex,revenueCol);assert.equal(cell.sources[0].rawValue,'');
+    return {recordId:missing.recordId,recordIndex:row+1,columnIndex:revenueCol,rawValue:''};
+  });
   const a=analyses[0],r=a.results[0];
   const simulated={insightId:'audit-simulated-insight',analysisId:a.analysisId,kind:'interpretation',origin:'live_ai',textTemplate:`参考 {{result:${r.resultId}}}；相关不等于因果。`,resultRefs:[r.resultId],generatedAt:now,model:'audit-simulated-model',status:'valid'};
   const synthetic={analysisId:a.analysisId,requestId:'audit-simulated-request',insights:[simulated],graph:graph.buildInsightGraph([simulated],[a]),model:simulated.model,generatedAt:now};
@@ -215,6 +225,10 @@ if (appRoot && analyses.length === 3) {
       let response; try { response=await api.requestInsights(project.datasets[0],a,new AbortController().signal); } catch { return; }
       assert.fail(`raw fabricated numeric literal accepted as ${response.insights[0].status}; actual deterministic value=${r.value}`);
     });
+    await check('SIMULATED:server-itself-rejects-unbound-number',async()=>{
+      const response=await realFetch(fakeBase+'/api/insights',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({analysisId:a.analysisId,facts:a.results.map(r=>({resultId:r.resultId,fieldIds:r.fieldIds,metric:r.metric,value:r.value,unit:r.unit,method:r.method,sampleSize:r.validRecordIds.length})),context:{}})});
+      const body=await response.json();assert.equal(response.status,502);assert.equal(body.error.code,'unbound_numeric_value');
+    });
   } finally { globalThis.fetch=realFetch; await new Promise(resolve=>fake.close(resolve)); }
   if(process.env.AUDIT_RUNNING_BASE) {
     const runningBase=process.env.AUDIT_RUNNING_BASE; assert.match(runningBase,/^http:\/\/127\.0\.0\.1:\d+$/);
@@ -276,6 +290,12 @@ if (appRoot && analyses.length === 3) {
       assert.ok(network.nodes.filter(n=>n.type==='calculation').every(n=>n.ref.startsWith(a.analysisId+':')));
       for(const insight of record.insights)for(const ref of insight.resultRefs) {const e=graph.getEvidence(owned,ref);assert.equal(e.analysisId,a.analysisId);assert.ok(e.validCount>0);assert.ok(network.edges.some(edge=>edge.id===`cites:${insight.insightId}:${ref}`));}
       return {sourceEvidenceFile:path.basename(process.env.AUDIT_REUSE_LIVE_EVIDENCE),historicalGeneratedAt:record.generatedAt,analysisId:a.analysisId,currentNetworkNodes:network.nodes.length,newModelRequests:0};
+    });
+    if(old.liveAi?.length===3)await check('SAVE:replay-current-method-real-AI-history-without-network',async()=>{
+      const actualInsights=old.liveAi.flatMap(r=>r.insights);const withAi={...project,insights:[...project.insights,...actualInsights],selection:{...project.selection,nodeId:`finding:${actualInsights.at(-1).insightId}`}};
+      let fetches=0;const savedFetch=globalThis.fetch;globalThis.fetch=async()=>{fetches++;throw new Error('restore must not use network');};
+      try{const json=await storage.exportProject(withAi);assert.deepEqual(await storage.importProject(json),withAi);assert.equal(fetches,0);return {historicalEvidenceFile:path.basename(process.env.AUDIT_REUSE_LIVE_EVIDENCE),liveAiRecords:actualInsights.length,networkRequestsDuringRestore:fetches,jsonBytes:Buffer.byteLength(json)};}
+      finally{globalThis.fetch=savedFetch;}
     });
   }
 }
