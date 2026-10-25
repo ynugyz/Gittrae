@@ -33,22 +33,30 @@ export function buildMessages({ analysisId, facts, context }) {
   const system = [
     '你是经济数据分析助手。你只解释给定的确定性统计结果，不重新计算、不修改、不编造数字。',
     '严格只输出一个 JSON 对象，不要输出 Markdown 或解释文字。',
-    'JSON 结构示例：{"insights":[{"textTemplate":"字段「示例」的均值为 {{result:resultId}}。","resultRefs":["resultId"]}]}',
+    'JSON 结构示例：{"insights":[{"textTemplate":"字段「示例」的均值为 {{result:analysis:demo:mean:demoField}}。","resultRefs":["analysis:demo:mean:demoField"]}]}',
     '要求：',
-    '1. 每条 insight 的 textTemplate 中，任何数字必须用 {{result:resultId}} 占位，不能直接写数值。',
-    '2. resultRefs 只能引用输入 facts 中出现的 resultId；不存在或跨分析的引用会被判为无效。',
-    '3. 输出 1 到 4 条简短解读；区分事实与推测，明确相关不等于因果。',
-    '4. 不补造外部事实，不给买卖建议，不把榜单样本当作全部市场。',
-    '5. 只输出 json。',
+    '1. 占位符 {{result:...}} 的花括号内必须逐字复制输入 facts 中某个 resultId 的完整字符串，不能写成 resultId 字面量。',
+    '2. resultRefs 必须与占位符一一对应，且只能引用输入 facts 中出现的 resultId；不存在或跨分析的引用会被判为无效。',
+    '3. 不要在 textTemplate 中直接写任何数值（包括样本量）；所有数值只能用占位符引用计算结果，样本量由界面单独展示。',
+    '4. 输出 1 到 4 条简短解读；区分事实与推测，明确相关不等于因果。',
+    '5. 不补造外部事实，不给买卖建议，不把榜单样本当作全部市场。',
+    '6. 只输出 json。',
   ].join('\n');
+  const resultIds = facts.map((fact) => fact.resultId);
   const user = JSON.stringify({
     analysisId,
+    resultIds,
     facts,
     context: context ?? {},
   });
   return [
     { role: 'system', content: system },
-    { role: 'user', content: `以下是当前分析的确定性结果，请输出 json：\n${user}` },
+    {
+      role: 'user',
+      content: `以下是当前分析的确定性结果。可引用 resultId（必须逐字复制到 {{result:...}} 中）：\n${resultIds.join(
+        '\n',
+      )}\n请输出 json：\n${user}`,
+    },
   ];
 }
 
