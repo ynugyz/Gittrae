@@ -1,14 +1,14 @@
-# IF-08 · 本机分析与真实AI接线
+# IF-08 · 本机服务与真实AI【人员2、3、4必读】
 
-必做；人员2服务，人员3客户端。人员3报告：2026-10-25T15:51:37+08:00，dev/app；客户端commit `a0023b3da87a2a1b888f1b7d99b882f5ac427901`；依据总控本阶段批准的窄范围接口决定，schemaVersion保持1。
+人员3接收记录，2026-10-25 15:59。集成代码`d88c32a`；服务来自人员2 `042ca2c`。同机127.0.0.1:8787，/api/health已确认keyConfigured=true、model=deepseek-flash。密钥只在人员2启动的服务进程，不进入页面或项目文件。
 
-已做：AI最小facts携带fieldIds及sampleSize；统计改为POST /api/analyze（见IF-00）；同一8787服务，启动兼容index.mjs。解释先检查所属分析、结果引用及占位，再重建固定finding/cites。共享验证禁止live_ai冒充fact，恢复路径同样检查。API响应和异步项目校验后均检查请求序号/快照。
+客户端发送最小facts（含fieldIds/sampleSize）；响应检查analysisId、模型、来源类型、结果引用与占位，随后重建固定发现图。旧响应及异步验证中项目变化均拒绝覆盖。恢复仍使用同样严格校验；历史解读不得显示为本次调用。
 
-| 阶段 | 状态 |
+| 页面真实调用 | 状态/证据 |
 |---|---|
-| 客户端自测 | passed：22项边界/存储/图谱检查及构建；其中新增统计请求不传原来源、未知引用拒绝、恢复拒绝伪造AI事实 |
-| 服务端 | in_progress：人员2原探通证据保留；本轮等待/api/analyze及最新归一化交付，未由人员3复验 |
-| 三域页面真实AI | not_started：待真实数据和服务接入 |
-| 人员4产品复验 | not_started |
+| D1 2024收入/消费，31条 | passed：15:56:58，4条实时解读；[页面文本](../../reports/person3/final/d1-page.txt)、[截图](../../reports/person3/final/d1-page.png) |
+| D2 FY2025营收/净利润，5228条 | passed：15:57:48，4条实时解读；[页面文本](../../reports/person3/final/d2-page.txt)、[截图](../../reports/person3/final/d2-page.png) |
+| D3 2026-08月销量/同比 | in_progress |
+| 三域合并保存恢复/独立审计 | 未完成 |
 
-直接依赖IF-00/01/02/03。下一步人员3按D1→D2→D3接入，三域各一次页面真实调用，记录脱敏requestId/model/analysisId；人员4按AI/TRACE/STATE用例复验。密钥仅服务端；缺配置如实blocked，不用模板补验收。
+上述均由页面按钮触发，模型deepseek-flash；requestId/analysisId将与人员2脱敏服务日志对照，不以此前单独HTTP探通替代。首次临时浏览器会话意外关闭，页面证据已保存；重建合并项目进行恢复验收，最多每域再一次必要真实调用。所有作者历史探通记录保留在[人员2报告](../../reports/人员2_交付与复验.md)。

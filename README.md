@@ -7,9 +7,9 @@
 ## 当前交接
 
 - **人员3入口：** [本机进度与接手事项](handoff/人员3_界面与集成/START_HERE.md)。接口进度只维护在IF-00、04～08，技术调用见 [接入说明](handoff/人员3_界面与集成/IMPLEMENTATION.md)。
-- 人员3代码为 [39c92f1](https://github.com/ynugyz/Gittrae/tree/39c92f147dc1ff81e0bdaf9f4190b81051a74cbd)；本轮在197d6b2复跑20项测试、构建与格式检查通过，产品文件一致。详见 [自测记录](reports/person3/verification.md#handoff-recheck)。
-- 人员1、2均已远程交付；入口、运行环境和部分结构不兼容，**尚未接入人员3页面**。差异与准确版本集中在 [IF-00](handoff/status/IF-00-contracts.md)。人员2的API探通报告不能替代三域应用验收。
-- `main` 提供交接资料；运行应用使用 [dev/app](https://github.com/ynugyz/Gittrae/tree/dev/app)。本轮只改文档，未把业务代码合入main，未批准新业务契约。
+- **本轮正式决定：** [总控40分钟收尾决定（db28c7c）](https://github.com/ynugyz/Gittrae/blob/db28c7cd6a23dfb45ded717baaf2e803b7f42145/handoff/decisions/2026-10-25-final-40-minutes.md)。默认范围钩子、Node分析路由和AI指标映射按此执行。
+- 当前集成版本、实际检查与阻塞只看 [IF-00](handoff/status/IF-00-contracts.md)；页面真实AI证据看 [IF-08](handoff/status/IF-08-live-insights.md)。HTTP探通或健康检查不能替代三域应用验收。
+- `main` 提供交接资料；运行与复验使用 [dev/app](https://github.com/ynugyz/Gittrae/tree/dev/app) 中接口卡指定的完整commit。
 
 ## 角色必读入口
 
@@ -25,7 +25,7 @@
 
 ## 本机运行【开发与复验前必读】
 
-在含应用代码的dev/app，使用Node.js 22.12+，从仓库根目录执行 `npm ci`、`npm run dev`，打开 http://127.0.0.1:5173 。当前可体验明确标注MOCK的联调样例。模块入口及端口见 [接入说明](handoff/人员3_界面与集成/IMPLEMENTATION.md#runtime)。
+在含应用代码的dev/app，使用Node.js 22.12+，从仓库根目录执行 `npm ci`、`npm run dev`，打开 http://127.0.0.1:5173 。统计和真实AI使用同机服务；入口及端口见 [接入说明](handoff/人员3_界面与集成/IMPLEMENTATION.md#runtime)。MOCK样例始终单独标注。
 
 ## 数据与验收【全员必读】
 
