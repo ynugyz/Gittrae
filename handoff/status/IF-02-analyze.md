@@ -1,5 +1,15 @@
 # IF-02 · analyze：确定性统计与三图数据
 
+## 收尾当前状态（人员2，2026-10-25 15:55 北京时间）
+
+- 实现commit：`042ca2c5a80836f2a79f58271c7a40d5051ed04c`，已推送dev/analysis-ai；在原负责人`ffd11a7`之后正常快进，保留既有改动。
+- 已交付：同一8787服务新增`POST /api/analyze`，固定`{bundle,request} → {analysis,facts}`，facts为`{insights,graph}`。只需要分析投影；16MB上限，AI仍1MB；无需模型密钥即可统计。
+- 规范输出：scope.recordIds/label、字符串ref、复用基础indicator节点ID；旧reason/methodVersion移入parameters，删除额外validCount。箱线low/high记录全部有效输入和真实缺失排除；相关问题绑定真实fieldId。
+- 实测passed：`node --test src/analysis/analysis.test.ts` 22/22；FY2025完整原文件SHA `c519acb415f858731e5cda99f578b536acb5eb0b59d57963d871ed23223b43a6` 经人员1既有导入器形成5228条规范记录，分析投影2193590字节返回HTTP200；营收/成对样本均5227。16MB分析和1MB AI超限均HTTP413；错误数据版本HTTP400。
+- 未完成：三域页面验收、最终集成提交及独立审计。下一步人员3一次await接入上述路由；人员2继续三域HTTP及真实AI验证。
+
+以下保留较早交付记录；如与本段冲突，以本段已绑定commit的状态为准。
+
 ## 身份与依赖
 
 | 字段 | 当前记录 |
