@@ -19,6 +19,9 @@ export function validateInsight(insight, { analysisId, resultIds }) {
   }
   const known = resultIds instanceof Set ? resultIds : new Set(resultIds ?? []);
   const refs = Array.isArray(insight.resultRefs) ? insight.resultRefs.map(String) : [];
+  if (refs.length === 0 || new Set(refs).size !== refs.length) {
+    errors.push({ code: 'invalid_result_refs', message: '结果引用不能为空或重复' });
+  }
   for (const resultId of refs) {
     if (!known.has(resultId)) {
       errors.push({ code: 'unknown_result', message: `引用了不存在或不属于当前分析的结果：${resultId}` });
@@ -37,6 +40,9 @@ export function validateInsight(insight, { analysisId, resultIds }) {
     }
   }
   const leftover = text.replace(PLACEHOLDER, '');
+  if (refs.some((ref) => !used.has(ref))) {
+    errors.push({ code: 'unused_ref', message: 'resultRefs 中存在未在文本使用的引用' });
+  }
   if (leftover.includes('{{') || leftover.includes('}}')) {
     errors.push({ code: 'malformed_placeholder', message: '存在无法解析的占位符' });
   }

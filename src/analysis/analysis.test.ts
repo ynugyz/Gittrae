@@ -9,7 +9,7 @@ import { analyze, AnalysisError } from './analyze.mjs';
 import { buildFacts } from './facts.mjs';
 import { validateInsights } from './validate.mjs';
 import { boxplot, histogram, mean, median, pearson, quantileType7, sampleStdDev } from './statistics.mjs';
-import { createInsightsServer } from '../../server/insights.mjs';
+import { createInsightsServer, normalizeFacts } from '../../server/insights.mjs';
 
 const TOLERANCE = 1e-9;
 
@@ -105,7 +105,8 @@ test('analyze 产出均值、三图数据与派生图', () => {
   close(resultOf(analysis, 'pearson', ['x', 'y']).value, 1, 'Pearson');
 
   for (const result of analysis.results) {
-    assert.equal(result.validCount, result.validRecordIds.length);
+    assert.equal('validCount' in result, false);
+    assert.equal(result.validRecordIds.length + result.excludedRecordIds.length, analysis.scope.recordIds.length);
   }
 
   assert.equal(analysis.chartData.histograms.length, 2);
@@ -185,7 +186,7 @@ test('缺失与常量：逐列删除、成对相关、常量箱线图', () => {
 
   const constantCorrelation = analyzerWithConstant(records);
   assert.equal(constantCorrelation.value, null);
-  assert.equal(constantCorrelation.reason, 'constant_field');
+  assert.equal(constantCorrelation.parameters.reason, 'constant_field');
 });
 
 function analyzerWithConstant(records) {
@@ -210,7 +211,7 @@ test('全缺失：统计为 null，直方图为空', () => {
   ];
   const analysis = analyze(makeBundle(records), request({ measureFieldIds: ['x'] }));
   assert.equal(resultOf(analysis, 'mean', ['x']).value, null);
-  assert.equal(resultOf(analysis, 'mean', ['x']).validCount, 0);
+  assert.equal(resultOf(analysis, 'mean', ['x']).validRecordIds.length, 0);
   const hist = analysis.chartData.histograms.find((item) => item.fieldId === 'x');
   assert.deepEqual(hist.edges, []);
   assert.deepEqual(hist.counts, []);
@@ -239,7 +240,8 @@ test('分析编号绑定方法版本，并复用人员1 的数据集节点 ID', 
     },
   });
   const analysis = analyze(bundle, request());
-  assert.equal(analysis.methodVersion, 'analysis-methods-v1');
+  assert.equal(analysis.results[0].parameters.methodVersion, 'analysis-methods-v1');
+  assert.equal('methodVersion' in analysis, false);
   const selects = analysis.graph.edges.find((edge) => edge.type === 'selects');
   assert.equal(selects.to, 'dataset:custom-node');
 });
@@ -257,6 +259,8 @@ test('箱线图异常点仍能映射回原始记录', () => {
   assert.deepEqual(box.outliers, [{ recordId: 'e', value: 100 }]);
   assert.equal(resultOf(analysis, 'low', ['x']).value, 1);
   assert.equal(resultOf(analysis, 'high', ['x']).value, 4);
+  assert.deepEqual(resultOf(analysis, 'low', ['x']).validRecordIds, ['a', 'b', 'c', 'd', 'e']);
+  assert.deepEqual(resultOf(analysis, 'high', ['x']).validRecordIds, ['a', 'b', 'c', 'd', 'e']);
 });
 
 test('重复记录 ID 被拒绝', () => {
@@ -383,7 +387,7 @@ test('本机代理：缺密钥返回 503，不泄露密钥', async () => {
     const response = await fetch(`http://127.0.0.1:${port}/api/insights`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ analysisId: 'analysis:test', facts: [{ resultId: 'r1' }], context: {} }),
+      body: JSON.stringify({ analysisId: 'analysis:test', facts: [{ resultId: 'analysis:test:mean:x' }], context: {} }),
     });
     const body = await response.json();
     assert.equal(response.status, 503);
@@ -394,7 +398,7 @@ test('本机代理：缺密钥返回 503，不泄露密钥', async () => {
   }
 });
 
-test('本机代理：真实调用成功时校验引用并生成发现图', async () => {
+test('本机代理：模拟上游成功时校验引用并生成发现图', async () => {
   const analysis = analyze(makeBundle(basicRecords()), request());
   const meanResult = resultOf(analysis, 'mean', ['x']);
   const content = `\`\`\`json\n${JSON.stringify({
@@ -415,8 +419,8 @@ test('本机代理：真实调用成功时校验引用并生成发现图', async
           value: result.value,
           unit: result.unit,
           method: result.method,
-          // 按共享契约 InsightRequest 使用 sampleSize。
-          sampleSize: result.validCount,
+          sampleSize: result.validRecordIds.length,
+          fieldIds: result.fieldIds,
         })),
         context: { domain: 'generic' },
       }),
@@ -436,7 +440,7 @@ test('本机代理：真实调用成功时校验引用并生成发现图', async
   }
 });
 
-test('本机代理：未知引用标记 invalid 且不进入发现图', async () => {
+test('本机代理：未知引用明确失败且不生成成功发现图', async () => {
   const analysis = analyze(makeBundle(basicRecords()), request());
   const content = JSON.stringify({
     insights: [{ textTemplate: '均值为 {{result:analysis:unknown:mean:x}}。', resultRefs: ['analysis:unknown:mean:x'] }],
@@ -455,12 +459,49 @@ test('本机代理：未知引用标记 invalid 且不进入发现图', async ()
       }),
     });
     const body = await response.json();
-    assert.equal(response.status, 200);
-    assert.equal(body.insights[0].status, 'invalid');
-    assert.equal(body.graph.nodes.length, 0);
+    assert.equal(response.status, 502);
+    assert.equal(body.error.code, 'invalid_insight_reference');
+    assert.equal(body.insights, undefined);
   } finally {
     server.close();
   }
+});
+
+test('页面facts投影保留指标映射和sampleSize，兼容旧validCount', () => {
+  assert.deepEqual(normalizeFacts([{ resultId: 'r', fieldIds: ['x', 'y'], sampleSize: 2 }])[0].fieldIds, ['x', 'y']);
+  assert.equal(normalizeFacts([{ resultId: 'r', sampleSize: 2 }])[0].sampleSize, 2);
+  assert.equal(normalizeFacts([{ resultId: 'r', sampleSize: 0 }])[0].sampleSize, 0);
+  assert.equal(normalizeFacts([{ resultId: 'r', validCount: 3 }])[0].sampleSize, 3);
+});
+
+test('分析HTTP一次返回规范analysis和facts，并复用基础指标ID', async () => {
+  const bundle = makeBundle(basicRecords(), { bundle: { graph: {
+    schemaVersion: 1, owner: 'data', nodes: [
+      { id: 'dataset:actual', type: 'dataset', label: '数据', ref: 'ds:fixture' },
+      { id: 'indicator:actual-x', type: 'indicator', label: '真实x', ref: 'x' },
+    ], edges: [],
+  } } });
+  const server = createInsightsServer({ env: {} });
+  const port = await listen(server);
+  try {
+    const response = await fetch(`http://127.0.0.1:${port}/api/analyze`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bundle, request: request() }),
+    });
+    const body = await response.json();
+    assert.equal(response.status, 200);
+    assert.deepEqual(Object.keys(body).sort(), ['analysis', 'facts']);
+    assert.deepEqual(Object.keys(body.analysis.scope).sort(), ['filters', 'label', 'limitations', 'recordIds', 'scopeId']);
+    assert.ok([...body.analysis.graph.nodes, ...body.facts.graph.nodes].every((node) => typeof node.ref === 'string'));
+    assert.ok(body.analysis.graph.edges.some((edge) => edge.type === 'uses_indicator' && edge.to === 'indicator:actual-x'));
+    assert.match(body.facts.insights[0].textTemplate, /真实x/);
+    const invalid = await fetch(`http://127.0.0.1:${port}/api/analyze`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bundle, request: request({ datasetVersion: 'wrong' }) }),
+    });
+    assert.equal(invalid.status, 400);
+    assert.equal((await invalid.json()).error.code, 'dataset_version_mismatch');
+  } finally { server.close(); }
 });
 
 test('本机代理：空 content 重试一次后报错', async () => {
@@ -475,7 +516,7 @@ test('本机代理：空 content 重试一次后报错', async () => {
     const response = await fetch(`http://127.0.0.1:${port}/api/insights`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ analysisId: 'analysis:test', facts: [{ resultId: 'r1' }], context: {} }),
+      body: JSON.stringify({ analysisId: 'analysis:test', facts: [{ resultId: 'analysis:test:mean:x' }], context: {} }),
     });
     const body = await response.json();
     assert.equal(response.status, 502);
@@ -506,7 +547,7 @@ test('本机代理：思考 token 截断时返回明确失败', async () => {
     const response = await fetch(`http://127.0.0.1:${port}/api/insights`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ analysisId: 'analysis:test', facts: [{ resultId: 'r1' }], context: {} }),
+      body: JSON.stringify({ analysisId: 'analysis:test', facts: [{ resultId: 'analysis:test:mean:x' }], context: {} }),
     });
     const body = await response.json();
     assert.equal(response.status, 502);
@@ -533,7 +574,7 @@ test('本机代理：非法 JSON 与空 insights 都返回明确失败', async (
       const response = await fetch(`http://127.0.0.1:${port}/api/insights`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ analysisId: 'analysis:test', facts: [{ resultId: 'r1' }], context: {} }),
+        body: JSON.stringify({ analysisId: 'analysis:test', facts: [{ resultId: 'analysis:test:mean:x' }], context: {} }),
       });
       const body = await response.json();
       assert.equal(response.status, 502);

@@ -187,19 +187,13 @@ function createResult({ analysisId, metric, fieldIds, value, unit = '', paramete
     metric,
     fieldIds,
     value: value === undefined ? null : value,
-    reason,
     unit,
     method,
-    parameters,
+    parameters: { ...parameters, methodVersion: METHODS_VERSION, ...(reason ? { reason } : {}) },
     validRecordIds,
     excludedRecordIds,
     exclusionReasons,
-    validCount: validRecordIds.length,
   };
-}
-
-function valuesAt(validEntries, target) {
-  return validEntries.filter((entry) => entry.value === target).map((entry) => entry.recordId);
 }
 
 export function analyze(bundle, request) {
@@ -277,7 +271,6 @@ export function analyze(bundle, request) {
         reason: noValidReason,
         method: 'observed_whisker_inside_1.5_iqr',
         parameters: { fence: 'q1-1.5*iqr' },
-        validRecordIds: boxLow === null ? [] : valuesAt(summary.valid, boxLow),
       }),
     );
     results.push(
@@ -288,7 +281,6 @@ export function analyze(bundle, request) {
         reason: noValidReason,
         method: 'observed_whisker_inside_1.5_iqr',
         parameters: { fence: 'q3+1.5*iqr' },
-        validRecordIds: boxHigh === null ? [] : valuesAt(summary.valid, boxHigh),
       }),
     );
 
@@ -389,7 +381,10 @@ export function analyze(bundle, request) {
     ]
       .filter(Boolean)
       .join('｜'),
-    limitations: DOMAIN_LIMITATIONS[bundle.domain] ?? DOMAIN_LIMITATIONS.generic,
+    limitations: [...new Set([
+      ...(DOMAIN_LIMITATIONS[bundle.domain] ?? DOMAIN_LIMITATIONS.generic),
+      ...(bundle.issues ?? []).map((issue) => issue.message),
+    ])],
   };
 
   const graph = buildGraph({ bundle, scope, results, fields, normalized });
@@ -397,7 +392,6 @@ export function analyze(bundle, request) {
   return {
     schemaVersion: 1,
     analysisId,
-    methodVersion: METHODS_VERSION,
     datasetId: bundle.datasetId,
     datasetVersion: bundle.datasetVersion,
     request: {
@@ -425,13 +419,17 @@ function buildGraph({ bundle, scope, results, fields, normalized }) {
   const datasetNodeId = datasetNode?.id ?? `dataset:${bundle.datasetId}`;
   const indicatorIds = new Set(normalized.measureFieldIds);
   if (normalized.correlationPair) for (const fieldId of normalized.correlationPair) indicatorIds.add(fieldId);
+  const indicatorNodeIds = new Map();
   for (const fieldId of indicatorIds) {
     const field = fields.get(fieldId);
+    const existing = bundle.graph?.nodes?.find((node) => node.type === 'indicator' &&
+      (node.ref === fieldId || node.ref?.fieldId === fieldId));
+    const nodeId = existing?.id ?? `indicator:${fieldId}`;
+    indicatorNodeIds.set(fieldId, nodeId);
     nodes.push({
-      id: `indicator:${fieldId}`,
+      id: nodeId,
       type: 'indicator',
-      label: field.label ?? fieldId,
-      // 共享类型 GraphNode.ref 是字符串；人员3 的 mergeGraph 用 requireText 校验。
+      label: existing?.label ?? field.label ?? fieldId,
       ref: fieldId,
     });
   }
@@ -459,7 +457,7 @@ function buildGraph({ bundle, scope, results, fields, normalized }) {
       edges.push({
         id: `uses_indicator:${result.resultId}:${fieldId}`,
         from: `calculation:${result.resultId}`,
-        to: `indicator:${fieldId}`,
+        to: indicatorNodeIds.get(fieldId),
         type: 'uses_indicator',
       });
     }

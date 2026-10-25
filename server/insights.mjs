@@ -5,6 +5,8 @@ import http from 'node:http';
 import { randomUUID } from 'node:crypto';
 import { shortHash } from '../src/analysis/ids.mjs';
 import { validateInsight } from '../src/analysis/validate.mjs';
+import { analyze, AnalysisError } from '../src/analysis/analyze.mjs';
+import { buildFacts } from '../src/analysis/facts.mjs';
 
 export const DEFAULT_BASE_URL = 'https://api.deepseek.com';
 export const DEFAULT_MODEL = 'deepseek-flash';
@@ -61,7 +63,7 @@ export function buildMessages({ analysisId, facts, context }) {
   ];
 }
 
-function normalizeFacts(facts) {
+export function normalizeFacts(facts) {
   if (!Array.isArray(facts) || facts.length === 0) {
     throw new ApiError('invalid_facts', 'facts 必须是非空数组', { retryable: false, statusCode: 400 });
   }
@@ -72,15 +74,12 @@ function normalizeFacts(facts) {
     return {
       resultId: fact.resultId,
       metric: fact.metric ?? null,
+      fieldIds: Array.isArray(fact.fieldIds) ? fact.fieldIds.map(String) : [],
       value: fact.value ?? null,
       unit: fact.unit ?? '',
       method: fact.method ?? null,
-      // 共享契约用 sampleSize；保留 validCount 兼容旧调用方。
-      sampleSize: Number.isFinite(fact.sampleSize)
-        ? fact.sampleSize
-        : Number.isFinite(fact.validCount)
-          ? fact.validCount
-          : null,
+      sampleSize: Number.isInteger(fact.sampleSize ?? fact.validCount) && (fact.sampleSize ?? fact.validCount) >= 0
+        ? (fact.sampleSize ?? fact.validCount) : null,
     };
   });
   return normalized;
@@ -146,6 +145,10 @@ export async function requestDeepSeekInsights(
     throw new ApiError('invalid_analysis_id', 'analysisId 缺失', { retryable: false, statusCode: 400 });
   }
   const normalizedFacts = normalizeFacts(facts);
+  if (normalizedFacts.some((fact) => !fact.resultId.startsWith(`${analysisId}:`)) ||
+      new Set(normalizedFacts.map((fact) => fact.resultId)).size !== normalizedFacts.length) {
+    throw new ApiError('invalid_facts', 'facts 必须唯一且属于当前分析', { retryable: false, statusCode: 400 });
+  }
   const resultIds = new Set(normalizedFacts.map((fact) => fact.resultId));
   const messages = buildMessages({ analysisId, facts: normalizedFacts, context });
   const requestId = randomUUID();
@@ -226,8 +229,7 @@ export async function requestDeepSeekInsights(
       };
       const check = validateInsight(insight, { analysisId, resultIds });
       if (!check.valid) {
-        insight.status = 'invalid';
-        insight.validationErrors = check.errors;
+        throw new ApiError('invalid_insight_reference', '模型解读的结果引用未通过校验', { retryable: true, statusCode: 502 });
       }
       return insight;
     });
@@ -284,8 +286,8 @@ function readBody(req, limitBytes = 1024 * 1024) {
     req.on('data', (chunk) => {
       size += chunk.length;
       if (size > limitBytes) {
-        reject(new ApiError('body_too_large', '请求体超过 1MB', { retryable: false, statusCode: 413 }));
-        req.destroy();
+        chunks.length = 0;
+        reject(new ApiError('body_too_large', `请求体超过 ${limitBytes / 1024 / 1024}MB`, { retryable: false, statusCode: 413 }));
         return;
       }
       chunks.push(chunk);
@@ -321,14 +323,14 @@ export function createInsightsServer({ env = process.env, fetchImpl = globalThis
       });
       return;
     }
-    if (req.method !== 'POST' || url.pathname !== '/api/insights') {
+    if (req.method !== 'POST' || !['/api/insights', '/api/analyze'].includes(url.pathname)) {
       sendJson(res, 404, { error: { code: 'not_found', message: '未找到接口', retryable: false } });
       return;
     }
 
     let body;
     try {
-      const text = await readBody(req);
+      const text = await readBody(req, url.pathname === '/api/analyze' ? 16 * 1024 * 1024 : 1024 * 1024);
       body = JSON.parse(text);
     } catch (error) {
       if (error instanceof ApiError) {
@@ -341,6 +343,11 @@ export function createInsightsServer({ env = process.env, fetchImpl = globalThis
 
     const analysisId = body?.analysisId;
     try {
+      if (url.pathname === '/api/analyze') {
+        const analysis = analyze(body?.bundle, body?.request);
+        sendJson(res, 200, { analysis, facts: buildFacts(analysis) });
+        return;
+      }
       const result = await requestDeepSeekInsights(
         { analysisId, facts: body?.facts, context: body?.context },
         { config, fetchImpl, logger },
@@ -348,12 +355,14 @@ export function createInsightsServer({ env = process.env, fetchImpl = globalThis
       sendJson(res, 200, result);
     } catch (error) {
       const apiError =
-        error instanceof ApiError
+        error instanceof AnalysisError
+          ? new ApiError(error.code, error.message, { retryable: false, statusCode: 400 })
+          : error instanceof ApiError
           ? error
           : new ApiError('internal_error', '服务内部错误', { retryable: true, statusCode: 500 });
       logger.error?.(
         JSON.stringify({
-          event: 'deepseek_insight',
+          event: url.pathname === '/api/analyze' ? 'analysis' : 'deepseek_insight',
           analysisId: typeof analysisId === 'string' ? analysisId : null,
           status: 'error',
           code: apiError.code,
