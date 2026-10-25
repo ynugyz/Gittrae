@@ -17,7 +17,7 @@ export function buildGraph(
     ...sources.map((s) => ({
       id: `source:${s.sourceId}`,
       type: 'source' as const,
-      label: s.originalName,
+      label: s.originalFileName,
       ref: s.sourceId,
     })),
     ...measureFields.map((f) => ({

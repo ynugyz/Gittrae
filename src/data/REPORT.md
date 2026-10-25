@@ -32,10 +32,10 @@
 2. **CPCA 总量表覆盖期**：2025-01 ~ 2026-08 共 20 个月（2026-09 起为未来月份，源表空），不生成全空记录（issue `D3_CPCA_COVERAGE`）。
 3. **默认范围提示**：D1 建议默认 2024；D2 建议默认 report_period=FY2025；GASGOO 建议默认 2026-08 横截面。当前以 bundle issue 承载，建议契约 v1.1 增加 `DatasetBundle.defaultScope` 字段（详见下节建议 2）。
 
-## 4. 契约变更建议（提请总控定稿、人员3编码，不私改）
+## 4. 契约对齐结果（已按人员3落地的 src/contracts v1.0 对齐）
 
-1. `src/contracts` 落地后，`src/data/types.ts`（镜像）应替换为引用；字段以 handoff/01 v1.0 为准，未发现与契约冲突。
-2. 建议 `DatasetBundle` 增加可选 `defaultScope`（分析默认范围提示），当前暂由 issue 承载。
+1. `src/data/types.ts` 已与 `src/contracts/index.ts` 逐字段对齐：`Scalar`/`DataRecord` 命名、`SourceFile.originalFileName`、`ParseOptions{delimiter, quoteChar, escapeChar, skipEmptyLines:false}`、`Field.unit: string`（无单位为 `""`）、`Transformation{fieldIds, affectedCount}` 必填；保留 `CellValue`/`RecordRow` 别名以减少适配器 churn。全部 7 份 Bundle 与核验套件已同步更新，56/56 PASS。
+2. 建议 `DatasetBundle` 增加可选 `defaultScope`（分析默认范围提示），当前暂由 issue 承载，待总控裁决（契约 v1.1 候选）。
 3. `ImportOptions`（adapterHints/fieldOverrides）为本方实现细化，如人员3 UI 需要不同形态请提出。
 
 ## 5. 已知边界（非缺陷）

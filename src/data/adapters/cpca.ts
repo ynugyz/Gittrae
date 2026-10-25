@@ -80,11 +80,11 @@ const TOTAL_MEASURES: { match: RegExp; fieldId: string; label: string }[] = [
 async function buildTotal(files: CpcaFile[], issues: Issue[]): Promise<DatasetBundle> {
   const dsId = 'ds:d3-cpca-total-monthly';
   const fields: Field[] = [
-    { fieldId: 'year', label: '年份', role: 'dimension', valueType: 'number', unit: null, meaning: '年份', definitionStatus: 'confirmed', analysisPolicy: 'allowed' },
-    { fieldId: 'month', label: '月份', role: 'dimension', valueType: 'number', unit: null, meaning: '月份（1-12）', definitionStatus: 'confirmed', analysisPolicy: 'allowed' },
+    { fieldId: 'year', label: '年份', role: 'dimension', valueType: 'number', unit: '', meaning: '年份', definitionStatus: 'confirmed', analysisPolicy: 'allowed' },
+    { fieldId: 'month', label: '月份', role: 'dimension', valueType: 'number', unit: '', meaning: '月份（1-12）', definitionStatus: 'confirmed', analysisPolicy: 'allowed' },
   ];
   for (const t of TOTAL_MEASURES) {
-    const f = files.find((x) => t.match.test(x.source.originalName));
+    const f = files.find((x) => t.match.test(x.source.originalFileName));
     if (!f) continue;
     fields.push({
       fieldId: t.fieldId, label: t.label, role: 'measure', valueType: 'number', unit: '万辆',
@@ -96,7 +96,7 @@ async function buildTotal(files: CpcaFile[], issues: Issue[]): Promise<DatasetBu
   const map = new Map<string, Agg>();
 
   for (const f of files) {
-    const t = TOTAL_MEASURES.find((x) => x.match.test(f.source.originalName));
+    const t = TOTAL_MEASURES.find((x) => x.match.test(f.source.originalFileName));
     if (!t) continue;
     // 年份列：'2025年'、'2026年'
     const yearCols: { col: number; y: number }[] = [];
@@ -129,7 +129,7 @@ async function buildTotal(files: CpcaFile[], issues: Issue[]): Promise<DatasetBu
         if (agg.values[t.fieldId] !== undefined) {
           issues.push({
             code: 'D3_CPCA_CONFLICT', severity: 'error',
-            message: `重复键：${t.fieldId} ${key} 已有值（${f.source.originalName}）`,
+            message: `重复键：${t.fieldId} ${key} 已有值（${f.source.originalFileName}）`,
             fieldId: t.fieldId,
             sourceRefs: [{ sourceId: f.source.sourceId, recordIndex, columnIndex: col }],
           });
@@ -175,7 +175,8 @@ async function buildTotal(files: CpcaFile[], issues: Issue[]): Promise<DatasetBu
       transformId: `t:w2l:${dsId}`,
       type: 'wide_to_long', inputSourceIds: sources.map((s) => s.sourceId),
       description: '月份×年份宽表转长表：观测单位 年×月，各指标（万辆）分别定位到各自来源列',
-      affectedFields: TOTAL_MEASURES.map((t) => t.fieldId),
+      fieldIds: TOTAL_MEASURES.map((t) => t.fieldId),
+      affectedCount: records.length,
     }],
     issues,
     graph: buildGraph(dsId, 'D3 乘联会总量表（零售/批发/产量/出口/整体，万辆）', sources, fieldsAll.filter((f2) => f2.role === 'measure')),
@@ -187,7 +188,7 @@ async function buildTotal(files: CpcaFile[], issues: Issue[]): Promise<DatasetBu
 async function buildShare(files: CpcaFile[], issues: Issue[]): Promise<DatasetBundle> {
   const dsId = 'ds:d3-cpca-share-monthly';
   const fields: Field[] = [
-    { fieldId: 'year_month', label: '年月', role: 'dimension', valueType: 'string', unit: null, meaning: '年月（YYYY-MM）', definitionStatus: 'confirmed', analysisPolicy: 'allowed' },
+    { fieldId: 'year_month', label: '年月', role: 'dimension', valueType: 'string', unit: '', meaning: '年月（YYYY-MM）', definitionStatus: 'confirmed', analysisPolicy: 'allowed' },
   ];
   const pushMeasure = (fieldId: string, label: string) => {
     fields.push({
@@ -206,7 +207,7 @@ async function buildShare(files: CpcaFile[], issues: Issue[]): Promise<DatasetBu
       if (mc.y === null) {
         issues.push({
           code: 'D3_SHARE_MONTH_AMBIGUOUS', severity: 'error',
-          message: `份额表月份缺年份（${f.source.originalName} 行 ${r + 1}）："${rec[0]}"`,
+          message: `份额表月份缺年份（${f.source.originalFileName} 行 ${r + 1}）："${rec[0]}"`,
           sourceRefs: [{ sourceId: f.source.sourceId, recordIndex: r + 1, columnIndex: 0 }],
         });
         return;
@@ -224,7 +225,7 @@ async function buildShare(files: CpcaFile[], issues: Issue[]): Promise<DatasetBu
         if (agg.values[fieldId] !== undefined) {
           issues.push({
             code: 'D3_CPCA_CONFLICT', severity: 'error',
-            message: `重复键：${fieldId} ${key}（${f.source.originalName}）`,
+            message: `重复键：${fieldId} ${key}（${f.source.originalFileName}）`,
             fieldId: fieldId,
             sourceRefs: [{ sourceId: f.source.sourceId, recordIndex: r + 1, columnIndex: col }],
           });
@@ -237,7 +238,7 @@ async function buildShare(files: CpcaFile[], issues: Issue[]): Promise<DatasetBu
   };
 
   for (const f of files) {
-    const name = f.source.originalName;
+    const name = f.source.originalFileName;
     if (/CPCA_fuel_销量占比_ICE_NEV\.csv$/.test(name)) {
       pushMeasure('nev_share', '新能源零售占比');
       pushMeasure('ice_share', '传统燃油零售占比');
@@ -286,7 +287,8 @@ async function buildShare(files: CpcaFile[], issues: Issue[]): Promise<DatasetBu
       transformId: `t:w2l:${dsId}`,
       type: 'wide_to_long', inputSourceIds: sources.map((s) => s.sourceId),
       description: '份额表按年月归位：NEV/ICE、国别、各细分市场级别份额（%），观测单位 年×月',
-      affectedFields: fields.filter((f2) => f2.role === 'measure').map((f2) => f2.fieldId),
+      fieldIds: fields.filter((f2) => f2.role === 'measure').map((f2) => f2.fieldId),
+      affectedCount: records.length,
     }],
     issues,
     graph: buildGraph(dsId, 'D3 乘联会结构与份额表（%）', sources, fields.filter((f2) => f2.role === 'measure')),
@@ -298,8 +300,8 @@ async function buildShare(files: CpcaFile[], issues: Issue[]): Promise<DatasetBu
 async function buildManrank(files: CpcaFile[], issues: Issue[]): Promise<DatasetBundle> {
   const dsId = 'ds:d3-cpca-manrank';
   const fields: Field[] = [
-    { fieldId: 'vendor', label: '厂商', role: 'identifier', valueType: 'string', unit: null, meaning: '厂商名称（乘联会口径）', definitionStatus: 'confirmed', analysisPolicy: 'allowed' },
-    { fieldId: 'year_month', label: '年月', role: 'dimension', valueType: 'string', unit: null, meaning: '年月（YYYY-MM）', definitionStatus: 'confirmed', analysisPolicy: 'allowed' },
+    { fieldId: 'vendor', label: '厂商', role: 'identifier', valueType: 'string', unit: '', meaning: '厂商名称（乘联会口径）', definitionStatus: 'confirmed', analysisPolicy: 'allowed' },
+    { fieldId: 'year_month', label: '年月', role: 'dimension', valueType: 'string', unit: '', meaning: '年月（YYYY-MM）', definitionStatus: 'confirmed', analysisPolicy: 'allowed' },
     { fieldId: 'wholesale_single', label: '单月批发', role: 'measure', valueType: 'number', unit: '万辆', meaning: '当月厂商批发销量（万辆）', definitionStatus: 'confirmed', analysisPolicy: 'allowed' },
     { fieldId: 'wholesale_cum', label: '累计批发', role: 'measure', valueType: 'number', unit: '万辆', meaning: '年内累计厂商批发销量（万辆，单月与累计不混算）', definitionStatus: 'confirmed', analysisPolicy: 'allowed' },
   ];
@@ -308,7 +310,7 @@ async function buildManrank(files: CpcaFile[], issues: Issue[]): Promise<Dataset
   const map = new Map<string, Agg>();
 
   for (const f of files) {
-    const isCum = /累计/.test(f.source.originalName);
+    const isCum = /累计/.test(f.source.originalFileName);
     const fieldId = isCum ? 'wholesale_cum' : 'wholesale_single';
     const yearCols: { col: number; y: number; m: number }[] = [];
     f.headers.forEach((h, col) => {
@@ -332,7 +334,7 @@ async function buildManrank(files: CpcaFile[], issues: Issue[]): Promise<Dataset
         if (agg.values[fieldId] !== undefined) {
           issues.push({
             code: 'D3_CPCA_CONFLICT', severity: 'error',
-            message: `重复键：${fieldId} ${vendor} ${y}-${m}（${f.source.originalName}）`,
+            message: `重复键：${fieldId} ${vendor} ${y}-${m}（${f.source.originalFileName}）`,
             fieldId,
             sourceRefs: [{ sourceId: f.source.sourceId, recordIndex: r + 1, columnIndex: col }],
           });
@@ -360,7 +362,8 @@ async function buildManrank(files: CpcaFile[], issues: Issue[]): Promise<Dataset
       transformId: `t:w2l:${dsId}`,
       type: 'wide_to_long', inputSourceIds: sources.map((s) => s.sourceId),
       description: '厂商×年月长表：单月批发与累计批发分别成字段（万辆），来自单月/累计两张表',
-      affectedFields: ['wholesale_single', 'wholesale_cum'],
+      fieldIds: ['wholesale_single', 'wholesale_cum'],
+      affectedCount: records.length,
     }],
     issues,
     graph: buildGraph(dsId, 'D3 乘联会厂商批发榜（单月/累计，万辆）', sources, fields.filter((f2) => f2.role === 'measure')),

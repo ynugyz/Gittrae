@@ -57,7 +57,7 @@ export function sourceIdFromSha(sha: string): string {
   return `src:${sha.slice(0, 20)}`;
 }
 
-/** 构造 SourceFile 的公共部分。 */
+/** 构造 SourceFile 的公共部分（契约字段：originalFileName / parseOptions）。 */
 export async function makeSourceFile(
   name: string,
   bytes: Uint8Array,
@@ -68,11 +68,10 @@ export async function makeSourceFile(
   const sha = await sha256Hex(bytes);
   return {
     sourceId: sourceIdFromSha(sha),
-    originalName: name,
+    originalFileName: name,
     sha256: sha,
     encoding,
-    byteLength: bytes.length,
-    parseOptions: { delimiter: ',', quote: '"', keepEmptyRecords: true },
+    parseOptions: { delimiter: ',', quoteChar: '"', escapeChar: '"', skipEmptyLines: false },
     headers,
     rawRecords,
     rawBytesBase64: bytesToBase64(bytes),

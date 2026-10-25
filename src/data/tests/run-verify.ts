@@ -157,7 +157,7 @@ async function main(): Promise<void> {
     check('D1: 北京市 2024 income_all = 85415', bj2024.values['income_all'] === 85415);
     const ref = bj2024.provenance['income_all'][0];
     const src = d1.sources.find((s) => s.sourceId === ref.sourceId)!;
-    check('D1: SourceRef 指向 收入-全体 表 第1行 第1列', src.originalName.includes('全体居民人均可支配收入') && ref.recordIndex === 1 && ref.columnIndex === 1, JSON.stringify(ref));
+    check('D1: SourceRef 指向 收入-全体 表 第1行 第1列', src.originalFileName.includes('全体居民人均可支配收入') && ref.recordIndex === 1 && ref.columnIndex === 1, JSON.stringify(ref));
     const rawCell = src.rawRecords[ref.recordIndex - 1][ref.columnIndex];
     check('D1: 回查原始字符串 = "85415"', rawCell === '85415', rawCell);
     // 停更：微波炉 2024 全 null + issue
@@ -177,7 +177,7 @@ async function main(): Promise<void> {
     check('D2: 2 个来源', d2.sources.length === 2);
     const totalRaw = d2.sources.reduce((acc, s) => acc + s.rawRecords.length, 0);
     const filterT = d2.transformations.filter((t) => t.type === 'filter');
-    const excluded = filterT.reduce((acc, t) => acc + (t.affectedCount ?? 0), 0);
+    const excluded = filterT.reduce((acc, t) => acc + t.affectedCount, 0);
     check('D2: 保留 + 排除 = 原始记录总数', d2.records.length + excluded === totalRaw, `kept=${d2.records.length} excluded=${excluded} total=${totalRaw}`);
     check('D2: 排除数与 info issue 一致', d2.issues.some((i) => i.code === 'D2_MARKET_FILTER' && i.message.includes(`排除 ${excluded} 条`)));
 
@@ -191,8 +191,8 @@ async function main(): Promise<void> {
     check('D2: 存在前导零代码且为文本', codes.some((c) => typeof c === 'string' && c.startsWith('00')));
 
     // 全量口径核验：FY2025 同比 vs 用 FY2024 重算
-    const fy25 = d2.sources.find((s) => s.originalName.includes('FY2025'))!;
-    const fy24 = d2.sources.find((s) => s.originalName.includes('FY2024'))!;
+    const fy25 = d2.sources.find((s) => s.originalFileName.includes('FY2025'))!;
+    const fy24 = d2.sources.find((s) => s.originalFileName.includes('FY2024'))!;
     const h25 = fy25.headers;
     const iCode = h25.indexOf('股票代码');
     const iRev = h25.indexOf('营业总收入-营业总收入');
@@ -238,6 +238,12 @@ async function main(): Promise<void> {
     // 茅台净利同比 = -4.53 已在原始数据中，检查保留
     const mt = d2.records.find((r) => r.values['code'] === '600519' && r.values['report_period'] === 'FY2025');
     check('D2: 贵州茅台 FY2025 保留且 net_profit_yoy = -4.53', mt !== undefined && mt.values['net_profit_yoy'] === -4.53, JSON.stringify(mt?.values));
+
+    // 人员4审计锚点：FY2025 沪深筛选 保留 5228 / 排除 6297
+    const fy25T = d2.transformations.find((t) => t.type === 'filter' && t.inputSourceIds[0] === fy25.sourceId)!;
+    check('D2: FY2025 沪深筛选排除 6297 条（审计锚点）', fy25T.affectedCount === 6297, `affectedCount=${fy25T.affectedCount}`);
+    const fy25Kept = d2.records.filter((r) => r.values['report_period'] === 'FY2025').length;
+    check('D2: FY2025 沪深保留 5228 条（审计锚点）', fy25Kept === 5228, `kept=${fy25Kept}`);
   }
 
   // ---- D3 gasgoo ----
@@ -249,7 +255,7 @@ async function main(): Promise<void> {
     check('D3 firm: 比亚迪 2026-08 当月销量 = 432684', byd.values['month_sales'] === 432684);
     const ref = byd.provenance['month_sales'][0];
     const src = firm.sources.find((s) => s.sourceId === ref.sourceId)!;
-    check('D3 firm: SourceRef → 202608 文件 第1行 第1列', src.originalName.includes('202608') && ref.recordIndex === 1 && ref.columnIndex === 1);
+    check('D3 firm: SourceRef → 202608 文件 第1行 第1列', src.originalFileName.includes('202608') && ref.recordIndex === 1 && ref.columnIndex === 1);
     check('D3 firm: 回查原始字符串 = "432684"', src.rawRecords[0][1] === '432684');
     check('D3 firm: 比亚迪 2026-08 同比 = 16.47', byd.values['yoy'] === 16.47, JSON.stringify(byd.values['yoy']));
     check('D3 firm: 环比值保留但字段 excluded', byd.values['mom'] === -83.49 && firm.fields.find((f) => f.fieldId === 'mom')?.analysisPolicy === 'excluded');

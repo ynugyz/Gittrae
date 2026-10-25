@@ -111,11 +111,11 @@ export async function buildGasgooBundle(files: InputFile[]): Promise<DatasetBund
   const fields: Field[] = [
     {
       fieldId: kind === 'firm' ? 'vendor' : 'model',
-      label: nameLabel, role: 'identifier', valueType: 'string', unit: null,
+      label: nameLabel, role: 'identifier', valueType: 'string', unit: '',
       meaning: `${nameLabel}名称（榜单内唯一键）`, definitionStatus: 'confirmed', analysisPolicy: 'allowed',
     },
     {
-      fieldId: 'year_month', label: '年月', role: 'dimension', valueType: 'string', unit: null,
+      fieldId: 'year_month', label: '年月', role: 'dimension', valueType: 'string', unit: '',
       meaning: '统计年月（YYYY-MM）', definitionStatus: 'confirmed', analysisPolicy: 'allowed',
     },
     {
@@ -175,7 +175,7 @@ export async function buildGasgooBundle(files: InputFile[]): Promise<DatasetBund
           issues.push({
             code: 'D3_GASGOO_CONFLICT',
             severity: 'error',
-            message: `重复键冲突：${name} ${key} 字段 ${fieldId} 已有值，来自 ${l.source.originalName}`,
+            message: `重复键冲突：${name} ${key} 字段 ${fieldId} 已有值，来自 ${l.source.originalFileName}`,
             fieldId,
             sourceRefs: col !== undefined ? [ref(col)] : undefined,
           });
@@ -250,15 +250,17 @@ export async function buildGasgooBundle(files: InputFile[]): Promise<DatasetBund
     type: 'wide_to_long',
     inputSourceIds: [l.source.sourceId],
     description: `月份宽表转长表（${nameLabel}×年月）：当月/同比/环比/各年累计列按表头年月归位；环比列保留值但标为 excluded`,
-    affectedFields: ['month_sales', 'yoy', 'mom', 'cum_ytd'],
+    fieldIds: ['month_sales', 'yoy', 'mom', 'cum_ytd'],
     affectedCount: l.rows.length,
   }));
+  const momCount = records.filter((r) => r.values['mom'] !== undefined && r.values['mom'] !== null).length;
   transformations.push({
     transformId: `t:policy-excluded:${dsId}:mom`,
     type: 'parse',
     inputSourceIds: loaded.map((l) => l.source.sourceId),
     description: `环比字段 analysisPolicy=excluded：${MOM_EXCLUSION_REASON}`,
-    affectedFields: ['mom'],
+    fieldIds: ['mom'],
+    affectedCount: momCount,
   });
 
   issues.push({

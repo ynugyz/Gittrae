@@ -159,7 +159,7 @@ export async function buildD1Bundle(files: InputFile[]): Promise<DatasetBundle> 
         issues.push({
           code: 'D1_DUP_REGION',
           severity: 'error',
-          message: `文件 ${l.source.originalName} 内地区重复：${r}`,
+          message: `文件 ${l.source.originalFileName} 内地区重复：${r}`,
           sourceRefs: [{ sourceId: l.source.sourceId, recordIndex: i + 1, columnIndex: 0 }],
         });
       }
@@ -174,7 +174,7 @@ export async function buildD1Bundle(files: InputFile[]): Promise<DatasetBundle> 
       label: '地区',
       role: 'identifier',
       valueType: 'string',
-      unit: null,
+      unit: '',
       meaning: '省级行政区（国家统计局分省口径）',
       definitionStatus: 'confirmed',
       analysisPolicy: 'allowed',
@@ -184,7 +184,7 @@ export async function buildD1Bundle(files: InputFile[]): Promise<DatasetBundle> 
       label: '年份',
       role: 'dimension',
       valueType: 'number',
-      unit: null,
+      unit: '',
       meaning: '统计年份',
       definitionStatus: 'confirmed',
       analysisPolicy: 'allowed',
@@ -250,7 +250,7 @@ export async function buildD1Bundle(files: InputFile[]): Promise<DatasetBundle> 
     type: 'wide_to_long',
     inputSourceIds: [l.source.sourceId],
     description: `年份宽表转长表：地区×年份观测，字段 ${l.slug}（年份列 ${l.years.join('/')}，地区列为空表头首列）`,
-    affectedFields: [l.slug],
+    fieldIds: [l.slug],
     affectedCount: l.regions.length * l.years.length,
   }));
 

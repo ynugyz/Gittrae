@@ -51,11 +51,11 @@ export async function buildGenericBundle(file: InputFile, options: ImportOptions
     if (ov?.role) role = ov.role;
     roleByCol.push(role);
     fields.push({
-      fieldId: ov?.role || ov ? `col${col}` : `col${col}`,
+      fieldId: `col${col}`,
       label: ov?.label ?? label,
       role,
       valueType: role === 'measure' ? 'number' : 'string',
-      unit: ov?.unit ?? null,
+      unit: ov?.unit ?? '',
       meaning: '含义未确认（generic-csv 上传），请在界面确认字段角色与单位',
       definitionStatus: 'unknown',
       analysisPolicy: 'allowed',

@@ -85,27 +85,27 @@ export async function buildD2Bundle(files: InputFile[]): Promise<DatasetBundle> 
 
   const fields: Field[] = [
     {
-      fieldId: 'code', label: '股票代码', role: 'identifier', valueType: 'string', unit: null,
+      fieldId: 'code', label: '股票代码', role: 'identifier', valueType: 'string', unit: '',
       meaning: '6位股票代码（文本，前导零保留；仅保留 60/00/30/68 开头的沪深公司）',
       definitionStatus: 'confirmed', analysisPolicy: 'allowed',
     },
     {
-      fieldId: 'name', label: '股票简称', role: 'dimension', valueType: 'string', unit: null,
+      fieldId: 'name', label: '股票简称', role: 'dimension', valueType: 'string', unit: '',
       meaning: '股票简称（含 ST/退市标识，保留原文）',
       definitionStatus: 'confirmed', analysisPolicy: 'allowed',
     },
     {
-      fieldId: 'report_period', label: '报告期', role: 'dimension', valueType: 'string', unit: null,
+      fieldId: 'report_period', label: '报告期', role: 'dimension', valueType: 'string', unit: '',
       meaning: '会计报告期（FY2025/FY2024）',
       definitionStatus: 'confirmed', analysisPolicy: 'allowed',
     },
     {
-      fieldId: 'industry', label: '所处行业', role: 'dimension', valueType: 'string', unit: null,
+      fieldId: 'industry', label: '所处行业', role: 'dimension', valueType: 'string', unit: '',
       meaning: '东方财富行业分类；缺失为 null（界面显示"未分类"）',
       definitionStatus: 'confirmed', analysisPolicy: 'allowed',
     },
     {
-      fieldId: 'announce_date', label: '最新公告日期', role: 'dimension', valueType: 'string', unit: null,
+      fieldId: 'announce_date', label: '最新公告日期', role: 'dimension', valueType: 'string', unit: '',
       meaning: '该行数据的最新公告日期（数据为后续披露版本，不做历史可交易断言）',
       definitionStatus: 'confirmed', analysisPolicy: 'allowed',
     },
@@ -130,7 +130,7 @@ export async function buildD2Bundle(files: InputFile[]): Promise<DatasetBundle> 
     const indCol = ci('所处行业');
     const dateCol = ci('最新公告日期');
     if (codeCol === undefined || nameCol === undefined) {
-      throw new Error(`D2 文件缺少 股票代码/股票简称 列：${l.source.originalName}`);
+      throw new Error(`D2 文件缺少 股票代码/股票简称 列：${l.source.originalFileName}`);
     }
     const measureCols = MEASURE_COLS.map((c) => ({ spec: c, col: ci(c.header) }));
 
@@ -203,7 +203,7 @@ export async function buildD2Bundle(files: InputFile[]): Promise<DatasetBundle> 
       type: 'filter',
       inputSourceIds: [l.source.sourceId],
       description: `沪深筛选：仅保留 6 位且 60/00/30/68 开头的股票代码（${l.reportPeriod}），排除 ${excluded} 条（新三板/北交所/其他市场），原始来源保留全部记录`,
-      affectedFields: ['code'],
+      fieldIds: ['code'],
       affectedCount: excluded,
     });
   }
