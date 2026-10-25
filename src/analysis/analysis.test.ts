@@ -1,5 +1,6 @@
 // 手算样例自测：对照 acceptance/fixtures/expected.json 的口径。
 // 这些样例是团队自建参考，不是组委会官方真值。
+// 文件名使用 .test.ts，以便并入人员3 的 `tsx --test src/**/*.test.ts`。
 
 import assert from 'node:assert/strict';
 import test from 'node:test';
@@ -92,7 +93,9 @@ test('analyze 产出均值、三图数据与派生图', () => {
   const analysis = analyze(bundle, request({ measureFieldIds: ['x', 'y'], correlationPair: ['x', 'y'] }));
 
   assert.match(analysis.analysisId, /^analysis:[0-9a-f]{24}$/);
-  assert.equal(analysis.scope.selectedRecordIds.length, 3);
+  assert.deepEqual(analysis.scope.recordIds, ['a', 'b', 'c']);
+  assert.ok(typeof analysis.scope.label === 'string' && analysis.scope.label.length > 0);
+  assert.ok(Array.isArray(analysis.scope.limitations) && analysis.scope.limitations.length > 0);
 
   close(resultOf(analysis, 'mean', ['x']).value, 2, 'x 均值');
   close(resultOf(analysis, 'median', ['x']).value, 2, 'x 中位数');
@@ -122,6 +125,37 @@ test('analyze 产出均值、三图数据与派生图', () => {
   const edgeTypes = new Set(analysis.graph.edges.map((edge) => edge.type));
   assert.deepEqual([...edgeTypes].sort(), ['selects', 'uses_indicator', 'uses_scope']);
   assert.equal(analysis.graph.owner, 'analysis');
+});
+
+test('图节点符合人员3 共享类型：ref 为字符串且编号一致', () => {
+  const bundle = makeBundle(basicRecords(), {
+    bundle: {
+      graph: {
+        schemaVersion: 1,
+        owner: 'data',
+        nodes: [{ id: 'dataset:custom-node', type: 'dataset', label: '样例数据', ref: 'ds:fixture' }],
+        edges: [],
+      },
+    },
+  });
+  const analysis = analyze(bundle, request({ measureFieldIds: ['x', 'y'], correlationPair: ['x', 'y'] }));
+  for (const node of analysis.graph.nodes) {
+    assert.equal(typeof node.ref, 'string');
+    assert.ok(node.ref.length > 0);
+  }
+  for (const node of analysis.graph.nodes.filter((item) => item.type === 'calculation')) {
+    assert.equal(node.id, `calculation:${node.ref}`);
+  }
+  const scopeNode = analysis.graph.nodes.find((item) => item.type === 'scope');
+  assert.equal(scopeNode.ref, analysis.scope.scopeId);
+  const indicators = analysis.graph.nodes.filter((item) => item.type === 'indicator');
+  assert.deepEqual(indicators.map((item) => item.ref).sort(), ['x', 'y']);
+
+  const facts = buildFacts(analysis);
+  for (const node of facts.graph.nodes.filter((item) => item.type === 'finding')) {
+    assert.equal(node.id, `finding:${node.ref}`);
+    assert.equal(node.label, '数据事实');
+  }
 });
 
 test('缺失与常量：逐列删除、成对相关、常量箱线图', () => {
@@ -189,13 +223,20 @@ test('筛选会改变分析编号与范围', () => {
   const all = analyze(bundle, request());
   const filtered = analyze(bundle, request({ filters: [{ fieldId: 'region', operator: 'eq', values: ['R1'] }] }));
   assert.notEqual(all.analysisId, filtered.analysisId);
-  assert.deepEqual(filtered.scope.selectedRecordIds, ['a', 'b']);
+  assert.deepEqual(filtered.scope.recordIds, ['a', 'b']);
   assert.equal(resultOf(filtered, 'mean', ['x']).value, 1.5);
 });
 
 test('分析编号绑定方法版本，并复用人员1 的数据集节点 ID', () => {
   const bundle = makeBundle(basicRecords(), {
-    bundle: { graph: { schemaVersion: 1, owner: 'data', nodes: [{ id: 'dataset:custom-node', type: 'dataset', label: '自定义数据集' }], edges: [] } },
+    bundle: {
+      graph: {
+        schemaVersion: 1,
+        owner: 'data',
+        nodes: [{ id: 'dataset:custom-node', type: 'dataset', label: '自定义数据集', ref: 'ds:fixture' }],
+        edges: [],
+      },
+    },
   });
   const analysis = analyze(bundle, request());
   assert.equal(analysis.methodVersion, 'analysis-methods-v1');
@@ -258,16 +299,19 @@ test('拒绝未知字段、版本不一致、排除字段与非数值度量', ()
 });
 
 test('结果有效记录可回到原始来源引用', () => {
+  // 共享类型 DataRecord.provenance 是 { [fieldId]: SourceRef[] }。
   const records = basicRecords().map((record, index) => ({
     ...record,
-    provenance: { sourceId: 'acceptance/fixtures/basic.csv', row: index + 2, columns: { id: 1, x: 2, y: 3 } },
+    provenance: {
+      x: [{ sourceId: 'acceptance/fixtures/basic.csv', recordIndex: index + 2, columnIndex: 2 }],
+    },
   }));
   const analysis = analyze(makeBundle(records), request());
   const mean = resultOf(analysis, 'mean', ['x']);
   assert.deepEqual(mean.validRecordIds, ['a', 'b', 'c']);
   const byId = new Map(records.map((record) => [record.recordId, record]));
-  assert.equal(byId.get('a').provenance.row, 2);
-  assert.equal(byId.get('c').provenance.sourceId, 'acceptance/fixtures/basic.csv');
+  assert.equal(byId.get('a').provenance.x[0].recordIndex, 2);
+  assert.equal(byId.get('c').provenance.x[0].sourceId, 'acceptance/fixtures/basic.csv');
 
   const calculationId = `calculation:${mean.resultId}`;
   const usesScope = analysis.graph.edges.find((edge) => edge.from === calculationId && edge.type === 'uses_scope');
@@ -371,7 +415,8 @@ test('本机代理：真实调用成功时校验引用并生成发现图', async
           value: result.value,
           unit: result.unit,
           method: result.method,
-          validCount: result.validCount,
+          // 按共享契约 InsightRequest 使用 sampleSize。
+          sampleSize: result.validCount,
         })),
         context: { domain: 'generic' },
       }),
@@ -382,6 +427,8 @@ test('本机代理：真实调用成功时校验引用并生成发现图', async
     assert.equal(body.insights[0].status, 'valid');
     assert.equal(body.model, 'deepseek-flash');
     assert.equal(body.graph.nodes.length, 1);
+    assert.equal(body.graph.nodes[0].label, 'AI 解读');
+    assert.equal(body.graph.nodes[0].ref, body.insights[0].insightId);
     assert.equal(state.calls, 1);
     assert.equal(JSON.stringify(body).includes('test-key'), false);
   } finally {
@@ -435,6 +482,36 @@ test('本机代理：空 content 重试一次后报错', async () => {
     assert.equal(body.error.code, 'empty_content');
     assert.equal(body.error.retryable, true);
     assert.equal(state.calls, 2);
+  } finally {
+    server.close();
+  }
+});
+
+test('本机代理：思考 token 截断时返回明确失败', async () => {
+  const fetchImpl = async () => ({
+    ok: true,
+    status: 200,
+    json: async () => ({
+      model: 'deepseek-flash',
+      choices: [{ finish_reason: 'length', message: { content: '{"insights":[{"textTemplate":"x' } }],
+    }),
+  });
+  const server = createInsightsServer({
+    env: { DEEPSEEK_API_KEY: 'test-key' },
+    fetchImpl,
+    logger: { info() {}, warn() {}, error() {} },
+  });
+  const port = await listen(server);
+  try {
+    const response = await fetch(`http://127.0.0.1:${port}/api/insights`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ analysisId: 'analysis:test', facts: [{ resultId: 'r1' }], context: {} }),
+    });
+    const body = await response.json();
+    assert.equal(response.status, 502);
+    assert.equal(body.error.code, 'truncated_output');
+    assert.equal(body.error.retryable, true);
   } finally {
     server.close();
   }

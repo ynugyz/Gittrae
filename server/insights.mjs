@@ -25,7 +25,8 @@ export function readConfig(env = process.env) {
     baseUrl: (env.DEEPSEEK_BASE_URL || DEFAULT_BASE_URL).replace(/\/+$/, ''),
     model: env.DEEPSEEK_MODEL || DEFAULT_MODEL,
     timeoutMs: Number(env.DEEPSEEK_TIMEOUT_MS || 60000),
-    maxTokens: Number(env.DEEPSEEK_MAX_TOKENS || 1200),
+    // deepseek-flash 为思考模型，推理 token 与正文共用 max_tokens；预算过小会截断 JSON。
+    maxTokens: Number(env.DEEPSEEK_MAX_TOKENS || 4096),
   };
 }
 
@@ -74,7 +75,12 @@ function normalizeFacts(facts) {
       value: fact.value ?? null,
       unit: fact.unit ?? '',
       method: fact.method ?? null,
-      validCount: Number.isFinite(fact.validCount) ? fact.validCount : null,
+      // 共享契约用 sampleSize；保留 validCount 兼容旧调用方。
+      sampleSize: Number.isFinite(fact.sampleSize)
+        ? fact.sampleSize
+        : Number.isFinite(fact.validCount)
+          ? fact.validCount
+          : null,
     };
   });
   return normalized;
@@ -109,8 +115,9 @@ function buildFindingGraph(insights) {
     nodes.push({
       id: `finding:${insight.insightId}`,
       type: 'finding',
-      label: insight.textTemplate.replace(/\{\{result:[^}]+\}\}/g, '数值'),
-      ref: { insightId: insight.insightId },
+      // 与人员3 buildInsightGraph 的 finding 标签一致，避免合并冲突。
+      label: 'AI 解读',
+      ref: insight.insightId,
     });
     for (const resultId of insight.resultRefs) {
       edges.push({
@@ -185,7 +192,12 @@ export async function requestDeepSeekInsights(
       clearTimeout(timer);
     }
 
-    const content = payload?.choices?.[0]?.message?.content;
+    const choice = payload?.choices?.[0];
+    if (choice?.finish_reason === 'length') {
+      // 思考 token 用尽会截断 JSON；明确失败，不能把半截内容当成功或伪装成解析错误。
+      throw new ApiError('truncated_output', '模型输出达到长度上限被截断', { retryable: true, statusCode: 502 });
+    }
+    const content = choice?.message?.content;
     if (typeof content !== 'string' || content.trim() === '') {
       lastEmpty = true;
       if (attempt === 0) {

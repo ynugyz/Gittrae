@@ -4,21 +4,24 @@
 
 ## 启动
 
+人员3 的 `npm run dev` 会检测 `server/index.ts` 并自动拉起本服务；也可单独启动：
+
 ```powershell
 $env:DEEPSEEK_API_KEY = "<本机密钥>"
-node server/index.mjs
+node server/index.mjs    # 或 node server/index.ts（Node 22.18+）
 ```
 
-可选环境变量：`DEEPSEEK_BASE_URL`（默认 `https://api.deepseek.com`）、`DEEPSEEK_MODEL`（默认 `deepseek-flash`）、`DEEPSEEK_TIMEOUT_MS`（默认 60000）、`DEEPSEEK_MAX_TOKENS`（默认 1200）、`PORT`（默认 8787）。参考 `server/env.example`，不要把真实密钥提交。
+可选环境变量：`DEEPSEEK_BASE_URL`（默认 `https://api.deepseek.com`）、`DEEPSEEK_MODEL`（默认 `deepseek-flash`）、`DEEPSEEK_TIMEOUT_MS`（默认 60000）、`DEEPSEEK_MAX_TOKENS`（默认 4096；思考模型推理 token 与正文共用，过小会截断 JSON）、`PORT`（默认 8787）。参考 `server/env.example`，不要把真实密钥提交。
 
 ## 接口
 
 - `GET /api/health` → `{ ok, model, baseUrlHost, keyConfigured, timeoutMs }`，不返回密钥。
-- `POST /api/insights`，请求 `{ analysisId, facts, context }`，`facts` 为 `MetricResult` 最小投影（`resultId、metric、value、unit、method、validCount`）。
-- 成功 `{ analysisId, requestId, insights, graph, model, generatedAt }`。
+- `POST /api/insights`，请求 `{ analysisId, facts, context }`，`facts` 为 `MetricResult` 最小投影（`resultId、metric、value、unit、method、sampleSize`；兼容旧字段 `validCount`）。
+- 成功 `{ analysisId, requestId, insights, graph, model, generatedAt }`，与人员3 的 `InsightResponse` 一致。
 - 失败 `{ analysisId, error: { code, message, retryable } }`，HTTP 状态对应 400/502/503/504。
+- 返回的 `graph` 为 `owner: "insight"` 的 finding/cites 分片：节点 `ref` 为字符串（`insightId`），`fact` 节点名 `数据事实`、`live_ai` 节点名 `AI 解读`，与人员3 的 `buildInsightGraph` 可直接合并。
 
-失败码：`missing_api_key`、`timeout`、`network_error`、`upstream_http_<status>`、`empty_content`、`empty_insights`、`invalid_json`、`invalid_payload`。官方 JSON Output 说明提示可能返回空 content，这里会自动重试一次，仍为空则报错，不伪造成成功；模型偶尔包裹 Markdown 代码围栏时会先剥离再解析。
+失败码：`missing_api_key`、`timeout`、`network_error`、`upstream_http_<status>`、`truncated_output`、`empty_content`、`empty_insights`、`invalid_json`、`invalid_payload`。官方 JSON Output 说明提示可能返回空 content，这里会自动重试一次，仍为空则报错，不伪造成成功；模型偶尔包裹 Markdown 代码围栏时会先剥离再解析。`deepseek-flash` 为思考模型，`finish_reason=length` 视为明确的截断失败而非成功。
 
 ## 调用约定
 
@@ -30,7 +33,8 @@ node server/index.mjs
 ## 自测
 
 ```powershell
-node --test src/analysis/analysis.test.mjs
+node --test src/analysis/analysis.test.ts
+# 并入人员3 的工程后也可用：npx tsx --test src/analysis/analysis.test.ts
 ```
 
 真实调用探通（需先配置密钥）：

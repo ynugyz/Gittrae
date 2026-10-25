@@ -22,6 +22,8 @@ export class AnalysisError extends Error {
   }
 }
 
+const DOMAIN_LABELS = { D1: '居民收支', D2: '企业财务', D3: '汽车行业', generic: '通用CSV' };
+
 const DOMAIN_LIMITATIONS = {
   D1: [
     '全体、城镇、农村与单位口径分别保留；31 省简单均值不等于全国人口加权均值。',
@@ -363,29 +365,30 @@ export function analyze(bundle, request) {
     }
   }
 
+  // 按人员3 的共享类型输出 Scope：recordIds / label / limitations 是契约字段，
+  // 不另存一份自定义 labels 对象，避免下游看到两套结构。
+  const fieldLabel = (fieldId) => fields.get(fieldId)?.label ?? fieldId;
+  const measureText = normalized.measureFieldIds
+    .map((fieldId) => {
+      const unit = fields.get(fieldId)?.unit;
+      return unit ? `${fieldLabel(fieldId)}（${unit}）` : fieldLabel(fieldId);
+    })
+    .join('、');
+  const filterText = normalized.filters
+    .map((filter) => `${fieldLabel(filter.fieldId)}∈[${filter.values.map(String).join(',')}]`)
+    .join(' 且 ');
   const scope = {
     scopeId,
     filters: normalized.filters,
-    selectedRecordIds: selectedRecords.map((record) => record.recordId),
-    labels: {
-      domain: bundle.domain ?? 'generic',
-      measureFieldIds: normalized.measureFieldIds,
-      measureFields: normalized.measureFieldIds.map((fieldId) => ({
-        fieldId,
-        label: fields.get(fieldId)?.label ?? fieldId,
-        unit: fields.get(fieldId)?.unit ?? '',
-      })),
-      correlationPair: normalized.correlationPair,
-      filters: normalized.filters.map((filter) => ({
-        fieldId: filter.fieldId,
-        label: fields.get(filter.fieldId)?.label ?? filter.fieldId,
-        operator: filter.operator,
-        values: filter.values,
-      })),
-      filterText: normalized.filters
-        .map((filter) => `${fields.get(filter.fieldId)?.label ?? filter.fieldId}∈[${filter.values.map(String).join(',')}]`)
-        .join(' 且 '),
-    },
+    recordIds: selectedRecords.map((record) => record.recordId),
+    label: [
+      DOMAIN_LABELS[bundle.domain] ?? DOMAIN_LABELS.generic,
+      `指标：${measureText}`,
+      filterText ? `筛选：${filterText}` : null,
+      `记录 ${selectedRecords.length}/${bundle.records.length}`,
+    ]
+      .filter(Boolean)
+      .join('｜'),
     limitations: DOMAIN_LIMITATIONS[bundle.domain] ?? DOMAIN_LIMITATIONS.generic,
   };
 
@@ -428,10 +431,11 @@ function buildGraph({ bundle, scope, results, fields, normalized }) {
       id: `indicator:${fieldId}`,
       type: 'indicator',
       label: field.label ?? fieldId,
-      ref: { fieldId },
+      // 共享类型 GraphNode.ref 是字符串；人员3 的 mergeGraph 用 requireText 校验。
+      ref: fieldId,
     });
   }
-  nodes.push({ id: scope.scopeId, type: 'scope', label: '分析范围', ref: { scopeId: scope.scopeId } });
+  nodes.push({ id: scope.scopeId, type: 'scope', label: scope.label, ref: scope.scopeId });
   edges.push({
     id: `selects:${scope.scopeId}`,
     from: scope.scopeId,
@@ -443,7 +447,7 @@ function buildGraph({ bundle, scope, results, fields, normalized }) {
       id: `calculation:${result.resultId}`,
       type: 'calculation',
       label: METRIC_LABELS[result.metric] ?? result.metric,
-      ref: { resultId: result.resultId },
+      ref: result.resultId,
     });
     edges.push({
       id: `uses_scope:${result.resultId}`,

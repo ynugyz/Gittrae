@@ -6,7 +6,8 @@ import { shortHash } from './ids.mjs';
 function indicatorLabels(analysis) {
   const labels = new Map();
   for (const node of analysis.graph?.nodes ?? []) {
-    if (node.type === 'indicator' && node.ref?.fieldId) labels.set(node.ref.fieldId, node.label);
+    // GraphNode.ref 为字符串：indicator 的 ref 即 fieldId。
+    if (node.type === 'indicator' && typeof node.ref === 'string') labels.set(node.ref, node.label);
   }
   return labels;
 }
@@ -104,8 +105,9 @@ export function buildFacts(analysis) {
     nodes.push({
       id: `finding:${insight.insightId}`,
       type: 'finding',
-      label: insight.textTemplate.replace(/\{\{result:[^}]+\}\}/g, '数值'),
-      ref: { insightId: insight.insightId },
+      // 与人员3 buildInsightGraph 的标签保持一致，否则合并同编号节点会冲突。
+      label: '数据事实',
+      ref: insight.insightId,
     });
     for (const resultId of insight.resultRefs) {
       edges.push({
