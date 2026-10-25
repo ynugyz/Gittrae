@@ -132,6 +132,11 @@ if (appRoot && analyses.length === 3) {
   for (const a of analyses) await check(`${a.request.filters[0].fieldId}:core-getEvidence`,()=>{
     const e=graph.getEvidence(project,a.results[0].resultId); assert.equal(e.analysisId,a.analysisId); assert.equal(e.validCount,a.results[0].validRecordIds.length); return {validCount:e.validCount};
   });
+  for (const a of analyses) await check(`${a.request.filters[0].fieldId}:single-domain-export`,async()=>{
+    const ownInsights=insights.filter(i=>i.analysisId===a.analysisId);
+    const own={...project,datasets:project.datasets.filter(b=>b.datasetId===a.datasetId),analyses:[a],insights:ownInsights,selection:{datasetId:a.datasetId,analysisId:a.analysisId,measureFieldIds:a.request.measureFieldIds,nodeId:`finding:${ownInsights[0].insightId}`}};
+    const json=await storage.exportProject(own); assert.deepEqual(await storage.importProject(json),own); return {bytes:Buffer.byteLength(json)};
+  });
   await check('SAVE:three-domain-core-roundtrip',async()=>{
     const json=await storage.exportProject(project); const restored=await storage.importProject(json); assert.deepEqual(restored,project);
     assert.ok(!/DEEPSEEK_API_KEY|Authorization|"apiKey"/.test(json));
@@ -139,6 +144,28 @@ if (appRoot && analyses.length === 3) {
     const bad=JSON.parse(json); bad.datasets[0].sources[0].rawRecords[0][1]='CACHE_TAMPERED'; await assert.rejects(storage.importProject(JSON.stringify(bad)));
     return {jsonBytes:Buffer.byteLength(json),restoredDatasets:restored.datasets.length,restoredAnalysisIds:restored.analyses.map(a=>a.analysisId),tamperedCacheRejected:true,liveAiRecords:0};
   });
+  const api=await load(appRoot,'src/app/api.ts');
+  const {createInsightsServer}=await load(analysisRoot,'server/insights.mjs');
+  const realFetch=globalThis.fetch;
+  const server=createInsightsServer({env:{},logger:{info(){},warn(){},error(){}}});
+  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+  const base=`http://127.0.0.1:${server.address().port}`;
+  globalThis.fetch=(url,init)=>realFetch(typeof url==='string'&&url.startsWith('/api/')?base+url:url,init);
+  try {
+    for (const a of analyses) await check(`${a.request.filters[0].fieldId}:real-local-HTTP-analyze`,async()=>{
+      const b=project.datasets.find(b=>b.datasetId===a.datasetId);
+      const r=await api.requestAnalysis(b,a.request,new AbortController().signal);
+      assert.deepEqual(r.analysis,a); assert.ok(r.facts.insights.length>0); return {analysisId:r.analysis.analysisId,status:200};
+    });
+    await check('HTTP:version-mismatch-rejected',async()=>{
+      const a=analyses[0],b=project.datasets[0];
+      const res=await realFetch(base+'/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({bundle:b,request:{...a.request,datasetVersion:'wrong-version'}})});
+      const body=await res.json(); assert.equal(res.status,400); assert.equal(body.error.code,'dataset_version_mismatch');
+    });
+    await check('HTTP:missing-key-explicit-error',async()=>{
+      await assert.rejects(api.requestInsights(project.datasets[0],analyses[0],new AbortController().signal),/DEEPSEEK_API_KEY/);
+    });
+  } finally { globalThis.fetch=realFetch; await new Promise(resolve=>server.close(resolve)); }
 }
 out.summary={passed:out.checks.filter(c=>c.status==='passed').length,failed:out.checks.filter(c=>c.status==='failed').length};
 fs.writeFileSync(path.join(reportDir,`2026-10-25_product-${tag}.json`),JSON.stringify(out,null,2)+'\n');
