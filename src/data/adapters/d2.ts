@@ -31,7 +31,7 @@ interface ColumnSpec {
   header: string; // 原始表头
   fieldId: string;
   label: string;
-  unit: string | null;
+  unit: string;
   meaning: string;
   percent: boolean; // true → parsePercent；false → parseNumber
 }

@@ -15,7 +15,7 @@ function toContract(bundle: AdapterBundle): DatasetBundle {
   const fieldIds = new Set(bundle.fields.map((field) => field.fieldId));
   const transformations: Transformation[] = bundle.transformations.map(
     (transform) => {
-      const fields = (transform.affectedFields ?? [...fieldIds]).filter((id) =>
+      const fields = (transform.fieldIds ?? [...fieldIds]).filter((id) =>
         fieldIds.has(id),
       );
       const sources = new Set(transform.inputSourceIds);
@@ -65,13 +65,13 @@ function toContract(bundle: AdapterBundle): DatasetBundle {
     ...bundle,
     sources: bundle.sources.map((source) => ({
       sourceId: source.sourceId,
-      originalFileName: source.originalName,
+      originalFileName: source.originalFileName,
       sha256: source.sha256,
       encoding: source.encoding,
       parseOptions: {
         delimiter: source.parseOptions.delimiter,
-        quoteChar: source.parseOptions.quote,
-        escapeChar: source.parseOptions.quote,
+        quoteChar: source.parseOptions.quoteChar,
+        escapeChar: source.parseOptions.escapeChar,
         skipEmptyLines: false,
       },
       headers: source.headers,

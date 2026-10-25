@@ -102,6 +102,7 @@ export async function buildGenericBundle(file: InputFile, options: ImportOptions
       type: 'parse',
       inputSourceIds: [source.sourceId],
       description: 'generic-csv：保留原始字符串与位置，数值列按严格规则解析；未合并任何指标',
+      fieldIds: fields.map((field) => field.fieldId),
       affectedCount: parsed.rawRecords.length,
     },
   ];
