@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-25T08:03:40.999Z",
+  "kind": "actual-browser-save-restore-roundtrip",
+  "code": "8a8c8bd + 90c3ae0",
+  "datasets": 3,
+  "analyses": 3,
+  "validAI": 9,
+  "invalidAI": 3,
+  "bytes": 16614813,
+  "comparison": "All persisted content equal except savedAt; source bytes, IDs, values, AI templates/times/statuses and selection identical",
+  "note": "Three legacy insights marked invalid before restore under strict numeric binding; no template text rewritten."
+}

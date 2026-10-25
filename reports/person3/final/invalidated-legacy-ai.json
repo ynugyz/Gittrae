@@ -1,0 +1,20 @@
+{
+  "reason": "New strict numeric binding validation; original templates retained as invalid, not rewritten.",
+  "invalid": [
+    {
+      "insightId": "insight:1825e21914a147ccaed6c211",
+      "analysisId": "analysis:0290520c386a4c363d733754",
+      "reason": "AI解读含未绑定结果引用的数字；样本量与方法参数请使用页面已有说明。"
+    },
+    {
+      "insightId": "insight:42ed3c8f6fe987e4ac782460",
+      "analysisId": "analysis:0290520c386a4c363d733754",
+      "reason": "AI解读含未绑定结果引用的数字；样本量与方法参数请使用页面已有说明。"
+    },
+    {
+      "insightId": "insight:e1c3839578fc09e37a784a0e",
+      "analysisId": "analysis:595d245235bc5c9698fcafed",
+      "reason": "AI解读含未绑定结果引用的数字；样本量与方法参数请使用页面已有说明。"
+    }
+  ]
+}

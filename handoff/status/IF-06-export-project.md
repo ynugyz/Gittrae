@@ -1,16 +1,21 @@
 # IF-06 · exportProject：项目导出
 
-必做；负责人/报告人：本机人员3；2026-10-25T15:38:25+08:00；分支dev/app。契约：[v1.0](../01_公共接口.md)，无新增批准。直接依赖：IF-00、IF-01、IF-02、IF-03；真实解释另依赖IF-08；兼容问题统一见 [IF-00](IF-00-contracts.md)。
+必做；负责人/报告人：本机人员3；2026-10-25；分支 `dev/app`。
+产品commit：`33c34387025c0bce96b8d66a98af5fe0414b34a3`；已合人员1 `1ba946d`、人员2 `90c3ae0`。
 
-实现commit：`39c92f147dc1ff81e0bdaf9f4190b81051a74cbd`；[实现入口](https://github.com/ynugyz/Gittrae/blob/39c92f147dc1ff81e0bdaf9f4190b81051a74cbd/src/storage/index.ts)。已做：严格校验后输出紧凑JSON，携带源字节、分析、ID和历史解释；不保存未计算筛选草稿。
+**必读依赖：** [IF-00 契约](IF-00-contracts.md)、[IF-01 数据](IF-01-import-files.md)、[IF-02 分析](IF-02-analyze.md)、[IF-03 发现](IF-03-build-facts.md)、[IF-08 AI历史](IF-08-live-insights.md)；往返结果读 [IF-07](IF-07-import-project.md)。
+[实现入口](https://github.com/ynugyz/Gittrae/blob/33c34387025c0bce96b8d66a98af5fe0414b34a3/src/storage/index.ts)：严格校验后导出紧凑JSON，保留源字节、ID、分析与历史解释；不保存未计算筛选草稿。
 
-| 阶段 | 当前状态 |
+| 检查 | 状态与边界 |
 |---|---|
-| 实现 | in_progress：本模块已交付，完整链路待接入 |
-| 本机自测 | passed：存储测试：固定样例及11,525行FY2025展示夹具导出后恢复，预期ID/值/来源保持；实际通过，JSON约33.0MiB。该夹具不证明财务适配/统计 |
-| 三域真实联调 | blocked：上游已交付但契约/运行入口不相容，尚未接入 |
-| 人员4产品复验 | not_started：等待明确集成commit；基线材料核验不算应用复验 |
+| 当前产品自动检查 | passed：52项测试及构建通过 |
+| 实际页面保存 | passed：3域、3分析，16,614,813字节；含9条有效历史及3条invalid，原文保留 |
+| 新空白页恢复再保存 | passed：除savedAt外全内容一致；源字节、ID、值、选择及AI时间/状态均保持 |
+| 当前产品独立签收 | not_started：旧版本核心通过不自动覆盖33c3438或页面 |
 
-本轮检查commit：`197d6b2478e5666eef2dd241a4bd1a0443fce435`；产品文件与实现commit一致。测试输入、操作与历史浏览器证据见 [自测记录](../../reports/person3/verification.md#handoff-recheck)；本轮未运行上游模块、浏览器或真实API。
+本轮 [往返证据](../../reports/person3/final/restore-check.json) 明记运行代码为 `8a8c8bd + 90c3ae0`，不改写成另一受测commit；8a8c8bd已拒绝AI裸数字。
+invalid历史仅保留证据原文，不作为有效实时AI结论；三域全链仍未签收，D2缺失来源问题见 [IF-05](IF-05-get-evidence.md)。
+人员4 [2cc2df1审计](https://github.com/ynugyz/Gittrae/blob/2cc2df1/acceptance/reports/2026-10-25_78f7678_audit.md) 对旧产品78f7678的核心导出恢复通过；本轮页面由人员3自测。
+历史展示夹具及检查见 [开发自测](../../reports/person3/verification.md)，不替代本轮真实项目证据。
 
-下一步：总控裁决IF-00、原负责人对齐并交commit后，人员3用真实三域和实时解释项目验证导出、清空、恢复，核对文件不含密钥。人员4按 [验收矩阵](../../acceptance/cases.md) 的 SAVE-01/02、PERF-01 独立复验；依赖未齐暂缓真实联调与签收，不减少必做项。
+下一步：交明确新commit及往返证据给人员4，按 [验收矩阵](../../acceptance/cases.md) 独立复验SAVE-01/02、PERF-01；不得将保存成功当作来源或统计正确性签收。
