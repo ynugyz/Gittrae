@@ -40,6 +40,9 @@ export function validateInsight(insight, { analysisId, resultIds }) {
     }
   }
   const leftover = text.replace(PLACEHOLDER, '');
+  if (insight.origin === 'live_ai' && /[0-9０-９]/u.test(leftover)) {
+    errors.push({ code: 'unbound_numeric_value', message: 'AI解读含未绑定结果引用的数字' });
+  }
   if (refs.some((ref) => !used.has(ref))) {
     errors.push({ code: 'unused_ref', message: 'resultRefs 中存在未在文本使用的引用' });
   }
