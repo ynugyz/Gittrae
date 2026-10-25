@@ -1,27 +1,33 @@
 # 人员3实现与接入说明
 
-日期：2026-10-25。分支：`dev/app`。起点：`472d151b811cb9f4af0620c2bdc6bd8e78a09de7`。
+> **本轮新增必读交接。** 总控读第5、6节；人员1读第1、2、4、5节；人员2读第1、3、4、5节；人员3读全文；人员4读第4、5、6节及 [开发自测](../../reports/person3/verification.md)。完整清单见 [交接索引](../README.md)，版本状态见 [仓库首页](../../README.md)。
+
+日期：2026-10-25。代码分支：`dev/app`。已实现且自测的代码：[`39c92f1`](https://github.com/ynugyz/Gittrae/tree/39c92f147dc1ff81e0bdaf9f4190b81051a74cbd)。起点：`472d151b811cb9f4af0620c2bdc6bd8e78a09de7`。后续文档同步commit不是新的产品受测版本。
 
 用户已明确要求本机人员3尽可能推进可完成工作，本轮进入开发阶段。当前成果是人员3实现与自测，仍待人员1、2接入，以及总控确认集成范围、人员4独立复验。
 
-## 1. 已交付入口
+<a id="delivered"></a>
+
+## 1. 已交付入口【人员1、2、3必读】
 
 | 路径 | 用途 |
 |---|---|
-| `src/contracts/index.ts` | 六个共同对象及关联类型唯一入口 |
-| `src/contracts/example.ts` | `createExampleProject()`，始终含MOCK问题标记的固定手算联调输入 |
-| `src/app/App.tsx` | 上传入口、范围与指标、三图、事实/AI、历史分析、来源和保存恢复 |
-| `src/app/modules.ts` | 唯一业务模块接入位置，缺模块明确未准备 |
-| `src/app/state.ts` | 新增数据/分析、当前AI响应验证、旧响应隔离 |
-| `src/app/api.ts` | POST `/api/insights`，60秒超时、HTTP/JSON失败、最小统计投影 |
-| `src/graph/index.ts` | 图合并、当前分析查询、发现图重建、证据查询 |
-| `src/storage/index.ts` | 项目校验、导出和原子恢复；原字节重解析工具 |
-| `scripts/dev.mjs` | 统一启动网页及可选模型服务 |
-| `scripts/create-review-projects.ts` | 生成仅用于展示/交互自测的本地项目文件 |
+| [src/contracts/index.ts](https://github.com/ynugyz/Gittrae/blob/39c92f147dc1ff81e0bdaf9f4190b81051a74cbd/src/contracts/index.ts) | 六个共同对象及关联类型唯一入口 |
+| [src/contracts/example.ts](https://github.com/ynugyz/Gittrae/blob/39c92f147dc1ff81e0bdaf9f4190b81051a74cbd/src/contracts/example.ts) | `createExampleProject()`，始终含MOCK问题标记的固定手算联调输入 |
+| [src/app/App.tsx](https://github.com/ynugyz/Gittrae/blob/39c92f147dc1ff81e0bdaf9f4190b81051a74cbd/src/app/App.tsx) | 上传入口、范围与指标、三图、事实/AI、历史分析、来源和保存恢复 |
+| [src/app/modules.ts](https://github.com/ynugyz/Gittrae/blob/39c92f147dc1ff81e0bdaf9f4190b81051a74cbd/src/app/modules.ts) | 唯一业务模块接入位置，缺模块明确未准备 |
+| [src/app/state.ts](https://github.com/ynugyz/Gittrae/blob/39c92f147dc1ff81e0bdaf9f4190b81051a74cbd/src/app/state.ts) | 新增数据/分析、当前AI响应验证、旧响应隔离 |
+| [src/app/api.ts](https://github.com/ynugyz/Gittrae/blob/39c92f147dc1ff81e0bdaf9f4190b81051a74cbd/src/app/api.ts) | POST `/api/insights`，60秒超时、HTTP/JSON失败、最小统计投影 |
+| [src/graph/index.ts](https://github.com/ynugyz/Gittrae/blob/39c92f147dc1ff81e0bdaf9f4190b81051a74cbd/src/graph/index.ts) | 图合并、当前分析查询、发现图重建、证据查询 |
+| [src/storage/index.ts](https://github.com/ynugyz/Gittrae/blob/39c92f147dc1ff81e0bdaf9f4190b81051a74cbd/src/storage/index.ts) | 项目校验、导出和原子恢复；原字节重解析工具 |
+| [scripts/dev.mjs](https://github.com/ynugyz/Gittrae/blob/39c92f147dc1ff81e0bdaf9f4190b81051a74cbd/scripts/dev.mjs) | 统一启动网页及可选模型服务 |
+| [scripts/create-review-projects.ts](https://github.com/ynugyz/Gittrae/blob/39c92f147dc1ff81e0bdaf9f4190b81051a74cbd/scripts/create-review-projects.ts) | 生成仅用于展示/交互自测的本地项目文件 |
 
 页面不重算直方分箱、四分位或成对样本。计算值保持原精度，显示至多4位小数；数字和图表提供来源入口。大量表格分页，图默认只包含当前分析，超过60节点时显示选中节点的两跳邻域。
 
-## 2. 人员1接入
+<a id="data"></a>
+
+## 2. 人员1接入【人员1必读】
 
 在 `src/data/index.ts` 导出：
 
@@ -38,7 +44,9 @@ export function getDefaultRequest(bundle: DatasetBundle): AnalysisRequest;
 
 目前上传调用的 options 为空对象；指定适配器、通用CSV字段角色与单位确认流程，须在人员1提供实际识别/确认结果后共同接入。UI不会自行把标识列变成度量列。
 
-## 3. 人员2接入
+<a id="analysis"></a>
+
+## 3. 人员2接入【人员2必读】
 
 在 `src/analysis/index.ts` 导出：
 
@@ -58,7 +66,9 @@ export function buildFacts(analysis: AnalysisResult): FactsOutput;
 
 finding和cites由 `buildInsightGraph` 统一重建；建议直接使用其输出构造返回graph，避免相同ID不同label产生冲突。`GraphFragment.owner`不能把data/analysis都改成insight。
 
-## 4. 项目与运行约定
+<a id="runtime"></a>
+
+## 4. 项目与运行约定【人员1、2、3、4必读】
 
 `exportProject(project):Promise<string>`、`importProject(json):Promise<ProjectSnapshot>`、`validateProject(value):Promise<ProjectSnapshot>`。UI在恢复全部校验成功后才替换状态；失败保留原项目。
 
@@ -68,15 +78,19 @@ finding和cites由 `buildInsightGraph` 统一重建；建议直接使用其输�
 
 Node >=22.12，测试主机22.23.2。`npm ci`、`npm run dev`、`npm run build`、`npm test`、`npm run format:check`。前端5173，生产预览4173，模型服务8787；均限制本机地址，端口占用明确失败。
 
-## 5. 需要总控及上游对齐的接口事项
+<a id="pending"></a>
+
+## 5. 需要总控及上游对齐的接口事项【全员必读】
 
 1. 默认分析范围的数据传递位置在原公共文档中尚未定形。本实现提供可选 `getDefaultRequest(bundle)` 钩子作为可运行接线点；缺钩子时不猜年份或月份，用户显式选择，对未筛选的多值维度在计算前确认。此钩子尚非总控批准的公共契约变更。
 2. 模型请求最小facts投影在原文没有resultId到fieldId映射。当前实现遵循原投影，尚未擅增字段；人员2接入时应由总控明确补充fieldIds或等价映射，避免不透明resultId下模型误认指标。真实模型验收尚未进行。
 3. 通用CSV的字段角色/单位确认、D1/D2/D3适配默认值依赖人员1，统计和真实DeepSeek证据依赖人员2。当前只具备接入壳和显式缺模块状态，不宣称三域全流程已完成。
 
-## 6. 下一角色接手
+<a id="next"></a>
+
+## 6. 下一角色接手【总控、人员3、4必读】
 
 - 人员1：依据当前类型和样例实现/对齐importFiles与默认范围，交模块commit及58文件实际导入证据。
 - 人员2：对齐analyze/buildFacts及服务启动入口，提供三域真实API证据并解决结果到指标映射。
-- 总控：确认第5节接口事项，确定模块commit与集成顺序；本轮没有合并main。
+- 总控：确认第5节接口事项，确定模块commit与集成顺序；本轮只同步交接文档至main，应用代码尚未合并main。
 - 人员4：以本分支提交运行人员3自测和复现步骤，再在真正集成后的新commit独立验收。自测记录不替代审计报告。
