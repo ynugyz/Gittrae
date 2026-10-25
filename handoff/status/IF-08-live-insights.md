@@ -6,6 +6,7 @@
 - 已按批准决定保留`fieldIds`及页面`sampleSize`，兼容旧validCount；facts必须唯一且属于当前分析。解读占位与引用不符返回HTTP502 `invalid_insight_reference`，不能生成成功发现图；保留4096输出预算和截断错误。
 - 本轮22/22自测中的上游响应为模拟，不能算真实API成功。此前15:33:53及原负责人后续HTTP探通记录保留，不能替代三域页面调用。
 - 15:55用户提供本机运行凭据后，已仅在进程环境配置并启动`127.0.0.1:8787`；未写入代码、项目文件或报告。本轮三域真实调用正在验证，尚未签收。
+- 服务就绪实测：`GET /api/health` → `{"ok":true,"model":"deepseek-flash","baseUrlHost":"api.deepseek.com","keyConfigured":true,"timeoutMs":60000}`。运行的是`042ca2c`服务代码，提供analyze与insights两个路由；人员3无需再启动第二个8787进程，可直接页面联调。
 - 下一步：人员3页面接通后每域触发一次；记录实际model/generatedAt/requestId/analysisId及引用，人员4复验。若最终主机重启服务，须在服务端运行环境重新配置凭据。
 
 以下保留原负责人较早交付证据；其历史成绩不扩大为本轮三域验收。
