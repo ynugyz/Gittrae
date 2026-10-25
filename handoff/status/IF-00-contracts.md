@@ -7,6 +7,7 @@
 - 人员2审阅指定的D1两条/D2一条解读已标invalid并保留原文；D1剩2条、D3原4条沿用正确历史；新版D2于16:18:40重新取得4条真实解读。首次裸数字错误被拒绝，手动重试一次成功。详见[IF-08](IF-08-live-insights.md)。
 - 最终三域项目16,739,046字节，已导出→空白页恢复→再导出，全字段除savedAt一致；当前范围、选中finding和历史时间保留，恢复无模型重发。[恢复证据](../../reports/person3/final/restore-check.json)。
 - 当前代码停止修改，独立最终页面签收尚未取得；大图表分包提示仍保留。不得将作者与协作自测标作人员4独立签收。
+- 人员4最终[独立报告](https://github.com/ynugyz/Gittrae/blob/1a33ad130d036c9cb8ac3849d2ea50d06116bcdf/acceptance/reports/FINAL.md)：已知核心缺陷、新来源修复、真实AI及核心恢复复验通过；页面控制工具故障，三图/三入口/完整演示未独立执行，结论仍为“条件不足未完成”。该角色的项目与调用编号独立记录，不替代本页作者页面证据。
 
 演示：本机http://127.0.0.1:5173/ → 恢复 `.local/person3-final/three-domain-freeze.t3project.json` → 左侧D1/D2/D3入口，分别选2024居民、FY2025企业、2026-08车企分析。三图、可点击数字与信息网络均在同一工作台。历史原文及旧D2版本保留在同目录 `three-domain-semantic-reviewed.t3project.json`；原始演示备份 `three-domain-final.t3project.json` 未覆盖。
 
