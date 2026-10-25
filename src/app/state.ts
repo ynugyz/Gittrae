@@ -72,6 +72,17 @@ function appendInsights(existing: Insight[], incoming: Insight[]) {
   const all = new Map(existing.map((i) => [i.insightId, i]));
   for (const insight of incoming) {
     const previous = all.get(insight.insightId);
+    if (
+      previous?.origin === "computed" &&
+      insight.origin === "computed" &&
+      previous.kind === "fact" &&
+      insight.kind === "fact" &&
+      sameContent(
+        { ...previous, generatedAt: null },
+        { ...insight, generatedAt: null },
+      )
+    )
+      continue;
     if (previous && !sameContent(previous, insight))
       throw new Error("解释编号冲突：历史解释不能被同编号的新内容覆盖。");
     all.set(insight.insightId, insight);

@@ -98,6 +98,30 @@ test("新增数据和分析保留原状态，切到同一次分析的指标和�
   );
 });
 
+test("重复计算仅生成时间变化时复用原事实，正文变化仍拒绝", async () => {
+  const sample = await createExampleProject();
+  const facts = structuredClone(sample.insights);
+  facts[0].generatedAt = "2026-10-25T07:58:00.000Z";
+  const repeated = addAnalysis(
+    sample,
+    sample.analyses[0],
+    sample.analyses[0].request,
+    facts,
+  );
+  assert.deepEqual(repeated.insights, sample.insights);
+  facts[0].textTemplate += "改变内容";
+  assert.throws(
+    () =>
+      addAnalysis(
+        sample,
+        sample.analyses[0],
+        sample.analyses[0].request,
+        facts,
+      ),
+    /冲突/,
+  );
+});
+
 test("有效实时响应必须有一致的发现图，且只追加解释而不改变统计结果", async () => {
   const sample = await createExampleProject();
   const response = responseFor(sample.analyses[0]);
