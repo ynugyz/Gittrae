@@ -66,6 +66,7 @@ for (const name of ['basic.csv', 'missing_constant.csv', 'single.csv', 'all_miss
         h.edges.forEach((e,i) => close(e, wanted.histogram.edges[i], true));
         assert.deepEqual(h.binRecordIds.map(ids => ids.length), h.counts);
       }
+      if(wanted.whiskers) {close(result(a,'low',field.fieldId).value,wanted.whiskers[0],true);close(result(a,'high',field.fieldId).value,wanted.whiskers[1],true);}
     }
     const xy = fields.filter(f => ['x', 'y'].includes(f.label));
     const correlation = expected[name].correlation ?? expected[name].correlations?.[0];
@@ -97,6 +98,7 @@ for (const s of specs) await check(`${s.name}:real-statistics-charts-source`, as
   const compare = (fieldId, wanted) => {
     assert.equal(result(a,'mean',fieldId).validRecordIds.length, wanted.count);
     for (const [metric,key] of [['mean','mean'],['median','median'],['stddev','std'],['q1','q1'],['q3','q3']]) close(result(a,metric,fieldId).value, wanted[key]);
+    close(result(a,'low',fieldId).value,wanted.whiskers[0]);close(result(a,'high',fieldId).value,wanted.whiskers[1]);
     const h = a.chartData.histograms.find(h => h.fieldId === fieldId);
     assert.deepEqual(h.counts, wanted.histogram.counts); assert.deepEqual(h.binRecordIds.map(ids => ids.length), h.counts);
     h.edges.forEach((e,i) => close(e,wanted.histogram.edges[i]));
@@ -120,6 +122,13 @@ for (const s of specs) await check(`${s.name}:real-statistics-charts-source`, as
   assert.equal(a.chartData.boxplots.length,2); assert.equal(a.chartData.scatter.points.length,result(a,'pearson').validRecordIds.length);
   assert.ok(f.insights.every(i=>i.resultRefs.every(id=>a.results.some(r=>r.resultId===id))));
   const records=new Map(s.bundle.records.map(r=>[r.recordId,r]));
+  for(const h of a.chartData.histograms) {
+    const seen=new Set();
+    h.binRecordIds.forEach((ids,i)=>ids.forEach(id=>{assert.ok(!seen.has(id));seen.add(id);const v=records.get(id).values[h.fieldId];assert.ok(v>=h.edges[i]&&(i===h.counts.length-1?v<=h.edges[i+1]:v<h.edges[i+1]),'bin source record does not belong to interval');}));
+    assert.deepEqual([...seen].sort(),[...result(a,'mean',h.fieldId).validRecordIds].sort());
+  }
+  for(const point of a.chartData.scatter.points) {const r=records.get(point.recordId);assert.equal(point.x,r.values[a.chartData.scatter.xFieldId]);assert.equal(point.y,r.values[a.chartData.scatter.yFieldId]);}
+  for(const box of a.chartData.boxplots) {const low=a.results.find(r=>r.resultId===box.lowResultId).value,high=a.results.find(r=>r.resultId===box.highResultId).value;for(const p of box.outliers) {assert.equal(p.value,records.get(p.recordId).values[box.fieldId]);assert.ok(p.value<low||p.value>high);}}
   const trace=[];
   for (const fid of s.fields) {
     const r=records.get(result(a,'mean',fid).validRecordIds[0]); const ref=r.provenance[fid][0];
@@ -235,6 +244,18 @@ if (appRoot && analyses.length === 3) {
         return {jsonBytes:Buffer.byteLength(json),actualLiveInsightCount:liveInsights.length,localModelRequests:before,requestsDuringRestore:localInsightCalls-before,selectedFinding:withAi.selection.nodeId};
       });
     } finally {globalThis.fetch=realFetch;}
+  }
+  if(process.env.AUDIT_REUSE_LIVE_EVIDENCE) {
+    const old=JSON.parse(fs.readFileSync(path.resolve(process.env.AUDIT_REUSE_LIVE_EVIDENCE),'utf8'));
+    for(const record of old.liveAi??[]) await check(`${record.domain}:historical-AI-number-and-finding-core-evidence`,()=>{
+      const a=analyses.find(a=>a.analysisId===record.analysisId);assert.ok(a,'分析身份已改变，需要新证据');
+      const owned={...project,insights:[...project.insights,...record.insights],selection:{datasetId:a.datasetId,analysisId:a.analysisId,measureFieldIds:a.request.measureFieldIds,nodeId:`finding:${record.insights[0].insightId}`}};
+      const network=graph.currentGraph(owned,a.analysisId);
+      assert.ok(network.nodes.some(n=>n.id===owned.selection.nodeId));
+      assert.ok(network.nodes.filter(n=>n.type==='calculation').every(n=>n.ref.startsWith(a.analysisId+':')));
+      for(const insight of record.insights)for(const ref of insight.resultRefs) {const e=graph.getEvidence(owned,ref);assert.equal(e.analysisId,a.analysisId);assert.ok(e.validCount>0);assert.ok(network.edges.some(edge=>edge.id===`cites:${insight.insightId}:${ref}`));}
+      return {sourceEvidenceFile:path.basename(process.env.AUDIT_REUSE_LIVE_EVIDENCE),historicalGeneratedAt:record.generatedAt,analysisId:a.analysisId,currentNetworkNodes:network.nodes.length,newModelRequests:0};
+    });
   }
 }
 out.summary={passed:out.checks.filter(c=>c.status==='passed').length,failed:out.checks.filter(c=>c.status==='failed').length};
