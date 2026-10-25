@@ -11,3 +11,10 @@ local/
 Thumbs.db
 __pycache__/
 .venv/
+
+# 保留既有骨架的本机数据与缓存忽略规则
+data_raw/
+*.zip
+*.pyc
+.ipynb_checkpoints/
+desktop.ini
