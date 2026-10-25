@@ -1,0 +1,339 @@
+{
+  "kind": "team_authored_reference_not_official_gold",
+  "schemaVersion": 1,
+  "purpose": "小型手算验收参考；不是应用接口响应，不是组委会真值。",
+  "conventions": {
+    "std": "sample_ddof_1",
+    "quantiles": "type_7_linear",
+    "correlation": "Pearson_pairwise_complete",
+    "histogram": "10_equal_width_left_closed_last_right_inclusive",
+    "constant_histogram_range": "value_minus_0.5_to_value_plus_0.5",
+    "no_valid_histogram": "empty_edges_and_counts",
+    "boxplot": "observed_whiskers_inside_1.5_IQR_fences",
+    "absoluteTolerance": 1e-09,
+    "recordIndex": "one_based_excluding_header_including_empty_records",
+    "columnIndex": "zero_based"
+  },
+  "basic.csv": {
+    "rawRecordCount": 3,
+    "x": {
+      "count": 3,
+      "missing": 0,
+      "mean": 2,
+      "median": 2,
+      "std": 1,
+      "min": 1,
+      "q1": 1.5,
+      "q3": 2.5,
+      "max": 3,
+      "iqr": 1,
+      "fences": [
+        0,
+        4
+      ],
+      "whiskers": [
+        1,
+        3
+      ],
+      "outlierIds": [],
+      "histogram": {
+        "edges": [
+          1.0,
+          1.2,
+          1.4,
+          1.6,
+          1.8,
+          2.0,
+          2.2,
+          2.4,
+          2.6,
+          2.8,
+          3.0
+        ],
+        "counts": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1
+        ]
+      }
+    },
+    "y": {
+      "count": 3,
+      "missing": 0,
+      "mean": 4,
+      "median": 4,
+      "std": 2,
+      "min": 2,
+      "q1": 3,
+      "q3": 5,
+      "max": 6,
+      "iqr": 2,
+      "fences": [
+        0,
+        8
+      ],
+      "whiskers": [
+        2,
+        6
+      ],
+      "outlierIds": [],
+      "histogram": {
+        "edges": [
+          2.0,
+          2.4,
+          2.8,
+          3.2,
+          3.6,
+          4.0,
+          4.4,
+          4.8,
+          5.2,
+          5.6,
+          6.0
+        ],
+        "counts": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1
+        ]
+      }
+    },
+    "correlation": {
+      "fields": [
+        "x",
+        "y"
+      ],
+      "pairCount": 3,
+      "value": 1,
+      "includedIds": [
+        "a",
+        "b",
+        "c"
+      ]
+    }
+  },
+  "missing_constant.csv": {
+    "rawRecordCount": 4,
+    "x": {
+      "count": 3,
+      "missing": 1,
+      "mean": 3,
+      "median": 3,
+      "std": 2,
+      "min": 1,
+      "q1": 2,
+      "q3": 4,
+      "max": 5
+    },
+    "y": {
+      "count": 3,
+      "missing": 1,
+      "mean": 5.333333333333333,
+      "median": 4,
+      "std": 4.163331998932265,
+      "min": 2,
+      "q1": 3,
+      "q3": 7,
+      "max": 10
+    },
+    "constant": {
+      "count": 4,
+      "missing": 0,
+      "mean": 5,
+      "median": 5,
+      "std": 0,
+      "q1": 5,
+      "q3": 5,
+      "histogram": {
+        "edges": [
+          4.5,
+          4.6,
+          4.7,
+          4.8,
+          4.9,
+          5.0,
+          5.1,
+          5.2,
+          5.3,
+          5.4,
+          5.5
+        ],
+        "counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "correlations": [
+      {
+        "fields": [
+          "x",
+          "y"
+        ],
+        "pairCount": 2,
+        "value": 1,
+        "includedIds": [
+          "a",
+          "d"
+        ],
+        "excludedIds": [
+          "b",
+          "c"
+        ]
+      },
+      {
+        "fields": [
+          "x",
+          "constant"
+        ],
+        "pairCount": 3,
+        "value": null,
+        "reason": "constant_field"
+      }
+    ]
+  },
+  "single.csv": {
+    "rawRecordCount": 1,
+    "x": {
+      "count": 1,
+      "mean": 7,
+      "median": 7,
+      "std": null,
+      "stdReason": "insufficient_sample",
+      "q1": 7,
+      "q3": 7
+    },
+    "correlation": {
+      "fields": [
+        "x",
+        "y"
+      ],
+      "pairCount": 1,
+      "value": null,
+      "reason": "insufficient_sample"
+    }
+  },
+  "all_missing.csv": {
+    "rawRecordCount": 2,
+    "value": {
+      "count": 0,
+      "missing": 2,
+      "mean": null,
+      "median": null,
+      "std": null,
+      "min": null,
+      "q1": null,
+      "q3": null,
+      "max": null,
+      "histogram": {
+        "edges": [],
+        "counts": []
+      },
+      "reason": "no_valid_values"
+    }
+  },
+  "join_left_duplicate.csv+join_right.csv": {
+    "joinKeys": [
+      "region",
+      "year"
+    ],
+    "expected": "reject_ambiguous_join",
+    "duplicateLeftKeys": [
+      {
+        "region": "北京",
+        "year": "2024",
+        "recordIndices": [
+          1,
+          2
+        ]
+      }
+    ],
+    "requireExplicitResolution": true
+  },
+  "leading_zero.csv": {
+    "codeType": "text",
+    "codeValues": [
+      "000001",
+      "000002",
+      "600001"
+    ],
+    "amountValues": [
+      10,
+      -2,
+      0
+    ],
+    "codeExcludedFromAutomaticNumericMetrics": true
+  },
+  "csv_quoted.csv": {
+    "rawRecordCountIncludingEmpty": 4,
+    "normalizedRecordCount": 3,
+    "emptyRecordIndices": [
+      2
+    ],
+    "records": [
+      {
+        "recordIndex": 1,
+        "values": [
+          "000001",
+          "收入,支出",
+          "1"
+        ],
+        "physicalLines": [
+          2,
+          2
+        ]
+      },
+      {
+        "recordIndex": 3,
+        "values": [
+          "000002",
+          "第一行\n第二行",
+          "2"
+        ],
+        "physicalLines": [
+          4,
+          5
+        ]
+      },
+      {
+        "recordIndex": 4,
+        "values": [
+          "000003",
+          "含\"引号\"",
+          "3"
+        ],
+        "physicalLines": [
+          6,
+          6
+        ]
+      }
+    ],
+    "exampleSourceRef": {
+      "recordIndex": 3,
+      "columnIndex": 1,
+      "value": "第一行\n第二行"
+    }
+  }
+}

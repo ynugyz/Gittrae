@@ -1,0 +1,13 @@
+node_modules/
+dist/
+coverage/
+.env
+.env.*
+!.env.example
+*.log
+*.t3project.json
+local/
+.DS_Store
+Thumbs.db
+__pycache__/
+.venv/

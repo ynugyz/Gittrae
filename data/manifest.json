@@ -1,0 +1,1680 @@
+{
+  "manifestVersion": "1.0.0",
+  "dataVersion": "t3-raw-20261025-v1",
+  "packageFingerprintSha256": "94520b80f023917c41e3799b13b1c988a9fea1b68308a0a2be5492455b3f6473",
+  "fingerprintMethod": "UTF-8, sorted relativePath + TAB + sha256, LF between entries, no trailing LF",
+  "verifiedAt": "2026-10-25",
+  "sourcePackageLabel": "数据洞察样例数据包/01_初始数据",
+  "sourceCollectionDateReported": "2026-10-14",
+  "collectionDateStatus": "来源说明所载，未重新联网采集或验证",
+  "pathBase": "repository-root",
+  "recordCounting": {
+    "headerRecordCount": 1,
+    "parsedRecordCount": "CSV解析后除去表头的数据记录数；不是物理文本行数。",
+    "dataRecordIndex": "对应SourceRef.recordIndex；从1开始，不含表头；CSV解析的空记录也占位置，过滤空记录不得重编号。",
+    "columnIndex": "对应SourceRef.columnIndex；从0开始，columns保留空表头。"
+  },
+  "fileCount": 58,
+  "totalBytes": 3545006,
+  "totalParsedRecordCount": 25114,
+  "domains": {
+    "D1": {
+      "fileCount": 19,
+      "totalBytes": 23956,
+      "parsedRecordCount": 589
+    },
+    "D2": {
+      "fileCount": 2,
+      "totalBytes": 3448524,
+      "parsedRecordCount": 23173
+    },
+    "D3": {
+      "fileCount": 37,
+      "totalBytes": 72526,
+      "parsedRecordCount": 1352
+    }
+  },
+  "sourceUrls": {
+    "D1": [
+      "https://data.stats.gov.cn/",
+      "https://www.stats.gov.cn/sj/zxfbhjd/"
+    ],
+    "D2": [
+      "https://data.eastmoney.com/bbsj/"
+    ],
+    "D3": [
+      "https://i.gasgoo.com/data/ranking",
+      "https://data.cpcadata.com/"
+    ]
+  },
+  "availability": {
+    "rawCsvPresent": 58,
+    "officialCleanedTablesPresent": false,
+    "officialExpectedStatsPresent": false,
+    "officialReproductionScriptsPresent": false,
+    "note": "来源说明提到的清洗表、expected_stats和脚本未在实际发放目录中找到；不得视为已交付或已验证。"
+  },
+  "files": [
+    {
+      "relativePath": "data/raw/D1_居民收支_国家统计局/NBS_fsYearData_durable__居民平均每百户年末家用汽车拥有量(辆).csv",
+      "sha256": "ce11a731a235c5358c5a2f715c18bd3c6699c14f882ced80cfb192253847ed41",
+      "bytes": 1220,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 31,
+      "columns": [
+        "",
+        "2024年",
+        "2023年",
+        "2022年",
+        "2021年",
+        "2020年"
+      ],
+      "domain": "D1",
+      "adapterType": "nbs-regional-wide",
+      "knownIssues": [
+        "首列表头为空，内容为地区；解析时显式映射，原文件不改写。",
+        "宽表年份列须转成长表；不同统计对象和单位不可合并。",
+        "省级人均指标的等权均值不是人口加权的全国人均值。",
+        "地区值存在首尾空白/制表符；规范化同时保留原始文本和来源位置。"
+      ],
+      "physicalLineCount": 32,
+      "missingCounts": {},
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D1_居民收支_国家统计局/NBS_fsYearData_durable__居民平均每百户年末彩色电视机拥有量(台).csv",
+      "sha256": "132de262ae261725bd60c2601b057dd4c65c3e5ba0607e0e4e4b3c246d7548ff",
+      "bytes": 1347,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 31,
+      "columns": [
+        "",
+        "2024年",
+        "2023年",
+        "2022年",
+        "2021年",
+        "2020年"
+      ],
+      "domain": "D1",
+      "adapterType": "nbs-regional-wide",
+      "knownIssues": [
+        "首列表头为空，内容为地区；解析时显式映射，原文件不改写。",
+        "宽表年份列须转成长表；不同统计对象和单位不可合并。",
+        "省级人均指标的等权均值不是人口加权的全国人均值。",
+        "地区值存在首尾空白/制表符；规范化同时保留原始文本和来源位置。"
+      ],
+      "physicalLineCount": 32,
+      "missingCounts": {},
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D1_居民收支_国家统计局/NBS_fsYearData_durable__居民平均每百户年末微波炉拥有量(台).csv",
+      "sha256": "e484f03f5e35c2647d5dbf5ef5e6e46403486a0d9492a89f5c7e0bf91d062c88",
+      "bytes": 894,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 31,
+      "columns": [
+        "",
+        "2022年",
+        "2021年",
+        "2020年"
+      ],
+      "domain": "D1",
+      "adapterType": "nbs-regional-wide",
+      "knownIssues": [
+        "首列表头为空，内容为地区；解析时显式映射，原文件不改写。",
+        "宽表年份列须转成长表；不同统计对象和单位不可合并。",
+        "省级人均指标的等权均值不是人口加权的全国人均值。",
+        "地区值存在首尾空白/制表符；规范化同时保留原始文本和来源位置。",
+        "本文件仅有2020—2022年；2023—2024年未提供，不填零、不推算。"
+      ],
+      "physicalLineCount": 32,
+      "missingCounts": {},
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D1_居民收支_国家统计局/NBS_fsYearData_durable__居民平均每百户年末排油烟机拥有量(台).csv",
+      "sha256": "1bedb52e07c1c211d4f0b55a6bad18f33e0bcdcfd5dc17c01071ee849b1ec18f",
+      "bytes": 1220,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 31,
+      "columns": [
+        "",
+        "2024年",
+        "2023年",
+        "2022年",
+        "2021年",
+        "2020年"
+      ],
+      "domain": "D1",
+      "adapterType": "nbs-regional-wide",
+      "knownIssues": [
+        "首列表头为空，内容为地区；解析时显式映射，原文件不改写。",
+        "宽表年份列须转成长表；不同统计对象和单位不可合并。",
+        "省级人均指标的等权均值不是人口加权的全国人均值。",
+        "地区值存在首尾空白/制表符；规范化同时保留原始文本和来源位置。"
+      ],
+      "physicalLineCount": 32,
+      "missingCounts": {},
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D1_居民收支_国家统计局/NBS_fsYearData_durable__居民平均每百户年末摩托车拥有量(辆).csv",
+      "sha256": "43c3cec9deca6a2f82c45efcb5b69a9296e88444e3e26e844bbcd5b516d0eb35",
+      "bytes": 1197,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 31,
+      "columns": [
+        "",
+        "2024年",
+        "2023年",
+        "2022年",
+        "2021年",
+        "2020年"
+      ],
+      "domain": "D1",
+      "adapterType": "nbs-regional-wide",
+      "knownIssues": [
+        "首列表头为空，内容为地区；解析时显式映射，原文件不改写。",
+        "宽表年份列须转成长表；不同统计对象和单位不可合并。",
+        "省级人均指标的等权均值不是人口加权的全国人均值。",
+        "地区值存在首尾空白/制表符；规范化同时保留原始文本和来源位置。"
+      ],
+      "physicalLineCount": 32,
+      "missingCounts": {},
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D1_居民收支_国家统计局/NBS_fsYearData_durable__居民平均每百户年末洗衣机拥有量(台).csv",
+      "sha256": "3d68835572343036885c95fe6728637009c4b0af2620503eb4e3d66f97ac00e4",
+      "bytes": 1271,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 31,
+      "columns": [
+        "",
+        "2024年",
+        "2023年",
+        "2022年",
+        "2021年",
+        "2020年"
+      ],
+      "domain": "D1",
+      "adapterType": "nbs-regional-wide",
+      "knownIssues": [
+        "首列表头为空，内容为地区；解析时显式映射，原文件不改写。",
+        "宽表年份列须转成长表；不同统计对象和单位不可合并。",
+        "省级人均指标的等权均值不是人口加权的全国人均值。",
+        "地区值存在首尾空白/制表符；规范化同时保留原始文本和来源位置。"
+      ],
+      "physicalLineCount": 32,
+      "missingCounts": {},
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D1_居民收支_国家统计局/NBS_fsYearData_durable__居民平均每百户年末热水器拥有量(台).csv",
+      "sha256": "d608a869a7ecf24013d1f299659c46673bfc5a08084f63fb8fe2373356f80baf",
+      "bytes": 1253,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 31,
+      "columns": [
+        "",
+        "2024年",
+        "2023年",
+        "2022年",
+        "2021年",
+        "2020年"
+      ],
+      "domain": "D1",
+      "adapterType": "nbs-regional-wide",
+      "knownIssues": [
+        "首列表头为空，内容为地区；解析时显式映射，原文件不改写。",
+        "宽表年份列须转成长表；不同统计对象和单位不可合并。",
+        "省级人均指标的等权均值不是人口加权的全国人均值。",
+        "地区值存在首尾空白/制表符；规范化同时保留原始文本和来源位置。"
+      ],
+      "physicalLineCount": 32,
+      "missingCounts": {},
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D1_居民收支_国家统计局/NBS_fsYearData_durable__居民平均每百户年末照相机拥有量(台).csv",
+      "sha256": "a33d6924f0958733da4d74f028d3ce904c4a54ab2bf3a188d7dd85ba4ad477fc",
+      "bytes": 825,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 31,
+      "columns": [
+        "",
+        "2022年",
+        "2021年",
+        "2020年"
+      ],
+      "domain": "D1",
+      "adapterType": "nbs-regional-wide",
+      "knownIssues": [
+        "首列表头为空，内容为地区；解析时显式映射，原文件不改写。",
+        "宽表年份列须转成长表；不同统计对象和单位不可合并。",
+        "省级人均指标的等权均值不是人口加权的全国人均值。",
+        "地区值存在首尾空白/制表符；规范化同时保留原始文本和来源位置。",
+        "本文件仅有2020—2022年；2023—2024年未提供，不填零、不推算。"
+      ],
+      "physicalLineCount": 32,
+      "missingCounts": {},
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D1_居民收支_国家统计局/NBS_fsYearData_durable__居民平均每百户年末电冰箱(柜)拥有量(台).csv",
+      "sha256": "ee40b74c69df51217211129d04dda62936ec96a7e04d0496dbc2537930b18a73",
+      "bytes": 1333,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 31,
+      "columns": [
+        "",
+        "2024年",
+        "2023年",
+        "2022年",
+        "2021年",
+        "2020年"
+      ],
+      "domain": "D1",
+      "adapterType": "nbs-regional-wide",
+      "knownIssues": [
+        "首列表头为空，内容为地区；解析时显式映射，原文件不改写。",
+        "宽表年份列须转成长表；不同统计对象和单位不可合并。",
+        "省级人均指标的等权均值不是人口加权的全国人均值。",
+        "地区值存在首尾空白/制表符；规范化同时保留原始文本和来源位置。"
+      ],
+      "physicalLineCount": 32,
+      "missingCounts": {},
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D1_居民收支_国家统计局/NBS_fsYearData_durable__居民平均每百户年末电动助力车拥有量(辆).csv",
+      "sha256": "f4956522feab43a4a6eadc75f7b21fc3536cdfd66d0ee53a577758c4badc84ce",
+      "bytes": 1253,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 31,
+      "columns": [
+        "",
+        "2024年",
+        "2023年",
+        "2022年",
+        "2021年",
+        "2020年"
+      ],
+      "domain": "D1",
+      "adapterType": "nbs-regional-wide",
+      "knownIssues": [
+        "首列表头为空，内容为地区；解析时显式映射，原文件不改写。",
+        "宽表年份列须转成长表；不同统计对象和单位不可合并。",
+        "省级人均指标的等权均值不是人口加权的全国人均值。",
+        "地区值存在首尾空白/制表符；规范化同时保留原始文本和来源位置。"
+      ],
+      "physicalLineCount": 32,
+      "missingCounts": {},
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D1_居民收支_国家统计局/NBS_fsYearData_durable__居民平均每百户年末移动电话拥有量(部).csv",
+      "sha256": "e0ed587fd7b471d41cc5fd97dd964655fea9774cb6cea0e5e1a5e69006d155c3",
+      "bytes": 1375,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 31,
+      "columns": [
+        "",
+        "2024年",
+        "2023年",
+        "2022年",
+        "2021年",
+        "2020年"
+      ],
+      "domain": "D1",
+      "adapterType": "nbs-regional-wide",
+      "knownIssues": [
+        "首列表头为空，内容为地区；解析时显式映射，原文件不改写。",
+        "宽表年份列须转成长表；不同统计对象和单位不可合并。",
+        "省级人均指标的等权均值不是人口加权的全国人均值。",
+        "地区值存在首尾空白/制表符；规范化同时保留原始文本和来源位置。"
+      ],
+      "physicalLineCount": 32,
+      "missingCounts": {},
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D1_居民收支_国家统计局/NBS_fsYearData_durable__居民平均每百户年末空调拥有量(台).csv",
+      "sha256": "77e283f063e8347d40f3091f04b03cf44d0e4228b2863075ea6f7c85f42403a5",
+      "bytes": 1299,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 31,
+      "columns": [
+        "",
+        "2024年",
+        "2023年",
+        "2022年",
+        "2021年",
+        "2020年"
+      ],
+      "domain": "D1",
+      "adapterType": "nbs-regional-wide",
+      "knownIssues": [
+        "首列表头为空，内容为地区；解析时显式映射，原文件不改写。",
+        "宽表年份列须转成长表；不同统计对象和单位不可合并。",
+        "省级人均指标的等权均值不是人口加权的全国人均值。",
+        "地区值存在首尾空白/制表符；规范化同时保留原始文本和来源位置。"
+      ],
+      "physicalLineCount": 32,
+      "missingCounts": {},
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D1_居民收支_国家统计局/NBS_fsYearData_durable__居民平均每百户年末计算机拥有量(台).csv",
+      "sha256": "bc4acd2efdfdd38ff6fe161fdfa22df4b323b199cab79f0e5d5eb00a20e47c75",
+      "bytes": 1221,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 31,
+      "columns": [
+        "",
+        "2024年",
+        "2023年",
+        "2022年",
+        "2021年",
+        "2020年"
+      ],
+      "domain": "D1",
+      "adapterType": "nbs-regional-wide",
+      "knownIssues": [
+        "首列表头为空，内容为地区；解析时显式映射，原文件不改写。",
+        "宽表年份列须转成长表；不同统计对象和单位不可合并。",
+        "省级人均指标的等权均值不是人口加权的全国人均值。",
+        "地区值存在首尾空白/制表符；规范化同时保留原始文本和来源位置。"
+      ],
+      "physicalLineCount": 32,
+      "missingCounts": {},
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D1_居民收支_国家统计局/NBS_fsYearData_expend__全体居民人均消费支出(元).csv",
+      "sha256": "3a55ba5fd6327ad0ddbf1ec19e3c0f40c1d823e26830331ee0a8cb24f137a0c0",
+      "bytes": 1375,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 31,
+      "columns": [
+        "",
+        "2024年",
+        "2023年",
+        "2022年",
+        "2021年",
+        "2020年"
+      ],
+      "domain": "D1",
+      "adapterType": "nbs-regional-wide",
+      "knownIssues": [
+        "首列表头为空，内容为地区；解析时显式映射，原文件不改写。",
+        "宽表年份列须转成长表；不同统计对象和单位不可合并。",
+        "省级人均指标的等权均值不是人口加权的全国人均值。",
+        "地区值存在首尾空白/制表符；规范化同时保留原始文本和来源位置。"
+      ],
+      "physicalLineCount": 32,
+      "missingCounts": {},
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D1_居民收支_国家统计局/NBS_fsYearData_expend__农村居民人均消费支出(元).csv",
+      "sha256": "02fa508b2372c8c8df39bdd1b095378b10c3edd55924252c9821555a8cb8eeb4",
+      "bytes": 1373,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 31,
+      "columns": [
+        "",
+        "2024年",
+        "2023年",
+        "2022年",
+        "2021年",
+        "2020年"
+      ],
+      "domain": "D1",
+      "adapterType": "nbs-regional-wide",
+      "knownIssues": [
+        "首列表头为空，内容为地区；解析时显式映射，原文件不改写。",
+        "宽表年份列须转成长表；不同统计对象和单位不可合并。",
+        "省级人均指标的等权均值不是人口加权的全国人均值。",
+        "地区值存在首尾空白/制表符；规范化同时保留原始文本和来源位置。"
+      ],
+      "physicalLineCount": 32,
+      "missingCounts": {},
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D1_居民收支_国家统计局/NBS_fsYearData_expend__城镇居民人均消费支出(元).csv",
+      "sha256": "d0870e22a59267167566dcef91f055b3ae0cd5e70986b86f1a4456667d14a14d",
+      "bytes": 1375,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 31,
+      "columns": [
+        "",
+        "2024年",
+        "2023年",
+        "2022年",
+        "2021年",
+        "2020年"
+      ],
+      "domain": "D1",
+      "adapterType": "nbs-regional-wide",
+      "knownIssues": [
+        "首列表头为空，内容为地区；解析时显式映射，原文件不改写。",
+        "宽表年份列须转成长表；不同统计对象和单位不可合并。",
+        "省级人均指标的等权均值不是人口加权的全国人均值。",
+        "地区值存在首尾空白/制表符；规范化同时保留原始文本和来源位置。"
+      ],
+      "physicalLineCount": 32,
+      "missingCounts": {},
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D1_居民收支_国家统计局/NBS_fsYearData_income__全体居民人均可支配收入(元).csv",
+      "sha256": "9b19c0e867b282d4b47d3e72ae05441872f9cb0cd7eb79a15b0da16ccbb71a78",
+      "bytes": 1375,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 31,
+      "columns": [
+        "",
+        "2024年",
+        "2023年",
+        "2022年",
+        "2021年",
+        "2020年"
+      ],
+      "domain": "D1",
+      "adapterType": "nbs-regional-wide",
+      "knownIssues": [
+        "首列表头为空，内容为地区；解析时显式映射，原文件不改写。",
+        "宽表年份列须转成长表；不同统计对象和单位不可合并。",
+        "省级人均指标的等权均值不是人口加权的全国人均值。",
+        "地区值存在首尾空白/制表符；规范化同时保留原始文本和来源位置。"
+      ],
+      "physicalLineCount": 32,
+      "missingCounts": {},
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D1_居民收支_国家统计局/NBS_fsYearData_income__农村居民人均可支配收入(元).csv",
+      "sha256": "9ca2a24c62f3f722452283c95b7d403703cd790c3cac158ca2f8eb0453125b54",
+      "bytes": 1375,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 31,
+      "columns": [
+        "",
+        "2024年",
+        "2023年",
+        "2022年",
+        "2021年",
+        "2020年"
+      ],
+      "domain": "D1",
+      "adapterType": "nbs-regional-wide",
+      "knownIssues": [
+        "首列表头为空，内容为地区；解析时显式映射，原文件不改写。",
+        "宽表年份列须转成长表；不同统计对象和单位不可合并。",
+        "省级人均指标的等权均值不是人口加权的全国人均值。",
+        "地区值存在首尾空白/制表符；规范化同时保留原始文本和来源位置。"
+      ],
+      "physicalLineCount": 32,
+      "missingCounts": {},
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D1_居民收支_国家统计局/NBS_fsYearData_income__城镇居民人均可支配收入(元).csv",
+      "sha256": "b2b7010c6893e4380338581341e047e200e4839fbd359badf86fe2a0496f47af",
+      "bytes": 1375,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 31,
+      "columns": [
+        "",
+        "2024年",
+        "2023年",
+        "2022年",
+        "2021年",
+        "2020年"
+      ],
+      "domain": "D1",
+      "adapterType": "nbs-regional-wide",
+      "knownIssues": [
+        "首列表头为空，内容为地区；解析时显式映射，原文件不改写。",
+        "宽表年份列须转成长表；不同统计对象和单位不可合并。",
+        "省级人均指标的等权均值不是人口加权的全国人均值。",
+        "地区值存在首尾空白/制表符；规范化同时保留原始文本和来源位置。"
+      ],
+      "physicalLineCount": 32,
+      "missingCounts": {},
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D2_企业财务_A股上市公司/EM_yjbb_FY2024_20241231.csv",
+      "sha256": "7b18d40f061985f4b79d4caea2305fffc4097c36ab8ea4f5bafd68160af35b68",
+      "bytes": 1733923,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 11648,
+      "columns": [
+        "序号",
+        "股票代码",
+        "股票简称",
+        "每股收益",
+        "营业总收入-营业总收入",
+        "营业总收入-同比增长",
+        "营业总收入-季度环比增长",
+        "净利润-净利润",
+        "净利润-同比增长",
+        "净利润-季度环比增长",
+        "每股净资产",
+        "净资产收益率",
+        "每股经营现金流量",
+        "销售毛利率",
+        "所处行业",
+        "最新公告日期"
+      ],
+      "domain": "D2",
+      "adapterType": "eastmoney-financial",
+      "knownIssues": [
+        "原始文件混合多个证券市场，目录名不代表全部记录均为沪深A股。",
+        "股票代码必须按文本读取，保留前导零。",
+        "所处行业及部分财务指标缺失；缺失不等于零，分组时须显示未分类范围。",
+        "最新公告日期可晚于报告期；不代表当时可得的历史快照。",
+        "负净利润保留为亏损观测；比率和金额字段单位分开。"
+      ],
+      "physicalLineCount": 11649,
+      "missingCounts": {
+        "每股收益": 16,
+        "营业总收入-营业总收入": 5,
+        "营业总收入-同比增长": 104,
+        "营业总收入-季度环比增长": 5684,
+        "净利润-同比增长": 47,
+        "净利润-季度环比增长": 5680,
+        "净资产收益率": 237,
+        "每股经营现金流量": 3,
+        "销售毛利率": 205,
+        "所处行业": 5989
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D2_企业财务_A股上市公司/EM_yjbb_FY2025_20251231.csv",
+      "sha256": "c519acb415f858731e5cda99f578b536acb5eb0b59d57963d871ed23223b43a6",
+      "bytes": 1714601,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 11525,
+      "columns": [
+        "序号",
+        "股票代码",
+        "股票简称",
+        "每股收益",
+        "营业总收入-营业总收入",
+        "营业总收入-同比增长",
+        "营业总收入-季度环比增长",
+        "净利润-净利润",
+        "净利润-同比增长",
+        "净利润-季度环比增长",
+        "每股净资产",
+        "净资产收益率",
+        "每股经营现金流量",
+        "销售毛利率",
+        "所处行业",
+        "最新公告日期"
+      ],
+      "domain": "D2",
+      "adapterType": "eastmoney-financial",
+      "knownIssues": [
+        "原始文件混合多个证券市场，目录名不代表全部记录均为沪深A股。",
+        "股票代码必须按文本读取，保留前导零。",
+        "所处行业及部分财务指标缺失；缺失不等于零，分组时须显示未分类范围。",
+        "最新公告日期可晚于报告期；不代表当时可得的历史快照。",
+        "负净利润保留为亏损观测；比率和金额字段单位分开。"
+      ],
+      "physicalLineCount": 11526,
+      "missingCounts": {
+        "营业总收入-营业总收入": 9,
+        "营业总收入-同比增长": 58,
+        "营业总收入-季度环比增长": 5611,
+        "净利润-季度环比增长": 5604,
+        "净资产收益率": 323,
+        "每股经营现金流量": 3,
+        "销售毛利率": 229,
+        "所处行业": 5867
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/CPCA_country.csv",
+      "sha256": "d36c98e7113bd674a8d55277553664806550370947de57323a026f36f08c1519",
+      "bytes": 558,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 12,
+      "columns": [
+        "月份",
+        "其他欧系",
+        "德系",
+        "日系",
+        "法系",
+        "美系",
+        "自主",
+        "韩系"
+      ],
+      "domain": "D3",
+      "adapterType": "cpca-table",
+      "knownIssues": [
+        "需按月份、表头年份、统计口径解析；销量单位与占比单位不同。",
+        "产量、批发、零售、出口分别保留口径；不与Top50榜单总量混称。",
+        "单位与统计范围按随包来源说明记录，未重新联网核验；说明不足时标记未确认，不猜测。"
+      ],
+      "physicalLineCount": 13,
+      "missingCounts": {},
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/CPCA_fuel_整体市场.csv",
+      "sha256": "e163c056fa623b34b74e6e39dd0b693683f5dd16618554a43c62b337c99c2e2d",
+      "bytes": 273,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 12,
+      "columns": [
+        "月份",
+        "2025年",
+        "2026年"
+      ],
+      "domain": "D3",
+      "adapterType": "cpca-table",
+      "knownIssues": [
+        "需按月份、表头年份、统计口径解析；销量单位与占比单位不同。",
+        "产量、批发、零售、出口分别保留口径；不与Top50榜单总量混称。",
+        "年份列存在尚未提供月份的空值；空值不代表零销量。",
+        "单位与统计范围按随包来源说明记录，未重新联网核验；说明不足时标记未确认，不猜测。"
+      ],
+      "physicalLineCount": 13,
+      "missingCounts": {
+        "2026年": 4
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/CPCA_fuel_销量占比_ICE_NEV.csv",
+      "sha256": "5d5694dbfe913e0d5f54e85ab172776cca44c5b649384cc3350e641ffa0e8bf5",
+      "bytes": 274,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 12,
+      "columns": [
+        "月份",
+        "NEV",
+        "ICE"
+      ],
+      "domain": "D3",
+      "adapterType": "cpca-table",
+      "knownIssues": [
+        "需按月份、表头年份、统计口径解析；销量单位与占比单位不同。",
+        "产量、批发、零售、出口分别保留口径；不与Top50榜单总量混称。",
+        "单位与统计范围按随包来源说明记录，未重新联网核验；说明不足时标记未确认，不猜测。"
+      ],
+      "physicalLineCount": 13,
+      "missingCounts": {},
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/CPCA_fuel_销量占比_PHEV_BEV.csv",
+      "sha256": "4d2cd3dfdb2977d1d05b1e7862c72306d587f9ce3704bd39739b75c6a4b507ee",
+      "bytes": 275,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 12,
+      "columns": [
+        "月份",
+        "PHEV",
+        "BEV"
+      ],
+      "domain": "D3",
+      "adapterType": "cpca-table",
+      "knownIssues": [
+        "需按月份、表头年份、统计口径解析；销量单位与占比单位不同。",
+        "产量、批发、零售、出口分别保留口径；不与Top50榜单总量混称。",
+        "单位与统计范围按随包来源说明记录，未重新联网核验；说明不足时标记未确认，不猜测。"
+      ],
+      "physicalLineCount": 13,
+      "missingCounts": {},
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/CPCA_manrank_狭义乘用车_单月_批发.csv",
+      "sha256": "aaff817e437ff2a51aab4cda89e7838ebf61eccec819014c1eaa0dc0ffbf5bc3",
+      "bytes": 342,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 10,
+      "columns": [
+        "厂商",
+        "2025年8月",
+        "2026年8月"
+      ],
+      "domain": "D3",
+      "adapterType": "cpca-table",
+      "knownIssues": [
+        "需按月份、表头年份、统计口径解析；销量单位与占比单位不同。",
+        "产量、批发、零售、出口分别保留口径；不与Top50榜单总量混称。",
+        "本表只有10条厂商排名记录，不代表全市场厂商。",
+        "单位与统计范围按随包来源说明记录，未重新联网核验；说明不足时标记未确认，不猜测。"
+      ],
+      "physicalLineCount": 11,
+      "missingCounts": {},
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/CPCA_manrank_狭义乘用车_累计_批发.csv",
+      "sha256": "11549a483ef273d3f49d4de20ba6545ba71c8b4d361bcbe173d6bcb5f6054847",
+      "bytes": 360,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 10,
+      "columns": [
+        "厂商",
+        "2025年 1-8月",
+        "2026年 1-8月"
+      ],
+      "domain": "D3",
+      "adapterType": "cpca-table",
+      "knownIssues": [
+        "需按月份、表头年份、统计口径解析；销量单位与占比单位不同。",
+        "产量、批发、零售、出口分别保留口径；不与Top50榜单总量混称。",
+        "本表只有10条厂商排名记录，不代表全市场厂商。",
+        "单位与统计范围按随包来源说明记录，未重新联网核验；说明不足时标记未确认，不猜测。"
+      ],
+      "physicalLineCount": 11,
+      "missingCounts": {},
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/CPCA_segment_MPV.csv",
+      "sha256": "0e75e99ba134320e02033c4a988db3a4a9e41b3c37208ce8db9fe332943ba133",
+      "bytes": 380,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 12,
+      "columns": [
+        "月份",
+        "A0",
+        "A",
+        "B",
+        "C"
+      ],
+      "domain": "D3",
+      "adapterType": "cpca-table",
+      "knownIssues": [
+        "需按月份、表头年份、统计口径解析；销量单位与占比单位不同。",
+        "产量、批发、零售、出口分别保留口径；不与Top50榜单总量混称。",
+        "单位与统计范围按随包来源说明记录，未重新联网核验；说明不足时标记未确认，不猜测。"
+      ],
+      "physicalLineCount": 13,
+      "missingCounts": {},
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/CPCA_segment_SUV.csv",
+      "sha256": "0bd1ea1cb0192aff80343a93834e3cd57f8cba13e7e984fa673ee84b9d75475d",
+      "bytes": 435,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 12,
+      "columns": [
+        "月份",
+        "A00",
+        "A0",
+        "A",
+        "B",
+        "C"
+      ],
+      "domain": "D3",
+      "adapterType": "cpca-table",
+      "knownIssues": [
+        "需按月份、表头年份、统计口径解析；销量单位与占比单位不同。",
+        "产量、批发、零售、出口分别保留口径；不与Top50榜单总量混称。",
+        "单位与统计范围按随包来源说明记录，未重新联网核验；说明不足时标记未确认，不猜测。"
+      ],
+      "physicalLineCount": 13,
+      "missingCounts": {},
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/CPCA_segment_轿车.csv",
+      "sha256": "cc63859360a141fe9f4bffdd6dc8a38b782a6e7107acc69ff425381ace21c9c1",
+      "bytes": 443,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 12,
+      "columns": [
+        "月份",
+        "A00",
+        "A0",
+        "A",
+        "B",
+        "C"
+      ],
+      "domain": "D3",
+      "adapterType": "cpca-table",
+      "knownIssues": [
+        "需按月份、表头年份、统计口径解析；销量单位与占比单位不同。",
+        "产量、批发、零售、出口分别保留口径；不与Top50榜单总量混称。",
+        "单位与统计范围按随包来源说明记录，未重新联网核验；说明不足时标记未确认，不猜测。"
+      ],
+      "physicalLineCount": 13,
+      "missingCounts": {},
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/CPCA_total_狭义乘用车_产量.csv",
+      "sha256": "1f220e691c9a6af27d4bf7afd9c8916ef195d9bd7dc938a850fa414b80a93f92",
+      "bytes": 284,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 12,
+      "columns": [
+        "月份",
+        "2025年",
+        "2026年"
+      ],
+      "domain": "D3",
+      "adapterType": "cpca-table",
+      "knownIssues": [
+        "需按月份、表头年份、统计口径解析；销量单位与占比单位不同。",
+        "产量、批发、零售、出口分别保留口径；不与Top50榜单总量混称。",
+        "年份列存在尚未提供月份的空值；空值不代表零销量。",
+        "单位与统计范围按随包来源说明记录，未重新联网核验；说明不足时标记未确认，不猜测。"
+      ],
+      "physicalLineCount": 13,
+      "missingCounts": {
+        "2026年": 4
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/CPCA_total_狭义乘用车_出口.csv",
+      "sha256": "b4eae8b0e6f0c010a856e88ba33125391f13772a2b44e8dfb061d95afd4837a5",
+      "bytes": 264,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 12,
+      "columns": [
+        "月份",
+        "2025年",
+        "2026年"
+      ],
+      "domain": "D3",
+      "adapterType": "cpca-table",
+      "knownIssues": [
+        "需按月份、表头年份、统计口径解析；销量单位与占比单位不同。",
+        "产量、批发、零售、出口分别保留口径；不与Top50榜单总量混称。",
+        "年份列存在尚未提供月份的空值；空值不代表零销量。",
+        "单位与统计范围按随包来源说明记录，未重新联网核验；说明不足时标记未确认，不猜测。"
+      ],
+      "physicalLineCount": 13,
+      "missingCounts": {
+        "2026年": 4
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/CPCA_total_狭义乘用车_批发.csv",
+      "sha256": "22457523c77a78a399c12f41f108938f7d6716ae8c913884820bb3e1bdb75ca7",
+      "bytes": 285,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 12,
+      "columns": [
+        "月份",
+        "2025年",
+        "2026年"
+      ],
+      "domain": "D3",
+      "adapterType": "cpca-table",
+      "knownIssues": [
+        "需按月份、表头年份、统计口径解析；销量单位与占比单位不同。",
+        "产量、批发、零售、出口分别保留口径；不与Top50榜单总量混称。",
+        "年份列存在尚未提供月份的空值；空值不代表零销量。",
+        "单位与统计范围按随包来源说明记录，未重新联网核验；说明不足时标记未确认，不猜测。"
+      ],
+      "physicalLineCount": 13,
+      "missingCounts": {
+        "2026年": 4
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/CPCA_total_狭义乘用车_零售.csv",
+      "sha256": "9f5c38a633de75d35007425c54fece45e1d5b6fd9b9830c917f9345d9b1d104a",
+      "bytes": 285,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 12,
+      "columns": [
+        "月份",
+        "2025年",
+        "2026年"
+      ],
+      "domain": "D3",
+      "adapterType": "cpca-table",
+      "knownIssues": [
+        "需按月份、表头年份、统计口径解析；销量单位与占比单位不同。",
+        "产量、批发、零售、出口分别保留口径；不与Top50榜单总量混称。",
+        "年份列存在尚未提供月份的空值；空值不代表零销量。",
+        "单位与统计范围按随包来源说明记录，未重新联网核验；说明不足时标记未确认，不猜测。"
+      ],
+      "physicalLineCount": 13,
+      "missingCounts": {
+        "2026年": 4
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/GASGOO_rank_firm_202509.csv",
+      "sha256": "8726dd00780f41850f9c8cc9da169ee89faa2f4a304a017f37ed0cf67ca3d8ef",
+      "bytes": 3031,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 50,
+      "columns": [
+        "厂商",
+        "2025-9",
+        "9月同比",
+        "9月环比",
+        "2025-1到9",
+        "2024-1到9",
+        "2023-1到9"
+      ],
+      "domain": "D3",
+      "adapterType": "gasgoo-ranking",
+      "knownIssues": [
+        "每月Top50截尾榜单，不代表全市场；不同月份榜单成员可能变化。",
+        "表头含月份与累计区间，逐文件解析；单月值与累计值不可混用。",
+        "源站环比列口径有问题，原样保留但不直接用于分析；如重算须使用同对象相邻月份单月值。",
+        "百分比文本需解析；同比极端值和历史累计缺失不自动删除或补零。"
+      ],
+      "physicalLineCount": 51,
+      "missingCounts": {
+        "2024-1到9": 1,
+        "2023-1到9": 4
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/GASGOO_rank_firm_202510.csv",
+      "sha256": "daf62a7cb66296e81c966712741e49987a2d9ae6b96c048acae9ad2d29fabb54",
+      "bytes": 3052,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 50,
+      "columns": [
+        "厂商",
+        "2025-10",
+        "10月同比",
+        "10月环比",
+        "2025-1到10",
+        "2024-1到10",
+        "2023-1到10"
+      ],
+      "domain": "D3",
+      "adapterType": "gasgoo-ranking",
+      "knownIssues": [
+        "每月Top50截尾榜单，不代表全市场；不同月份榜单成员可能变化。",
+        "表头含月份与累计区间，逐文件解析；单月值与累计值不可混用。",
+        "源站环比列口径有问题，原样保留但不直接用于分析；如重算须使用同对象相邻月份单月值。",
+        "百分比文本需解析；同比极端值和历史累计缺失不自动删除或补零。"
+      ],
+      "physicalLineCount": 51,
+      "missingCounts": {
+        "2024-1到10": 1,
+        "2023-1到10": 4
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/GASGOO_rank_firm_202511.csv",
+      "sha256": "55103507646ea89a15a2c2f75445a7b302c6dacdc71fd04430068d2caa9436fb",
+      "bytes": 3050,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 50,
+      "columns": [
+        "厂商",
+        "2025-11",
+        "11月同比",
+        "11月环比",
+        "2025-1到11",
+        "2024-1到11",
+        "2023-1到11"
+      ],
+      "domain": "D3",
+      "adapterType": "gasgoo-ranking",
+      "knownIssues": [
+        "每月Top50截尾榜单，不代表全市场；不同月份榜单成员可能变化。",
+        "表头含月份与累计区间，逐文件解析；单月值与累计值不可混用。",
+        "源站环比列口径有问题，原样保留但不直接用于分析；如重算须使用同对象相邻月份单月值。",
+        "百分比文本需解析；同比极端值和历史累计缺失不自动删除或补零。"
+      ],
+      "physicalLineCount": 51,
+      "missingCounts": {
+        "2024-1到11": 1,
+        "2023-1到11": 4
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/GASGOO_rank_firm_202512.csv",
+      "sha256": "385b2ac67fb00944cc73222804bca0db4d73e44248cc958fd62657e6f8b18853",
+      "bytes": 3069,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 50,
+      "columns": [
+        "厂商",
+        "2025-12",
+        "12月同比",
+        "12月环比",
+        "2025-1到12",
+        "2024-1到12",
+        "2023-1到12"
+      ],
+      "domain": "D3",
+      "adapterType": "gasgoo-ranking",
+      "knownIssues": [
+        "每月Top50截尾榜单，不代表全市场；不同月份榜单成员可能变化。",
+        "表头含月份与累计区间，逐文件解析；单月值与累计值不可混用。",
+        "源站环比列口径有问题，原样保留但不直接用于分析；如重算须使用同对象相邻月份单月值。",
+        "百分比文本需解析；同比极端值和历史累计缺失不自动删除或补零。"
+      ],
+      "physicalLineCount": 51,
+      "missingCounts": {
+        "2024-1到12": 1,
+        "2023-1到12": 4
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/GASGOO_rank_firm_202601.csv",
+      "sha256": "9bb337a1d94dfc56b85aeef28e6270ba680da49990387598da88608ce65e30a7",
+      "bytes": 2641,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 50,
+      "columns": [
+        "厂商",
+        "2026-1",
+        "1月同比",
+        "1月环比",
+        "2026-1到1",
+        "2025-1到1",
+        "2024-1到1"
+      ],
+      "domain": "D3",
+      "adapterType": "gasgoo-ranking",
+      "knownIssues": [
+        "每月Top50截尾榜单，不代表全市场；不同月份榜单成员可能变化。",
+        "表头含月份与累计区间，逐文件解析；单月值与累计值不可混用。",
+        "源站环比列口径有问题，原样保留但不直接用于分析；如重算须使用同对象相邻月份单月值。",
+        "百分比文本需解析；同比极端值和历史累计缺失不自动删除或补零。"
+      ],
+      "physicalLineCount": 51,
+      "missingCounts": {
+        "2025-1到1": 1,
+        "2024-1到1": 3
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/GASGOO_rank_firm_202602.csv",
+      "sha256": "404e024a11af686f02020251a300a10c7a3b368c37afbe370ee70d0d6bb2023d",
+      "bytes": 2927,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 50,
+      "columns": [
+        "厂商",
+        "2026-2",
+        "2月同比",
+        "2月环比",
+        "2026-1到2",
+        "2025-1到2",
+        "2024-1到2"
+      ],
+      "domain": "D3",
+      "adapterType": "gasgoo-ranking",
+      "knownIssues": [
+        "每月Top50截尾榜单，不代表全市场；不同月份榜单成员可能变化。",
+        "表头含月份与累计区间，逐文件解析；单月值与累计值不可混用。",
+        "源站环比列口径有问题，原样保留但不直接用于分析；如重算须使用同对象相邻月份单月值。",
+        "百分比文本需解析；同比极端值和历史累计缺失不自动删除或补零。"
+      ],
+      "physicalLineCount": 51,
+      "missingCounts": {
+        "2025-1到2": 1,
+        "2024-1到2": 2
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/GASGOO_rank_firm_202603.csv",
+      "sha256": "43a4c042902d3c40b784cd875ef36fd28a450adb79015f245de512da187cffbc",
+      "bytes": 2957,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 50,
+      "columns": [
+        "厂商",
+        "2026-3",
+        "3月同比",
+        "3月环比",
+        "2026-1到3",
+        "2025-1到3",
+        "2024-1到3"
+      ],
+      "domain": "D3",
+      "adapterType": "gasgoo-ranking",
+      "knownIssues": [
+        "每月Top50截尾榜单，不代表全市场；不同月份榜单成员可能变化。",
+        "表头含月份与累计区间，逐文件解析；单月值与累计值不可混用。",
+        "源站环比列口径有问题，原样保留但不直接用于分析；如重算须使用同对象相邻月份单月值。",
+        "百分比文本需解析；同比极端值和历史累计缺失不自动删除或补零。"
+      ],
+      "physicalLineCount": 51,
+      "missingCounts": {
+        "2025-1到3": 1,
+        "2024-1到3": 3
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/GASGOO_rank_firm_202604.csv",
+      "sha256": "273c20b9f686e462c261c6911e674e58fd523455f82fb816253f90d875ffaaa9",
+      "bytes": 2907,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 50,
+      "columns": [
+        "厂商",
+        "2026-4",
+        "4月同比",
+        "4月环比",
+        "2026-1到4",
+        "2025-1到4",
+        "2024-1到4"
+      ],
+      "domain": "D3",
+      "adapterType": "gasgoo-ranking",
+      "knownIssues": [
+        "每月Top50截尾榜单，不代表全市场；不同月份榜单成员可能变化。",
+        "表头含月份与累计区间，逐文件解析；单月值与累计值不可混用。",
+        "源站环比列口径有问题，原样保留但不直接用于分析；如重算须使用同对象相邻月份单月值。",
+        "百分比文本需解析；同比极端值和历史累计缺失不自动删除或补零。"
+      ],
+      "physicalLineCount": 51,
+      "missingCounts": {
+        "2024-1到4": 2
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/GASGOO_rank_firm_202605.csv",
+      "sha256": "8c89dca36ac9f795119c2e390a6a2df228c2cb7bff1dacf10b80cc57cbd0596a",
+      "bytes": 3006,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 50,
+      "columns": [
+        "厂商",
+        "2026-5",
+        "5月同比",
+        "5月环比",
+        "2026-1到5",
+        "2025-1到5",
+        "2024-1到5"
+      ],
+      "domain": "D3",
+      "adapterType": "gasgoo-ranking",
+      "knownIssues": [
+        "每月Top50截尾榜单，不代表全市场；不同月份榜单成员可能变化。",
+        "表头含月份与累计区间，逐文件解析；单月值与累计值不可混用。",
+        "源站环比列口径有问题，原样保留但不直接用于分析；如重算须使用同对象相邻月份单月值。",
+        "百分比文本需解析；同比极端值和历史累计缺失不自动删除或补零。"
+      ],
+      "physicalLineCount": 51,
+      "missingCounts": {
+        "2025-1到5": 1,
+        "2024-1到5": 2
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/GASGOO_rank_firm_202606.csv",
+      "sha256": "8babf35804370a3a75feb94027d94f6cd416add6ffdd5916c6032f5f1fba1392",
+      "bytes": 3029,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 50,
+      "columns": [
+        "厂商",
+        "2026-6",
+        "6月同比",
+        "6月环比",
+        "2026-1到6",
+        "2025-1到6",
+        "2024-1到6"
+      ],
+      "domain": "D3",
+      "adapterType": "gasgoo-ranking",
+      "knownIssues": [
+        "每月Top50截尾榜单，不代表全市场；不同月份榜单成员可能变化。",
+        "表头含月份与累计区间，逐文件解析；单月值与累计值不可混用。",
+        "源站环比列口径有问题，原样保留但不直接用于分析；如重算须使用同对象相邻月份单月值。",
+        "百分比文本需解析；同比极端值和历史累计缺失不自动删除或补零。"
+      ],
+      "physicalLineCount": 51,
+      "missingCounts": {
+        "2025-1到6": 1,
+        "2024-1到6": 2
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/GASGOO_rank_firm_202607.csv",
+      "sha256": "b418464d0533a9f6ba093d21cae0e347cd78ca7b51a857deca17b173536e6a4b",
+      "bytes": 3024,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 50,
+      "columns": [
+        "厂商",
+        "2026-7",
+        "7月同比",
+        "7月环比",
+        "2026-1到7",
+        "2025-1到7",
+        "2024-1到7"
+      ],
+      "domain": "D3",
+      "adapterType": "gasgoo-ranking",
+      "knownIssues": [
+        "每月Top50截尾榜单，不代表全市场；不同月份榜单成员可能变化。",
+        "表头含月份与累计区间，逐文件解析；单月值与累计值不可混用。",
+        "源站环比列口径有问题，原样保留但不直接用于分析；如重算须使用同对象相邻月份单月值。",
+        "百分比文本需解析；同比极端值和历史累计缺失不自动删除或补零。"
+      ],
+      "physicalLineCount": 51,
+      "missingCounts": {
+        "2025-1到7": 2,
+        "2024-1到7": 3
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/GASGOO_rank_firm_202608.csv",
+      "sha256": "c46f0b18fe99e619c8b0545a030b4cb0a22d36afc5d67a87ca378f81fec64262",
+      "bytes": 3043,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 50,
+      "columns": [
+        "厂商",
+        "2026-8",
+        "8月同比",
+        "8月环比",
+        "2026-1到8",
+        "2025-1到8",
+        "2024-1到8"
+      ],
+      "domain": "D3",
+      "adapterType": "gasgoo-ranking",
+      "knownIssues": [
+        "每月Top50截尾榜单，不代表全市场；不同月份榜单成员可能变化。",
+        "表头含月份与累计区间，逐文件解析；单月值与累计值不可混用。",
+        "源站环比列口径有问题，原样保留但不直接用于分析；如重算须使用同对象相邻月份单月值。",
+        "百分比文本需解析；同比极端值和历史累计缺失不自动删除或补零。"
+      ],
+      "physicalLineCount": 51,
+      "missingCounts": {
+        "2025-1到8": 2,
+        "2024-1到8": 3
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/GASGOO_rank_model_202509.csv",
+      "sha256": "79edc33c790582b371948fa8a2d02753abe1279b48cddcd5c59e11bb699091b8",
+      "bytes": 2780,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 50,
+      "columns": [
+        "车型",
+        "2025-9",
+        "9月同比",
+        "9月环比",
+        "2025-1到9",
+        "2024-1到9",
+        "2023-1到9"
+      ],
+      "domain": "D3",
+      "adapterType": "gasgoo-ranking",
+      "knownIssues": [
+        "每月Top50截尾榜单，不代表全市场；不同月份榜单成员可能变化。",
+        "表头含月份与累计区间，逐文件解析；单月值与累计值不可混用。",
+        "源站环比列口径有问题，原样保留但不直接用于分析；如重算须使用同对象相邻月份单月值。",
+        "百分比文本需解析；同比极端值和历史累计缺失不自动删除或补零。"
+      ],
+      "physicalLineCount": 51,
+      "missingCounts": {
+        "2024-1到9": 5,
+        "2023-1到9": 12
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/GASGOO_rank_model_202510.csv",
+      "sha256": "41f10d4acce40cea49cde380d8db531b5c1e4ec2d21ffcd5db42f4479f64f6d9",
+      "bytes": 2748,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 50,
+      "columns": [
+        "车型",
+        "2025-10",
+        "10月同比",
+        "10月环比",
+        "2025-1到10",
+        "2024-1到10",
+        "2023-1到10"
+      ],
+      "domain": "D3",
+      "adapterType": "gasgoo-ranking",
+      "knownIssues": [
+        "每月Top50截尾榜单，不代表全市场；不同月份榜单成员可能变化。",
+        "表头含月份与累计区间，逐文件解析；单月值与累计值不可混用。",
+        "源站环比列口径有问题，原样保留但不直接用于分析；如重算须使用同对象相邻月份单月值。",
+        "百分比文本需解析；同比极端值和历史累计缺失不自动删除或补零。"
+      ],
+      "physicalLineCount": 51,
+      "missingCounts": {
+        "2024-1到10": 7,
+        "2023-1到10": 15
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/GASGOO_rank_model_202511.csv",
+      "sha256": "f5c5cad0112f93bbfbfecb729abcef22f8b8573a4f01207ccd17d5737c4c430f",
+      "bytes": 2787,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 50,
+      "columns": [
+        "车型",
+        "2025-11",
+        "11月同比",
+        "11月环比",
+        "2025-1到11",
+        "2024-1到11",
+        "2023-1到11"
+      ],
+      "domain": "D3",
+      "adapterType": "gasgoo-ranking",
+      "knownIssues": [
+        "每月Top50截尾榜单，不代表全市场；不同月份榜单成员可能变化。",
+        "表头含月份与累计区间，逐文件解析；单月值与累计值不可混用。",
+        "源站环比列口径有问题，原样保留但不直接用于分析；如重算须使用同对象相邻月份单月值。",
+        "百分比文本需解析；同比极端值和历史累计缺失不自动删除或补零。"
+      ],
+      "physicalLineCount": 51,
+      "missingCounts": {
+        "2024-1到11": 5,
+        "2023-1到11": 13
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/GASGOO_rank_model_202512.csv",
+      "sha256": "97694fdb4201c887239bfd3caa0be9bae9ae86ff71661a84e43eb1b20940d1ec",
+      "bytes": 2774,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 50,
+      "columns": [
+        "车型",
+        "2025-12",
+        "12月同比",
+        "12月环比",
+        "2025-1到12",
+        "2024-1到12",
+        "2023-1到12"
+      ],
+      "domain": "D3",
+      "adapterType": "gasgoo-ranking",
+      "knownIssues": [
+        "每月Top50截尾榜单，不代表全市场；不同月份榜单成员可能变化。",
+        "表头含月份与累计区间，逐文件解析；单月值与累计值不可混用。",
+        "源站环比列口径有问题，原样保留但不直接用于分析；如重算须使用同对象相邻月份单月值。",
+        "百分比文本需解析；同比极端值和历史累计缺失不自动删除或补零。"
+      ],
+      "physicalLineCount": 51,
+      "missingCounts": {
+        "2024-1到12": 8,
+        "2023-1到12": 12
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/GASGOO_rank_model_202601.csv",
+      "sha256": "db93334fb0d3ed4c50c3b31ac15f54d8c3f5d0ff8a13f6b35a6c32835a91f18a",
+      "bytes": 2437,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 50,
+      "columns": [
+        "车型",
+        "2026-1",
+        "1月同比",
+        "1月环比",
+        "2026-1到1",
+        "2025-1到1",
+        "2024-1到1"
+      ],
+      "domain": "D3",
+      "adapterType": "gasgoo-ranking",
+      "knownIssues": [
+        "每月Top50截尾榜单，不代表全市场；不同月份榜单成员可能变化。",
+        "表头含月份与累计区间，逐文件解析；单月值与累计值不可混用。",
+        "源站环比列口径有问题，原样保留但不直接用于分析；如重算须使用同对象相邻月份单月值。",
+        "百分比文本需解析；同比极端值和历史累计缺失不自动删除或补零。"
+      ],
+      "physicalLineCount": 51,
+      "missingCounts": {
+        "2025-1到1": 4,
+        "2024-1到1": 8
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/GASGOO_rank_model_202602.csv",
+      "sha256": "0fb9ece4f343563643645d586b09bc06ad4ffdc38324e8c68169cea78f0771ff",
+      "bytes": 2673,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 50,
+      "columns": [
+        "车型",
+        "2026-2",
+        "2月同比",
+        "2月环比",
+        "2026-1到2",
+        "2025-1到2",
+        "2024-1到2"
+      ],
+      "domain": "D3",
+      "adapterType": "gasgoo-ranking",
+      "knownIssues": [
+        "每月Top50截尾榜单，不代表全市场；不同月份榜单成员可能变化。",
+        "表头含月份与累计区间，逐文件解析；单月值与累计值不可混用。",
+        "源站环比列口径有问题，原样保留但不直接用于分析；如重算须使用同对象相邻月份单月值。",
+        "百分比文本需解析；同比极端值和历史累计缺失不自动删除或补零。"
+      ],
+      "physicalLineCount": 51,
+      "missingCounts": {
+        "2025-1到2": 3,
+        "2024-1到2": 9
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/GASGOO_rank_model_202603.csv",
+      "sha256": "4d6cefb4be4d829036232c71f68fa2c6b9b11e18057e97628e41bf46db3f9342",
+      "bytes": 2729,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 50,
+      "columns": [
+        "车型",
+        "2026-3",
+        "3月同比",
+        "3月环比",
+        "2026-1到3",
+        "2025-1到3",
+        "2024-1到3"
+      ],
+      "domain": "D3",
+      "adapterType": "gasgoo-ranking",
+      "knownIssues": [
+        "每月Top50截尾榜单，不代表全市场；不同月份榜单成员可能变化。",
+        "表头含月份与累计区间，逐文件解析；单月值与累计值不可混用。",
+        "源站环比列口径有问题，原样保留但不直接用于分析；如重算须使用同对象相邻月份单月值。",
+        "百分比文本需解析；同比极端值和历史累计缺失不自动删除或补零。"
+      ],
+      "physicalLineCount": 51,
+      "missingCounts": {
+        "2025-1到3": 3,
+        "2024-1到3": 6
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/GASGOO_rank_model_202604.csv",
+      "sha256": "523faabb42b29b05b9b6b344fdf0261e368c4574407c8f60db08e26b5d1bbd69",
+      "bytes": 2700,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 50,
+      "columns": [
+        "车型",
+        "2026-4",
+        "4月同比",
+        "4月环比",
+        "2026-1到4",
+        "2025-1到4",
+        "2024-1到4"
+      ],
+      "domain": "D3",
+      "adapterType": "gasgoo-ranking",
+      "knownIssues": [
+        "每月Top50截尾榜单，不代表全市场；不同月份榜单成员可能变化。",
+        "表头含月份与累计区间，逐文件解析；单月值与累计值不可混用。",
+        "源站环比列口径有问题，原样保留但不直接用于分析；如重算须使用同对象相邻月份单月值。",
+        "百分比文本需解析；同比极端值和历史累计缺失不自动删除或补零。"
+      ],
+      "physicalLineCount": 51,
+      "missingCounts": {
+        "2025-1到4": 6,
+        "2024-1到4": 13
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/GASGOO_rank_model_202605.csv",
+      "sha256": "022bb1259a3685e4a809c68353b856935ed6049a106fafc1e75da1781a6c0f2a",
+      "bytes": 2666,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 50,
+      "columns": [
+        "车型",
+        "2026-5",
+        "5月同比",
+        "5月环比",
+        "2026-1到5",
+        "2025-1到5",
+        "2024-1到5"
+      ],
+      "domain": "D3",
+      "adapterType": "gasgoo-ranking",
+      "knownIssues": [
+        "每月Top50截尾榜单，不代表全市场；不同月份榜单成员可能变化。",
+        "表头含月份与累计区间，逐文件解析；单月值与累计值不可混用。",
+        "源站环比列口径有问题，原样保留但不直接用于分析；如重算须使用同对象相邻月份单月值。",
+        "百分比文本需解析；同比极端值和历史累计缺失不自动删除或补零。"
+      ],
+      "physicalLineCount": 51,
+      "missingCounts": {
+        "2025-1到5": 9,
+        "2024-1到5": 15
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/GASGOO_rank_model_202606.csv",
+      "sha256": "2e073fbb8cac330b8bda68c1e7882ffc2f7f0cce3651588115b10f4f894dd619",
+      "bytes": 2674,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 50,
+      "columns": [
+        "车型",
+        "2026-6",
+        "6月同比",
+        "6月环比",
+        "2026-1到6",
+        "2025-1到6",
+        "2024-1到6"
+      ],
+      "domain": "D3",
+      "adapterType": "gasgoo-ranking",
+      "knownIssues": [
+        "每月Top50截尾榜单，不代表全市场；不同月份榜单成员可能变化。",
+        "表头含月份与累计区间，逐文件解析；单月值与累计值不可混用。",
+        "源站环比列口径有问题，原样保留但不直接用于分析；如重算须使用同对象相邻月份单月值。",
+        "百分比文本需解析；同比极端值和历史累计缺失不自动删除或补零。"
+      ],
+      "physicalLineCount": 51,
+      "missingCounts": {
+        "2025-1到6": 9,
+        "2024-1到6": 17
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/GASGOO_rank_model_202607.csv",
+      "sha256": "72a238dac620ea9da4f433d2232ce2d56bde2c6a6ba84bb0e81c7722e07c4e3c",
+      "bytes": 2671,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 50,
+      "columns": [
+        "车型",
+        "2026-7",
+        "7月同比",
+        "7月环比",
+        "2026-1到7",
+        "2025-1到7",
+        "2024-1到7"
+      ],
+      "domain": "D3",
+      "adapterType": "gasgoo-ranking",
+      "knownIssues": [
+        "每月Top50截尾榜单，不代表全市场；不同月份榜单成员可能变化。",
+        "表头含月份与累计区间，逐文件解析；单月值与累计值不可混用。",
+        "源站环比列口径有问题，原样保留但不直接用于分析；如重算须使用同对象相邻月份单月值。",
+        "百分比文本需解析；同比极端值和历史累计缺失不自动删除或补零。"
+      ],
+      "physicalLineCount": 51,
+      "missingCounts": {
+        "2025-1到7": 11,
+        "2024-1到7": 19
+      },
+      "duplicateRecordCount": 0
+    },
+    {
+      "relativePath": "data/raw/D3_行业与宏观_火山引擎等/GASGOO_rank_model_202608.csv",
+      "sha256": "0a3337a17b9f549ca9105380ffdc2f9b0b77e9b2c16c53b0765e2008526e4d52",
+      "bytes": 2693,
+      "encoding": "utf-8-sig",
+      "parsedRecordCount": 50,
+      "columns": [
+        "车型",
+        "2026-8",
+        "8月同比",
+        "8月环比",
+        "2026-1到8",
+        "2025-1到8",
+        "2024-1到8"
+      ],
+      "domain": "D3",
+      "adapterType": "gasgoo-ranking",
+      "knownIssues": [
+        "每月Top50截尾榜单，不代表全市场；不同月份榜单成员可能变化。",
+        "表头含月份与累计区间，逐文件解析；单月值与累计值不可混用。",
+        "源站环比列口径有问题，原样保留但不直接用于分析；如重算须使用同对象相邻月份单月值。",
+        "百分比文本需解析；同比极端值和历史累计缺失不自动删除或补零。"
+      ],
+      "physicalLineCount": 51,
+      "missingCounts": {
+        "2025-1到8": 11,
+        "2024-1到8": 17
+      },
+      "duplicateRecordCount": 0
+    }
+  ]
+}
