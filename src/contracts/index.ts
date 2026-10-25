@@ -216,9 +216,14 @@ export interface AnalyzeRequest {
     | "datasetId"
     | "datasetVersion"
     | "domain"
+    | "adapterType"
+    | "adapterVersion"
     | "fields"
     | "graph"
-  > & { records: Pick<DataRecord, "recordId" | "values">[] };
+  > & {
+    records: Pick<DataRecord, "recordId" | "values">[];
+    issues: Pick<Issue, "code" | "severity" | "message" | "fieldId">[];
+  };
   request: AnalysisRequest;
 }
 export interface AnalyzeResponse {

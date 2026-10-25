@@ -20,7 +20,15 @@ export async function requestAnalysis(
       datasetId: bundle.datasetId,
       datasetVersion: bundle.datasetVersion,
       domain: bundle.domain,
+      adapterType: bundle.adapterType,
+      adapterVersion: bundle.adapterVersion,
       fields: bundle.fields,
+      issues: bundle.issues.map(({ code, severity, message, fieldId }) => ({
+        code,
+        severity,
+        message,
+        ...(fieldId ? { fieldId } : {}),
+      })),
       records: bundle.records.map(({ recordId, values }) => ({
         recordId,
         values,
