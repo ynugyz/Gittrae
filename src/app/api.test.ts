@@ -1,8 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createExampleProject } from "../contracts/example";
-import type { InsightRequest } from "../contracts";
-import { requestInsights } from "./api";
+import type { AnalyzeRequest, InsightRequest } from "../contracts";
+import { requestAnalysis, requestInsights } from "./api";
 
 test("AI客户端只发送当前计算投影和口径，不发送原始记录、字节或密钥", async (context) => {
   const sample = await createExampleProject();
@@ -22,6 +22,7 @@ test("AI客户端只发送当前计算投影和口径，不发送原始记录、
       return Response.json({
         analysisId: analysis.analysisId,
         requestId: "test-only-request",
+        insights: sample.insights,
       });
     },
   );
@@ -35,6 +36,7 @@ test("AI客户端只发送当前计算投影和口径，不发送原始记录、
     "facts",
   ]);
   assert.deepEqual(payload.context.scope.recordIds, []);
+  assert.deepEqual(payload.facts[0].fieldIds, analysis.results[0].fieldIds);
   assert.equal(
     payload.facts[0].sampleSize,
     analysis.results[0].validRecordIds.length,
@@ -59,6 +61,50 @@ test("AI客户端只发送当前计算投影和口径，不发送原始记录、
   }
   assert.equal(serialized.includes(bundle.sources[0].rawBytesBase64), false);
   assert.equal(serialized.includes(analysis.scope.recordIds[0]), false);
+});
+
+test("本机统计只传规范值与ID，返回事实须先通过引用校验再重建图", async (context) => {
+  const sample = await createExampleProject();
+  let payload: AnalyzeRequest;
+  const response = {
+    analysis: sample.analyses[0],
+    facts: { insights: sample.insights, graph: { owner: "untrusted" } },
+  };
+  context.mock.method(
+    globalThis,
+    "fetch",
+    async (url: string, init: RequestInit) => {
+      assert.equal(url, "/api/analyze");
+      payload = JSON.parse(String(init.body));
+      for (const forbidden of [
+        "sources",
+        "provenance",
+        "rawRecords",
+        "rawBytesBase64",
+      ])
+        assert.equal(String(init.body).includes(`"${forbidden}"`), false);
+      return Response.json(response);
+    },
+  );
+  const result = await requestAnalysis(
+    sample.datasets[0],
+    sample.analyses[0].request,
+    new AbortController().signal,
+  );
+  assert.deepEqual(payload!.bundle.records[0], {
+    recordId: sample.datasets[0].records[0].recordId,
+    values: sample.datasets[0].records[0].values,
+  });
+  assert.equal(result.facts.graph.owner, "insight");
+  response.facts.insights[0].resultRefs = ["missing-result"];
+  await assert.rejects(
+    requestAnalysis(
+      sample.datasets[0],
+      sample.analyses[0].request,
+      new AbortController().signal,
+    ),
+    /不存在|不属于|占位/,
+  );
 });
 
 test("HTTP错误、服务错误和非JSON响应均明确失败，不包装为成功", async (context) => {

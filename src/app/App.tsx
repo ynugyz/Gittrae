@@ -21,8 +21,8 @@ import {
   blankRequest,
   emptyProject,
 } from "./state";
-import { analysisModule, dataModule, moduleStatus } from "./modules";
-import { requestInsights } from "./api";
+import { dataModule, moduleStatus } from "./modules";
+import { requestAnalysis, requestInsights } from "./api";
 import { NetworkChart, nodeNames, number, StatisticalChart } from "./Charts";
 import Evidence, { type EvidenceView } from "./Evidence";
 
@@ -132,6 +132,7 @@ export default function App() {
   const projectRef = useRef(project);
   projectRef.current = project;
   const aiRequest = useRef<AbortController | null>(null);
+  const analysisRequest = useRef<AbortController | null>(null);
   const generation = useRef(0);
   const csvInput = useRef<HTMLInputElement>(null),
     projectInput = useRef<HTMLInputElement>(null);
@@ -182,10 +183,17 @@ export default function App() {
     window.addEventListener("beforeunload", handler);
     return () => window.removeEventListener("beforeunload", handler);
   }, [dirty]);
-  useEffect(() => () => aiRequest.current?.abort(), []);
+  useEffect(
+    () => () => {
+      aiRequest.current?.abort();
+      analysisRequest.current?.abort();
+    },
+    [],
+  );
   function invalidateAI() {
     generation.current++;
     aiRequest.current?.abort();
+    analysisRequest.current?.abort();
     setAiStatus("idle");
     setAiError("");
   }
@@ -317,12 +325,6 @@ export default function App() {
   }
   async function analyze() {
     if (!dataset || !draft) return;
-    if (!moduleStatus.analysis) {
-      setError(
-        "统计模块尚未接入，请由人员2提供 src/analysis/index.ts。当前显示的联调样例为固定参考。",
-      );
-      return;
-    }
     const unfiltered = dataset.fields.filter(
       (f) =>
         f.role === "dimension" &&
@@ -338,11 +340,21 @@ export default function App() {
       return;
     await action("正在计算", async () => {
       invalidateAI();
-      const result = analysisModule.analyze(dataset, draft);
-      const facts = analysisModule.buildFacts(result);
-      const next = await validateProject(
-        addAnalysis(projectRef.current, result, draft, facts.insights),
+      const ticket = generation.current;
+      const base = projectRef.current;
+      const request = structuredClone(draft);
+      const controller = new AbortController();
+      analysisRequest.current = controller;
+      const { analysis: result, facts } = await requestAnalysis(
+        dataset,
+        request,
+        controller.signal,
       );
+      if (ticket !== generation.current || projectRef.current !== base) return;
+      const next = await validateProject(
+        addAnalysis(base, result, request, facts.insights),
+      );
+      if (ticket !== generation.current || projectRef.current !== base) return;
       replace(next);
       setNotice("分析完成，数字、图表与来源已绑定同一次计算。");
     });
@@ -362,10 +374,9 @@ export default function App() {
         controller.signal,
       );
       if (ticket !== generation.current) return;
-      const next = await validateProject(
-        applyInsightResponse(projectRef.current, response),
-      );
-      if (ticket !== generation.current) return;
+      const base = projectRef.current;
+      const next = await validateProject(applyInsightResponse(base, response));
+      if (ticket !== generation.current || projectRef.current !== base) return;
       projectRef.current = next;
       setProject(next);
       setLiveIds((ids) => [
@@ -731,9 +742,7 @@ export default function App() {
                 <span>
                   数据模块 · {moduleStatus.data ? "已接入" : "未接入"}
                 </span>
-                <span>
-                  统计模块 · {moduleStatus.analysis ? "已接入" : "未接入"}
-                </span>
+                <span>统计计算 · 本机服务</span>
                 <span>真实 AI · 未验证</span>
               </div>
             </section>
@@ -1210,11 +1219,6 @@ export default function App() {
                       <p>
                         更改数据、指标或筛选后，旧结果会退出当前视图。新结果将在完成计算后展示。
                       </p>
-                      {!moduleStatus.analysis && (
-                        <p className="warning-text">
-                          统计模块尚未接入，可从“查看已有分析”打开固定联调参考。
-                        </p>
-                      )}
                     </div>
                   )}
                 </>

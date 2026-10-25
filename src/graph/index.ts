@@ -134,6 +134,8 @@ export function validateInsight(
     !["computed", "live_ai"].includes(insight.origin)
   )
     fail("解释类型或来源不受支持。");
+  if ((insight.origin === "computed") !== (insight.kind === "fact"))
+    fail("解释来源与类型不一致：AI不能作为确定性事实。");
   requireText(insight.textTemplate, "解释文本");
   if (insight.origin === "live_ai")
     requireText(insight.model, "实时 AI 模型名称");

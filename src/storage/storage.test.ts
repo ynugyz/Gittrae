@@ -35,6 +35,13 @@ test("保持原字节与哈希不变，篡改rawRecords缓存仍被拒绝", asyn
   await assert.rejects(importProject(JSON.stringify(project)), /缓存.*不一致/);
 });
 
+test("恢复项目同样拒绝把实时AI伪装成确定性事实", async () => {
+  const project = await createExampleProject();
+  project.insights[0].origin = "live_ai";
+  project.insights[0].model = "test-only-model";
+  await assert.rejects(importProject(JSON.stringify(project)), /来源与类型/);
+});
+
 test("损坏哈希、未知版本、未知配置属性与非有限数值拒绝恢复或导出", async () => {
   const original = await createExampleProject();
   const changedHash = structuredClone(original);

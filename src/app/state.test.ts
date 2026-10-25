@@ -141,7 +141,6 @@ test("实时 AI 不能伪装为确定性事实，拒绝后原项目保持不变"
   const before = structuredClone(sample);
   const response = responseFor(sample.analyses[0]);
   response.insights[0].kind = "fact";
-  response.graph = buildInsightGraph(response.insights, sample.analyses);
   assert.throws(
     () => applyInsightResponse(sample, response),
     /来源|状态|模型标识/,

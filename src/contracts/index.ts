@@ -208,6 +208,23 @@ export interface FactsOutput {
   insights: Insight[];
   graph: GraphFragment;
 }
+/** 仅送往本机统计服务；原始来源与逐格回源信息留在浏览器。 */
+export interface AnalyzeRequest {
+  bundle: Pick<
+    DatasetBundle,
+    | "schemaVersion"
+    | "datasetId"
+    | "datasetVersion"
+    | "domain"
+    | "fields"
+    | "graph"
+  > & { records: Pick<DataRecord, "recordId" | "values">[] };
+  request: AnalysisRequest;
+}
+export interface AnalyzeResponse {
+  analysis: AnalysisResult;
+  facts: FactsOutput;
+}
 export interface InsightResponse extends FactsOutput {
   analysisId: string;
   requestId: string;
@@ -218,6 +235,7 @@ export interface InsightRequest {
   analysisId: string;
   facts: {
     resultId: string;
+    fieldIds: string[];
     metric: string;
     value: number | null;
     unit: string;

@@ -2,7 +2,7 @@ import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
-// 统一入口；server/index.ts 由人员2接入，未接入时网页仍可独立启动。
+// 统一入口；兼容人员2的.mjs服务，未接入时网页仍可独立启动。
 const root = fileURLToPath(new URL("../", import.meta.url));
 const children = [];
 function run(args) {
@@ -24,12 +24,19 @@ function stop() {
 }
 process.on("SIGINT", stop);
 process.on("SIGTERM", stop);
-if (existsSync(new URL("../server/index.ts", import.meta.url))) {
+const service = ["server/index.mjs", "server/index.ts"].find((path) =>
+  existsSync(new URL(`../${path}`, import.meta.url)),
+);
+if (service) {
   const envArgs = existsSync(new URL("../.env", import.meta.url))
     ? ["--env-file=.env"]
     : [];
-  run([...envArgs, "--import", "tsx", "server/index.ts"]);
+  run([
+    ...envArgs,
+    ...(service.endsWith(".ts") ? ["--import", "tsx"] : []),
+    service,
+  ]);
 } else {
-  console.log("模型服务尚未接入：统计与界面可独立运行，实时 AI 不可用。");
+  console.log("本机服务尚未接入：界面可启动，统计与实时 AI 暂不可用。");
 }
 run(["node_modules/vite/bin/vite.js", "--host", "127.0.0.1"]);
