@@ -24,7 +24,7 @@ import type {
   Transformation,
 } from '../types.ts';
 
-const ADAPTER_VERSION = '1.0.0';
+const ADAPTER_VERSION = '1.0.1';
 const DS_ID = 'ds:d2-listed-company-finance';
 
 interface ColumnSpec {
@@ -174,7 +174,8 @@ export async function buildD2Bundle(files: InputFile[]): Promise<DatasetBundle> 
       }
 
       for (const { spec, col } of measureCols) {
-        if (col === undefined) continue;
+        if (col === undefined || col >= rec.length) continue;
+        prov[spec.fieldId] = [{ sourceId: l.source.sourceId, recordIndex, columnIndex: col }];
         const raw = (rec[col] ?? '').trim();
         if (raw === '') continue; // 缺失 → null，不补零
         const num = spec.percent ? parsePercent(raw) : parseNumber(raw);
@@ -189,7 +190,6 @@ export async function buildD2Bundle(files: InputFile[]): Promise<DatasetBundle> 
           continue;
         }
         values[spec.fieldId] = num.value;
-        prov[spec.fieldId] = [{ sourceId: l.source.sourceId, recordIndex, columnIndex: col }];
       }
 
       records.push({ recordId: `rec:d2:${l.reportPeriod}:${code}`, values, provenance: prov });
