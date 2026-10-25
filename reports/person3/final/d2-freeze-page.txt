@@ -1,0 +1,328 @@
+- complementary:
+  - link "T3 数据洞察官 DATA · EVIDENCE · INSIGHT":
+    - /url: "#main"
+    - generic: T3
+    - text: 数据洞察官
+    - generic: DATA · EVIDENCE · INSIGHT
+  - text: 我的工作空间
+  - generic: LOCAL
+  - navigation "主导航":
+    - button "分析工作台":
+      - text: 分析工作台
+    - button "信息网络 31":
+      - text: 信息网络
+      - generic: "31"
+    - button "数据与来源":
+      - text: 数据与来源
+  - text: 项目数据
+  - generic: "01"
+  - button "D2 EM_yjbb_FY2025_20251231.csv 5,228 条记录":
+    - generic: D2
+    - text: EM_yjbb_FY2025_20251231.csv
+    - generic: 5,228 条记录
+  - button "＋ 添加数据"
+  - text: 本地运行
+  - paragraph:
+    - text: 项目保存在你下载的文件中。
+    - text: AI仅接收统计摘要与范围。
+  - button "打开联调样例 ↗"
+- main:
+  - generic: 工作空间 / 分析工作台
+  - button "恢复项目"
+  - button "保存项目":
+    - text: 保存项目
+  - button "导入 CSV":
+    - text: 导入 CSV
+  - button "选择 CSV 文件"
+  - button "选择项目文件"
+  - generic: T3 / DATA EXPLORER
+  - heading "让每个结论，有据可查" [level=1]
+  - paragraph: 从数据分布到文字解读，把发现连接到每一条原始记录。
+  - status: 项目文件已交给浏览器下载，包含原始来源与历史分析。
+  - generic: ANALYSIS SCOPE
+  - heading "明确范围，再看结果" [level=2]
+  - generic: 企业财务
+  - text: 数据集
+  - combobox "数据集":
+    - option "EM_yjbb_FY2025_20251231.csv" [selected]
+  - text: 股票简称
+  - combobox "股票简称":
+    - option "全部（请确认口径）" [selected]
+  - text: 报告期
+  - combobox "报告期":
+    - option "FY2025" [selected]
+  - text: 所处行业
+  - combobox "所处行业":
+    - option "全部（请确认口径）" [selected]
+  - text: 最新公告日期
+  - combobox "最新公告日期":
+    - option "全部（请确认口径）" [selected]
+  - button "开始分析":
+    - text: 开始分析
+  - generic: 分析指标
+  - generic "报告期每股收益":
+    - checkbox "每股收益 元"
+    - text: 每股收益
+    - generic: 元
+  - generic "报告期营业总收入":
+    - checkbox "营业总收入 元" [checked]
+    - text: 营业总收入
+    - generic: 元
+  - generic "营业总收入同比增长（百分数点：0.5414 表示 0.5414%）":
+    - checkbox "营收同比 %"
+    - text: 营收同比
+    - generic: "%"
+  - generic "营业总收入季度环比增长（百分数点）":
+    - checkbox "营收环比 %"
+    - text: 营收环比
+    - generic: "%"
+  - generic "报告期净利润（亏损为负值，保留）":
+    - checkbox "净利润 元" [checked]
+    - text: 净利润
+    - generic: 元
+  - generic "净利润同比增长（百分数点）":
+    - checkbox "净利润同比 %"
+    - text: 净利润同比
+    - generic: "%"
+  - generic "净利润季度环比增长（百分数点）":
+    - checkbox "净利润环比 %"
+    - text: 净利润环比
+    - generic: "%"
+  - generic "报告期每股净资产":
+    - checkbox "每股净资产 元"
+    - text: 每股净资产
+    - generic: 元
+  - generic "净资产收益率（百分数点）":
+    - checkbox "净资产收益率 %"
+    - text: 净资产收益率
+    - generic: "%"
+  - generic "每股经营活动现金流量":
+    - checkbox "每股经营现金流 元"
+    - text: 每股经营现金流
+    - generic: 元
+  - generic "销售毛利率（百分数点）":
+    - checkbox "销售毛利率 %"
+    - text: 销售毛利率
+    - generic: "%"
+  - generic: 企业财务｜指标：营业总收入（元）、净利润（元）｜筛选：报告期∈[FY2025]｜记录 5228/5228
+  - generic: 来源 1 份 · 规范记录 5,228 条
+  - combobox "查看已有分析":
+    - option "企业财务｜指标：营业总收入（元）、净利润（元）｜筛选：报告期∈[FY2025]｜记录 5228/5228 · 营业总收入、净利润" [selected]
+  - generic "数据口径与限制 · 10 项"
+  - button "均值 ↗ 13,964,968,470.3863 元 · 有效样本 5227":
+    - text: 均值
+    - generic: ↗
+    - strong: 13,964,968,470.3863
+    - generic: 元 · 有效样本 5227
+  - button "中位数 ↗ 2,016,348,883.02 元 · 有效样本 5227":
+    - text: 中位数
+    - generic: ↗
+    - strong: 2,016,348,883.02
+    - generic: 元 · 有效样本 5227
+  - generic: 当前有效范围
+  - strong: 5,228 条
+  - generic: 每个统计量的有效样本独立核对
+  - generic: DISTRIBUTION & RELATION
+  - heading "读懂数据的形状" [level=2]
+  - combobox "图表指标":
+    - option "营业总收入" [selected]
+  - button "直方图"
+  - button "散点图"
+  - button "箱线图"
+  - img "营业总收入（元）箱线图，须线为阈值内真实观测值"
+  - button "下须 -171,421,984.2"
+  - button "Q1 815,241,145.36"
+  - button "中位数 2,016,348,883.02"
+  - button "Q3 5,739,616,751.545"
+  - button "上须 13,121,060,568.37"
+  - generic: INSIGHT WITH EVIDENCE
+  - heading "发现与解读" [level=2]
+  - generic: 可回源
+  - heading "确定性事实" [level=3]
+  - article:
+    - text: 字段「营业总收入（元）」的均值为
+    - button "13,964,968,470.3863 元 ↗"
+    - text: （单位：元）。
+  - article:
+    - text: 字段「营业总收入（元）」的中位数为
+    - button "2,016,348,883.02 元 ↗"
+    - text: （单位：元）。
+  - article:
+    - text: 字段「营业总收入（元）」的样本标准差为
+    - button "83,866,198,264.1066 元 ↗"
+    - text: （单位：元），按 n−1 计算。
+  - article:
+    - text: 字段「净利润（元）」的均值为
+    - button "1,033,045,814.703 元 ↗"
+    - text: （单位：元）。
+  - article:
+    - text: 字段「净利润（元）」的中位数为
+    - button "84,499,446.465 元 ↗"
+    - text: （单位：元）。
+  - article:
+    - text: 字段「净利润（元）」的样本标准差为
+    - button "10,838,674,280.7552 元 ↗"
+    - text: （单位：元），按 n−1 计算。
+  - article:
+    - text: 字段「营业总收入（元）」与「净利润（元）」的 Pearson 相关系数为
+    - button "0.5271 ↗"
+    - text: ；相关不等于因果。
+  - heading "DeepSeek 解读" [level=3]
+  - paragraph: 解读引用当前统计结果。相关不等于因果。
+  - article:
+    - text: 所选企业样本的营业总收入均值为
+    - button "13,964,968,470.3863 元 ↗"
+    - text: ，中位数为
+    - button "2,016,348,883.02 元 ↗"
+    - text: 。均值明显高于中位数，说明收入分布右偏，少数较大规模样本对均值影响较大；这是描述性事实，不代表因果。
+    - generic: 本次实时调用 · deepseek-flash · 2026/10/25 16:18:40
+  - article:
+    - text: 营业总收入的下四分位为
+    - button "815,241,145.36 元 ↗"
+    - text: ，上四分位为
+    - button "5,739,616,751.545 元 ↗"
+    - text: ；标准差为
+    - button "83,866,198,264.1066 元 ↗"
+    - text: ，表明样本间收入规模差异较大。观测到的须内低值为
+    - button "-171,421,984.2 元 ↗"
+    - text: ，高值为
+    - button "13,121,060,568.37 元 ↗"
+    - text: 。
+    - generic: 本次实时调用 · deepseek-flash · 2026/10/25 16:18:40
+  - article:
+    - text: 净利润均值为
+    - button "1,033,045,814.703 元 ↗"
+    - text: ，中位数为
+    - button "84,499,446.465 元 ↗"
+    - text: ，而净利润下四分位为
+    - button "-15,611,973.495 元 ↗"
+    - text: ，观测到的须内低值为
+    - button "-497,088,962.39 元 ↗"
+    - text: 。负值说明所选样本中存在亏损企业，分析保留亏损记录，并未剔除。
+    - generic: 本次实时调用 · deepseek-flash · 2026/10/25 16:18:40
+  - article:
+    - text: 营业总收入与净利润的皮尔逊相关系数为
+    - button "0.5271 ↗"
+    - text: ，显示二者在本期企业样本中呈正相关。该结果仅为相关关系的描述，不能解释为因果；且数据为后续披露版本，不作历史可交易断言，也不构成投资建议。
+    - generic: 本次实时调用 · deepseek-flash · 2026/10/25 16:18:40
+  - button "生成真实 AI 解读":
+    - text: 生成真实 AI 解读
+  - paragraph: 响应已通过当前分析与引用检查；文字含义仍需审阅。
+  - heading "计算结果明细" [level=2]
+  - generic: 点击数字查看方法、样本和原文
+  - table:
+    - rowgroup:
+      - row "指标 统计量 结果 有效 / 排除 计算方法":
+        - columnheader "指标"
+        - columnheader "统计量"
+        - columnheader "结果"
+        - columnheader "有效 / 排除"
+        - columnheader "计算方法"
+    - rowgroup:
+      - row "营业总收入 均值 13,964,968,470.3863 元 ↗ 5227 / 1 arithmetic_mean":
+        - cell "营业总收入"
+        - cell "均值"
+        - cell "13,964,968,470.3863 元 ↗":
+          - button "13,964,968,470.3863 元 ↗"
+        - cell "5227 / 1"
+        - cell "arithmetic_mean"
+      - row "营业总收入 中位数 2,016,348,883.02 元 ↗ 5227 / 1 type7_linear":
+        - cell "营业总收入"
+        - cell "中位数"
+        - cell "2,016,348,883.02 元 ↗":
+          - button "2,016,348,883.02 元 ↗"
+        - cell "5227 / 1"
+        - cell "type7_linear"
+      - row "营业总收入 stddev 83,866,198,264.1066 元 ↗ 5227 / 1 sample_stddev_ddof1":
+        - cell "营业总收入"
+        - cell "stddev"
+        - cell "83,866,198,264.1066 元 ↗":
+          - button "83,866,198,264.1066 元 ↗"
+        - cell "5227 / 1"
+        - cell "sample_stddev_ddof1"
+      - row "营业总收入 第一四分位 815,241,145.36 元 ↗ 5227 / 1 type7_linear":
+        - cell "营业总收入"
+        - cell "第一四分位"
+        - cell "815,241,145.36 元 ↗":
+          - button "815,241,145.36 元 ↗"
+        - cell "5227 / 1"
+        - cell "type7_linear"
+      - row "营业总收入 第三四分位 5,739,616,751.545 元 ↗ 5227 / 1 type7_linear":
+        - cell "营业总收入"
+        - cell "第三四分位"
+        - cell "5,739,616,751.545 元 ↗":
+          - button "5,739,616,751.545 元 ↗"
+        - cell "5227 / 1"
+        - cell "type7_linear"
+      - row "营业总收入 下须 -171,421,984.2 元 ↗ 5227 / 1 observed_whisker_inside_1.5_iqr":
+        - cell "营业总收入"
+        - cell "下须"
+        - cell "-171,421,984.2 元 ↗":
+          - button "-171,421,984.2 元 ↗"
+        - cell "5227 / 1"
+        - cell "observed_whisker_inside_1.5_iqr"
+      - row "营业总收入 上须 13,121,060,568.37 元 ↗ 5227 / 1 observed_whisker_inside_1.5_iqr":
+        - cell "营业总收入"
+        - cell "上须"
+        - cell "13,121,060,568.37 元 ↗":
+          - button "13,121,060,568.37 元 ↗"
+        - cell "5227 / 1"
+        - cell "observed_whisker_inside_1.5_iqr"
+      - row "净利润 均值 1,033,045,814.703 元 ↗ 5228 / 0 arithmetic_mean":
+        - cell "净利润"
+        - cell "均值"
+        - cell "1,033,045,814.703 元 ↗":
+          - button "1,033,045,814.703 元 ↗"
+        - cell "5228 / 0"
+        - cell "arithmetic_mean"
+      - row "净利润 中位数 84,499,446.465 元 ↗ 5228 / 0 type7_linear":
+        - cell "净利润"
+        - cell "中位数"
+        - cell "84,499,446.465 元 ↗":
+          - button "84,499,446.465 元 ↗"
+        - cell "5228 / 0"
+        - cell "type7_linear"
+      - row "净利润 stddev 10,838,674,280.7552 元 ↗ 5228 / 0 sample_stddev_ddof1":
+        - cell "净利润"
+        - cell "stddev"
+        - cell "10,838,674,280.7552 元 ↗":
+          - button "10,838,674,280.7552 元 ↗"
+        - cell "5228 / 0"
+        - cell "sample_stddev_ddof1"
+      - row "净利润 第一四分位 -15,611,973.495 元 ↗ 5228 / 0 type7_linear":
+        - cell "净利润"
+        - cell "第一四分位"
+        - cell "-15,611,973.495 元 ↗":
+          - button "-15,611,973.495 元 ↗"
+        - cell "5228 / 0"
+        - cell "type7_linear"
+      - row "净利润 第三四分位 315,420,404.1875 元 ↗ 5228 / 0 type7_linear":
+        - cell "净利润"
+        - cell "第三四分位"
+        - cell "315,420,404.1875 元 ↗":
+          - button "315,420,404.1875 元 ↗"
+        - cell "5228 / 0"
+        - cell "type7_linear"
+      - row "净利润 下须 -497,088,962.39 元 ↗ 5228 / 0 observed_whisker_inside_1.5_iqr":
+        - cell "净利润"
+        - cell "下须"
+        - cell "-497,088,962.39 元 ↗":
+          - button "-497,088,962.39 元 ↗"
+        - cell "5228 / 0"
+        - cell "observed_whisker_inside_1.5_iqr"
+      - row "净利润 上须 811,953,460.29 元 ↗ 5228 / 0 observed_whisker_inside_1.5_iqr":
+        - cell "净利润"
+        - cell "上须"
+        - cell "811,953,460.29 元 ↗":
+          - button "811,953,460.29 元 ↗"
+        - cell "5228 / 0"
+        - cell "observed_whisker_inside_1.5_iqr"
+      - row "营业总收入 / 净利润 Pearson 相关 0.5271 ↗ 5227 / 1 pearson_pairwise_complete":
+        - cell "营业总收入 / 净利润"
+        - cell "Pearson 相关"
+        - cell "0.5271 ↗":
+          - button "0.5271 ↗"
+        - cell "5227 / 1"
+        - cell "pearson_pairwise_complete"
+  - generic: T3 数据洞察官
+  - generic: 数值由程序计算 · 解释引用结果 · 证据可回到原文

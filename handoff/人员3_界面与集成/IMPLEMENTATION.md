@@ -6,7 +6,7 @@
 
 ## 1. 唯一入口
 
-[共享类型](https://github.com/ynugyz/Gittrae/blob/c5c91cb292936e1aa0986caa05adc751453433a6/src/contracts/index.ts)、[MOCK样例](https://github.com/ynugyz/Gittrae/blob/c5c91cb292936e1aa0986caa05adc751453433a6/src/contracts/example.ts)、[模块接线](https://github.com/ynugyz/Gittrae/blob/c5c91cb292936e1aa0986caa05adc751453433a6/src/app/modules.ts)、[图谱与回源](https://github.com/ynugyz/Gittrae/blob/c5c91cb292936e1aa0986caa05adc751453433a6/src/graph/index.ts)、[保存恢复](https://github.com/ynugyz/Gittrae/blob/c5c91cb292936e1aa0986caa05adc751453433a6/src/storage/index.ts)。本轮集成版本为c5c91cb，已纳入人员1 1ba946d、人员2 6095758。
+[共享类型](https://github.com/ynugyz/Gittrae/blob/3a558506094c7934ccb1927108bf02950e71dee5/src/contracts/index.ts)、[MOCK样例](https://github.com/ynugyz/Gittrae/blob/3a558506094c7934ccb1927108bf02950e71dee5/src/contracts/example.ts)、[模块接线](https://github.com/ynugyz/Gittrae/blob/3a558506094c7934ccb1927108bf02950e71dee5/src/app/modules.ts)、[图谱与回源](https://github.com/ynugyz/Gittrae/blob/3a558506094c7934ccb1927108bf02950e71dee5/src/graph/index.ts)、[保存恢复](https://github.com/ynugyz/Gittrae/blob/3a558506094c7934ccb1927108bf02950e71dee5/src/storage/index.ts)。最终产品commit为 `3a558506094c7934ccb1927108bf02950e71dee5`，精确取入人员1 `42c91031f0baff61135018d0c26da4f8eec225eb`、人员2 `62fed25342fd724b73d197666279a8bc6a24d5c1`；代码已冻结。原基线c5c91cb的53项测试为历史检查，本轮26项针对性检查及构建通过，未重跑全套。
 
 <a id="data"></a>
 
@@ -14,7 +14,7 @@
 
 当前页面检测 `src/data/index.ts`，调用 `importFiles(files: File[], options: ImportOptions): Promise<DatasetBundle[]>`。所有记录及源字节经项目校验后进入页面；同datasetId不同内容拒绝覆盖。
 
-`SourceFile.originalFileName` 只存文件名，CSV参数为delimiter/quoteChar/escapeChar/skipEmptyLines:false。存储提供 `reparseSource`、`sha256`、`bytesToBase64`。空记录保留，终端换行伪记录不新增编号。
+`SourceFile.originalFileName` 只存文件名，CSV参数为delimiter/quoteChar/escapeChar/skipEmptyLines:false。存储提供 `reparseSource`、`sha256`、`bytesToBase64`。空记录保留，终端换行伪记录不新增编号。D2适配器1.0.1生成新数据版本；新导入页面已确认688759空营收映射到记录2755、列4，原字符串为空，统计有效5227/缺失1不变。旧项目不自动补造来源，复验使用新导入版本。
 
 `getDefaultRequest(bundle)` 已正式批准为可选钩子，不增加持久化字段；按真实维度选择D1 2024、D2 FY2025与沪深代码规则、GASGOO 2026-08，CPCA保留自身口径。当前options为空对象；保留普通CSV入口，未知字段/口径明确提示，暂停高级角色配置。
 
@@ -34,11 +34,11 @@ AI客户端请求 `POST /api/insights`，60秒超时、不自动重试；最小f
 
 ## 4. 运行与恢复【人员3、4必读】
 
-Node >=22.12；`npm ci`、`npm run dev`。网页127.0.0.1:5173，预览4173，分析与模型共用服务8787。启动脚本优先检测 `server/index.mjs`，兼容 `server/index.ts`，仅在服务端读取本机.env。当前本机 `/api/health` 返回keyConfigured=true、model=deepseek-flash；这只证明配置已加载，真实页面AI结果见 [IF-08](../status/IF-08-live-insights.md)。
+Node >=22.12；首次安装用 `npm ci`，启动用 `npm run dev`。网页 http://127.0.0.1:5173 ，分析与模型共用 http://127.0.0.1:8787 ，生产预览4173。已有服务勿重复启动；重启须在服务端环境或本机.env配置 `DEEPSEEK_API_KEY`。启动脚本优先检测 `server/index.mjs`，兼容 `server/index.ts`；密钥不进入浏览器、仓库或项目文件。健康检查不能替代真实页面AI结果，后者见 [IF-08](../status/IF-08-live-insights.md)。
 
 `exportProject(project): Promise<string>`、`importProject(json): Promise<ProjectSnapshot>`、`validateProject(value): Promise<ProjectSnapshot>`。紧凑JSON携带源字节、ID与历史结果；严格校验属性、哈希、重解析缓存和引用，恢复成功才替换状态，失败保留原项目。完整性校验不认证作者或统计正确性。
 
-已计算范围随分析恢复；未计算筛选草稿不在v1持久化承诺内，当前只保存指标选择。恢复不重算或请求模型。验证命令与实际覆盖见 [自测记录](../../reports/person3/verification.md)。
+已计算范围随分析恢复；未计算筛选草稿不在v1持久化承诺内，当前只保存指标选择。恢复不重算或请求模型。人员2已明确将旧D1两条、D2一条解释标为invalid并保留原文；`three-domain-semantic-reviewed.t3project.json` 已完成，不把无效历史恢复成有效结论。历史检查见 [自测记录](../../reports/person3/verification.md)，当前覆盖以接口卡为准。
 
 <a id="pending"></a>
 
@@ -50,4 +50,4 @@ Node >=22.12；`npm ci`、`npm run dev`。网页127.0.0.1:5173，预览4173，�
 
 ## 6. 下一角色接手
 
-按 [精简交接](START_HERE.md) 完成三域页面实测与保存恢复；人员4按明确的集成commit独立验收，不沿用历史自测或材料核验作为产品通过结论。
+D2新版页面16:18:40真实AI成功4条，analysisId为 `analysis:e98f90033b1c0bda7fca4f31`；首次裸数字响应拒绝后手动重试一次成功，详见 [IF-08](../status/IF-08-live-insights.md)。当前主机项目 `.local/person3-final/three-domain-freeze.t3project.json` 为16,739,046字节、3域，D2使用新版数据及分析；旧D2与invalid原文保留在同目录 `three-domain-semantic-reviewed.t3project.json`，原始 `three-domain-final.t3project.json` 另存备份。旧往返测试仍按原commit与项目取证，不自动转记为新冻结项目恢复通过。按 [精简交接](START_HERE.md) 交付固定最终commit与实际证据，代码不再修改。最终独立签收尚无；人员4按新commit独立验收，不沿用旧版本自测或材料核验作为产品通过结论。

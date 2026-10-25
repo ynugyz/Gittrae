@@ -249,5 +249,101 @@
     "D2 missing revenue record 688759 has no direct source reference; IF-01 tracks record 2755 column 4.",
     "AI semantic wording still requires review: D1/D2 include generic ranking-market phrasing.",
     "Independent UI audit is not signed off."
-  ]
+  ],
+  "freeze": {
+    "productCommit": "3a558506094c7934ccb1927108bf02950e71dee5",
+    "at": "2026-10-25T08:19:01.343Z",
+    "tests": "26 targeted checks + production build passed; previous c5c91cb baseline 53 passed",
+    "semanticInvalidated": [
+      "insight:531de00dde468583d5a56c0a",
+      "insight:a261581777e009c98d2c7fed",
+      "insight:95990c421ee8deb7af449ba2"
+    ],
+    "archivedProject": "three-domain-semantic-reviewed.t3project.json",
+    "newD2": {
+      "datasetVersion": "v1:0a66e26f7105aecf406dfd2e",
+      "analysisId": "analysis:e98f90033b1c0bda7fca4f31",
+      "liveAI": [
+        {
+          "insightId": "insight:ad96f33d62e3ef0d7d5b952b",
+          "analysisId": "analysis:e98f90033b1c0bda7fca4f31",
+          "kind": "interpretation",
+          "origin": "live_ai",
+          "textTemplate": "所选企业样本的营业总收入均值为 {{result:analysis:e98f90033b1c0bda7fca4f31:mean:revenue}}，中位数为 {{result:analysis:e98f90033b1c0bda7fca4f31:median:revenue}}。均值明显高于中位数，说明收入分布右偏，少数较大规模样本对均值影响较大；这是描述性事实，不代表因果。",
+          "resultRefs": [
+            "analysis:e98f90033b1c0bda7fca4f31:mean:revenue",
+            "analysis:e98f90033b1c0bda7fca4f31:median:revenue"
+          ],
+          "generatedAt": "2026-10-25T08:18:40.688Z",
+          "model": "deepseek-flash",
+          "status": "valid"
+        },
+        {
+          "insightId": "insight:33cb9a1f0b3e11d9675ec433",
+          "analysisId": "analysis:e98f90033b1c0bda7fca4f31",
+          "kind": "interpretation",
+          "origin": "live_ai",
+          "textTemplate": "营业总收入的下四分位为 {{result:analysis:e98f90033b1c0bda7fca4f31:q1:revenue}}，上四分位为 {{result:analysis:e98f90033b1c0bda7fca4f31:q3:revenue}}；标准差为 {{result:analysis:e98f90033b1c0bda7fca4f31:stddev:revenue}}，表明样本间收入规模差异较大。观测到的须内低值为 {{result:analysis:e98f90033b1c0bda7fca4f31:low:revenue}}，高值为 {{result:analysis:e98f90033b1c0bda7fca4f31:high:revenue}}。",
+          "resultRefs": [
+            "analysis:e98f90033b1c0bda7fca4f31:q1:revenue",
+            "analysis:e98f90033b1c0bda7fca4f31:q3:revenue",
+            "analysis:e98f90033b1c0bda7fca4f31:stddev:revenue",
+            "analysis:e98f90033b1c0bda7fca4f31:low:revenue",
+            "analysis:e98f90033b1c0bda7fca4f31:high:revenue"
+          ],
+          "generatedAt": "2026-10-25T08:18:40.688Z",
+          "model": "deepseek-flash",
+          "status": "valid"
+        },
+        {
+          "insightId": "insight:c900ffb6c1992c3b64fb0b96",
+          "analysisId": "analysis:e98f90033b1c0bda7fca4f31",
+          "kind": "interpretation",
+          "origin": "live_ai",
+          "textTemplate": "净利润均值为 {{result:analysis:e98f90033b1c0bda7fca4f31:mean:net_profit}}，中位数为 {{result:analysis:e98f90033b1c0bda7fca4f31:median:net_profit}}，而净利润下四分位为 {{result:analysis:e98f90033b1c0bda7fca4f31:q1:net_profit}}，观测到的须内低值为 {{result:analysis:e98f90033b1c0bda7fca4f31:low:net_profit}}。负值说明所选样本中存在亏损企业，分析保留亏损记录，并未剔除。",
+          "resultRefs": [
+            "analysis:e98f90033b1c0bda7fca4f31:mean:net_profit",
+            "analysis:e98f90033b1c0bda7fca4f31:median:net_profit",
+            "analysis:e98f90033b1c0bda7fca4f31:q1:net_profit",
+            "analysis:e98f90033b1c0bda7fca4f31:low:net_profit"
+          ],
+          "generatedAt": "2026-10-25T08:18:40.688Z",
+          "model": "deepseek-flash",
+          "status": "valid"
+        },
+        {
+          "insightId": "insight:0d9ce89b62816570b8c70765",
+          "analysisId": "analysis:e98f90033b1c0bda7fca4f31",
+          "kind": "interpretation",
+          "origin": "live_ai",
+          "textTemplate": "营业总收入与净利润的皮尔逊相关系数为 {{result:analysis:e98f90033b1c0bda7fca4f31:pearson:revenue+net_profit}}，显示二者在本期企业样本中呈正相关。该结果仅为相关关系的描述，不能解释为因果；且数据为后续披露版本，不作历史可交易断言，也不构成投资建议。",
+          "resultRefs": [
+            "analysis:e98f90033b1c0bda7fca4f31:pearson:revenue+net_profit"
+          ],
+          "generatedAt": "2026-10-25T08:18:40.688Z",
+          "model": "deepseek-flash",
+          "status": "valid"
+        }
+      ],
+      "uiEmptySource": {
+        "recordId": "rec:d2:FY2025:688759",
+        "recordIndex": 2755,
+        "columnIndex": 4,
+        "rawValue": ""
+      },
+      "firstAIRequest": "Rejected unbound number; explicit single retry succeeded"
+    },
+    "finalProject": "three-domain-freeze.t3project.json",
+    "bytes": 16739046,
+    "selection": {
+      "datasetId": "ds:d2-listed-company-finance",
+      "analysisId": "analysis:e98f90033b1c0bda7fca4f31",
+      "measureFieldIds": [
+        "revenue",
+        "net_profit"
+      ],
+      "nodeId": "finding:insight:ad96f33d62e3ef0d7d5b952b"
+    },
+    "independentSignoff": false
+  }
 }
