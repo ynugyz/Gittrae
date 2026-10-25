@@ -1,0 +1,14 @@
+# 原始数据不入库：体积大 + 版权属于赛事方
+data_raw/
+*.zip
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.ipynb_checkpoints/
+
+# 系统文件
+Thumbs.db
+desktop.ini
+.DS_Store
