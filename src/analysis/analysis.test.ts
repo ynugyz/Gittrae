@@ -258,7 +258,7 @@ test('分析编号绑定方法版本，并复用人员1 的数据集节点 ID', 
     },
   });
   const analysis = analyze(bundle, request());
-  assert.equal(analysis.results[0].parameters.methodVersion, 'analysis-methods-v1');
+  assert.equal(analysis.results[0].parameters.methodVersion, 'analysis-methods-v2');
   assert.equal('methodVersion' in analysis, false);
   const selects = analysis.graph.edges.find((edge) => edge.type === 'selects');
   assert.equal(selects.to, 'dataset:custom-node');

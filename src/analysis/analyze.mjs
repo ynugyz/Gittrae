@@ -12,7 +12,7 @@ import {
   toFiniteNumber,
 } from './statistics.mjs';
 
-export const METHODS_VERSION = 'analysis-methods-v1';
+export const METHODS_VERSION = 'analysis-methods-v2';
 
 export class AnalysisError extends Error {
   constructor(code, message) {
